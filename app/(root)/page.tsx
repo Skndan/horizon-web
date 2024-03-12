@@ -26,14 +26,14 @@ const AuthenticationPage = () => {
           <div className="relative z-20 flex items-center ">
             <Image
               src="/logo-white.svg"
-              className="hidden dark:hidden"
+              className="hidden dark:block"
               width="100"
               height="56"
               alt="Logo"
             />
             <Image
               src="/logo-black.svg"
-              className="block dark:block"
+              className="block dark:hidden"
               width="100"
               height="56"
               alt="Logo"
@@ -44,18 +44,19 @@ const AuthenticationPage = () => {
               Give your business everything it need to grow
             </h1>
             <p className="mt-4 text-lg">
-              Give it an extra sales channel with ZERO listing costs.
+              Manage your business at one place
             </p>
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
-              <p className="text-lg">Copyright &copy; Acme Inc 2023</p>
+              <p className="text-lg">Copyright &copy; skndan 2023</p>
             </blockquote>
           </div>
         </div>
         <div className="lg:p-8">
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-2 text-center">
+              
             </div>
             <Login />
             <p className="px-8 text-center text-sm text-muted-foreground pb-6">

@@ -4,14 +4,17 @@ import ThemeModeToggle from "@/components/common/theme-mode-toggle";
 import "../globals.css";
 import Image from "next/image";
 import { UserNav } from "@/components/dashboard/user-nav";
-import { MainNav } from "@/components/navigation/top-menu";
- 
+import { MainNav } from "@/components/navigation/top-menu"; 
+import MobileNav from "@/components/navigation/top-menu-mobile";
+
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
+
     <div className="h-full relative">
       <main>
         <header className="sticky top-0 z-40 border-b bg-background">
           <div className="flex h-16 items-center px-4">
+            <MobileNav />
             <Image
               src="/logo-white.svg"
               className="hidden dark:block"
@@ -26,7 +29,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               height="56"
               alt="Logo"
             />
-            {/* <TeamSwitcher /> */}
             <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
               <UserNav />
