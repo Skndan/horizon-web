@@ -15,7 +15,7 @@ import {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import React from "react"; 
+import React from "react";
 
 export function MainNav({
   className,
@@ -31,21 +31,39 @@ export function MainNav({
       children: []
     },
     {
-      href: `/employee-management`,
-      label: "Employee Management",
-      active: pathname.match(`/employee-management`),
+      href: `/organisation`,
+      label: "Organisation",
+      active: pathname.match(`/organisation`),
       children: [
         {
-          href: `/employee-management/directory`,
-          label: "Directory",
+          href: `/organisation/department`,
+          label: "Department",
+          description:
+            "Define departments in your organisation",
+        },
+        {
+          href: `/organisation/designation`,
+          label: "Designation",
+          description:
+            "Manage hierarchies",
+        },
+        {
+          href: `/organisation/employee`,
+          label: "Employee",
           description:
             "View all your employees at one place",
         },
         {
-          href: `/employee-management/onboarding`,
-          label: "Onboarding",
+          href: `/organisation/borndays`,
+          label: "Borndays",
           description:
-            "Welcome new member to your organization",
+            "Send birthday wishes to the new borns",
+        },
+        {
+          href: `/organisation/locations`,
+          label: "Locations",
+          description:
+            "Manage locations for your organisation",
         }
       ]
     },
@@ -99,6 +117,7 @@ export function MainNav({
 
                 >
                   {route.label}
+                  {/* <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">New</span> */}
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
@@ -125,10 +144,13 @@ const ListItem = React.forwardRef<
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
+          <div className="text-sm font-medium leading-none">{title}
+            {/* <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">New</span> */}
+          </div>
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
+
         </a>
       </NavigationMenuLink>
     </li>

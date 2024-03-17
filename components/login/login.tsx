@@ -49,7 +49,7 @@ const Login = () => {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Link href="/overview" className="w-full">
+            <Link href="/dashboard" className="w-full">
               <Button className="w-full">Sign In</Button>
             </Link>
           </CardFooter>
@@ -80,7 +80,7 @@ const Login = () => {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Link href="/overview" className="w-full">
+            <Link href="/dashboard" className="w-full">
               <Button className="w-full">Sign In</Button>
             </Link>
           </CardFooter>

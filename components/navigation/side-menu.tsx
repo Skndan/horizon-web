@@ -1,19 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-
-import { SidebarNavItem } from "@/types";
-import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react'
+ 
+import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import Image from "next/image";
-import { Separator } from "@radix-ui/react-dropdown-menu";
-
-interface SidebarNavProps {
-  items: SidebarNavItem[];
-}
-
+import Image from "next/image"; 
+ 
 const SidebarNav = () => {
   const pathname = usePathname();
   const routes = [
