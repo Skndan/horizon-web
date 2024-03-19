@@ -2,26 +2,28 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 
-import { CellAction } from "./cell-action"
+import { CellAction } from "./cell-action" 
+import { Profile } from "@/types/profile";
 
-export type EmployeeColumn = {
-  id: string
-  name: string;
-  price: string;
-  category: string;
-  size: string;
-  color: string;
-  createdAt: string;
-  isFeatured: boolean;
-  isArchived: boolean;
-}
 
-export const columns: ColumnDef<EmployeeColumn>[] = [
+export const columns: ColumnDef<Profile>[] = [
   {
-    accessorKey: "label",
+    accessorKey: "employeeId",
+    header: "Employee ID",
+  },
+  {
+    accessorKey: "name",
     header: "Name",
   },
   {
+    accessorKey: "mobile",
+    header: "Mobile",
+  }, 
+  {
+    accessorKey: "email",
+    header: "Email",
+  }, 
+  { 
     accessorKey: "createdAt",
     header: "Joined",
   },

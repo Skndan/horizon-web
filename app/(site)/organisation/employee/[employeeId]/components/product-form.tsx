@@ -35,8 +35,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-import { Checkbox } from "@/components/ui/checkbox"
-import { EmployeeColumn } from "../../components/columns"
+import { Checkbox } from "@/components/ui/checkbox" 
+import { Profile } from "@/types/profile"
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -52,8 +52,8 @@ const formSchema = z.object({
 type ProductFormValues = z.infer<typeof formSchema>
 
 interface ProductFormProps {
-  initialData: EmployeeColumn | null;
-  categories: EmployeeColumn[];
+  initialData: Profile | null;
+  categories: Profile[];
 };
 
 export const ProductForm: React.FC<ProductFormProps> = ({
@@ -72,8 +72,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const action = initialData ? 'Save changes' : 'Create';
 
   const defaultValues = initialData ? {
-    ...initialData,
-    price: parseFloat(String(initialData?.price)),
+    ...initialData, 
   } : {
     name: '',
     images: [],

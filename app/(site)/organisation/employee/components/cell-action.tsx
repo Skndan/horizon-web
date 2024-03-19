@@ -15,11 +15,11 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-
-import { EmployeeColumn } from "./columns";
+import { Profile } from "@/types/profile";
+ 
 
 interface CellActionProps {
-  data: EmployeeColumn;
+  data: Profile;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
@@ -34,8 +34,7 @@ export const CellAction: React.FC<CellActionProps> = ({
     try {
       setLoading(true);
       await axios.delete(`/api/${params.storeId}/billboards/${data.id}`);
-      toast.success('Billboard deleted.');
-      router.refresh();
+      toast.success('Billboard deleted.'); 
     } catch (error) {
       toast.error('Make sure you removed all categories using this billboard first.');
     } finally {

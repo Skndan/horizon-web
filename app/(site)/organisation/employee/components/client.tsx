@@ -6,12 +6,13 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator"; 
-
-import { columns, EmployeeColumn } from "./columns";
+import { Separator } from "@/components/ui/separator";  
+import { columns } from "./columns"; 
+import { Profile } from "@/types/profile";
+ 
 
 interface EmployeeClientProps {
-  data: EmployeeColumn[];
+  data: Profile[];
 }
 
 export const EmployeeClient: React.FC<EmployeeClientProps> = ({
@@ -29,7 +30,7 @@ export const EmployeeClient: React.FC<EmployeeClientProps> = ({
         </Button>
       </div>
       <Separator />
-      <DataTable searchKey="label" columns={columns} data={data} /> 
+      <DataTable searchKey="name" columns={columns} data={data} /> 
     </>
   );
 };
