@@ -29,7 +29,9 @@ import {
 import toast from 'react-hot-toast';
 import * as z from "zod";
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import apiClient from '@/lib/api/api-client';
+import apiClient, { parseJwt } from '@/lib/api/api-client';
+import { getSession, signIn } from 'next-auth/react';
+import { useUserStore } from '@/store/use-user-store';
 
 const formSchema = z.object({
   email: z.string().min(1),
@@ -52,18 +54,76 @@ const Login = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const { set } = useUserStore();
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      setLoading(true); 
+      setLoading(true);
+      // signIn("credentials", {
+      //   ...data,
+      //   redirect: false,
+      // })
+      //   .then(async (callback) => {
+      //     if (callback?.error) {
+      //       toast.error(callback.error);
+      //     }
 
+      //     if (callback?.ok) {
+      //       // const session = await getSession();
+      //       // var userId = tokenService.getUserId(session?.user.jwt);
+
+      //       // await api
+      //       //   .get(`/profile/get-by-user/${userId}`)
+      //       //   .then((res) => res.data)
+      //       //   .then((data) => {
+      //       //     set(data);
+      //       //   });
+      //       // router.push("/overview");
+      //       toast.success("Welcome");
+      //     }
+      //   })
+      //   .finally(() => setLoading(false)); 
+      localStorage.clear();
       await apiClient
-          .post("/auth/authenticate", data)
-          .then((res) => res.data)
-          .then((data) => {
-            console.log(data);
-            toast.success("Yay"); 
-          });
+        .post("/auth/authenticate", data)
+        .then((res) => res.data)
+        .then(async (data) => {
+          const { token, refreshToken } = data;
+
+          const { jti } = await parseJwt(token);
+
+          localStorage.setItem('token', token);
+          localStorage.setItem('refreshToken', refreshToken);
+
+          await apiClient.get(`/profile/get-by-user/${jti}`)
+            .then((res) => res.data)
+            .then(async (data) => {
+
+              var profile = {
+                userId: jti,
+                profileId: data.id,
+                orgId: data.organisation.id,
+                profilePicture: '',
+                username: data.name,
+                email: data.email,
+                mobile: data.mobile,
+              };
+
+              localStorage.setItem('userId', jti);
+              localStorage.setItem('profileId', data.id);
+              localStorage.setItem('orgId', data.organisation.id);
+              localStorage.setItem('username', data.name);
+              localStorage.setItem('email', data.email);
+              localStorage.setItem('mobile', data.mobile);
+
+              set(profile);
+
+              toast.success("Welcome");
+              router.push("/dashboard");
+            });
+
+
+        });
     } catch (error: any) {
       toast.error("Something went wrong.");
     } finally {

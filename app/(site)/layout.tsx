@@ -4,7 +4,7 @@ import ThemeModeToggle from "@/components/common/theme-mode-toggle";
 import "../globals.css";
 import Image from "next/image";
 import { UserNav } from "@/components/dashboard/user-nav";
-import { MainNav } from "@/components/navigation/top-menu"; 
+import { MainNav } from "@/components/navigation/top-menu";
 import MobileNav from "@/components/navigation/top-menu-mobile";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
@@ -31,10 +31,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             />
             <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
+              <ThemeModeToggle />
               <UserNav />
-              <span className="ml-[20px]">
-                <ThemeModeToggle />
-              </span>
             </div>
           </div>
         </header>

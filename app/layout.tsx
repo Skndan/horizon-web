@@ -5,6 +5,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
 import ProgressBarProvider from "@/providers/progress-bar-provider";
+import SessionProvider from "@/providers/session-provider";
 
 export const metadata: Metadata = {
   title: "Horizon",
@@ -21,15 +22,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <head>
-      <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className={urbanist.className}> 
+      <body className={urbanist.className}>
+        <SessionProvider>
           <ProgressBarProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <ToastProvider />
               {children}
             </ThemeProvider>
-          </ProgressBarProvider> 
+          </ProgressBarProvider>
+        </SessionProvider>
       </body>
     </html>
   );

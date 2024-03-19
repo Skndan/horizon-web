@@ -34,37 +34,30 @@ export function MainNav({
       href: `/organisation`,
       label: "Organisation",
       active: pathname.match(`/organisation`),
-      children: [
-        {
-          href: `/organisation/department`,
-          label: "Department",
-          description:
-            "Define departments in your organisation",
-        },
-        {
-          href: `/organisation/designation`,
-          label: "Designation",
-          description:
-            "Manage hierarchies",
-        },
-        {
-          href: `/organisation/employee`,
-          label: "Employee",
-          description:
-            "View all your employees at one place",
-        },
-        {
-          href: `/organisation/borndays`,
-          label: "Borndays",
-          description:
-            "Send birthday wishes to the new borns",
-        },
-        {
-          href: `/organisation/locations`,
-          label: "Locations",
-          description:
-            "Manage locations for your organisation",
-        }
+      children: [{
+        href: `/organisation/employee`,
+        label: "Employee",
+        description:
+          "View all your employees at one place",
+      },
+      {
+        href: `/organisation/department`,
+        label: "Department",
+        description:
+          "Define departments in your organisation",
+      }, 
+      {
+        href: `/organisation/location`,
+        label: "Locations",
+        description:
+          "Manage locations for your organisation",
+      },
+      {
+        href: `/organisation/settings`,
+        label: "Settings",
+        description:
+          "Manage organisation settings",
+      }
       ]
     },
     {

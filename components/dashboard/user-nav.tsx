@@ -10,17 +10,16 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useUserStore } from "@/store/use-user-store";
 // import { useUserStore } from "@/store/use-user-store";
 import { getSession, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export function UserNav() {
   const router = useRouter();
-
-  const { data: session } = useSession();
-  console.log(`UserNav: session: ${session}`);
-
-  // const { profile } = useUserStore();
+ 
+  
+  const { profile } = useUserStore(); 
 
 
   const onLogOut = () => {
@@ -31,6 +30,7 @@ export function UserNav() {
 
   const refresh = async () => {
     // console.log(profile);
+    // console.log(profile.name)
     // const session = await getSession();
     // console.log(session);
   };
@@ -51,23 +51,23 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Balaji</p>
-            <p className="text-xs leading-none text-muted-foreground pt-2">balaji@skndan.com</p>
+            <p className="text-sm font-medium leading-none">{profile.username}</p>
+            <p className="text-xs leading-none text-muted-foreground pt-2">{profile.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
+        {/* <DropdownMenuGroup>
+            <DropdownMenuItem>
             Profile
           </DropdownMenuItem>
           <DropdownMenuItem>
             Billing
-          </DropdownMenuItem>
+          </DropdownMenuItem>  
           <DropdownMenuItem onClick={refresh}>
-            Refresh
-          </DropdownMenuItem>
+            Organisation Settings
+          </DropdownMenuItem>  
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator /> */}
         <DropdownMenuItem
           className="text-red-600 cursor-pointer"
           onClick={onLogOut}
