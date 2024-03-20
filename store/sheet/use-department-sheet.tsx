@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface useDepartmentSheetInterface {
-  department?: Department;
+  department: Department;
   departmentList?: any;
   isOpen: boolean;
   set: (department: any) => void;
@@ -18,7 +18,7 @@ export const useDepartmentSheet = create(persist<useDepartmentSheetInterface>((s
   set: (department: Department) => set({ department, isOpen: true }),
   setList: (departmentList: any) => set({ departmentList }),
   reset: () => set({ department: {}, isOpen: false }),
-}) , { name: 'department_tag' })); 
+}), { name: 'department_tag' })); 
 
 
  

@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table"
 
 import { CellAction } from "./cell-action" 
 import { Profile } from "@/types/profile";
+import DateTimeCell from "@/components/common/date-time-cell";
 
 
 export const columns: ColumnDef<Profile>[] = [
@@ -26,6 +27,8 @@ export const columns: ColumnDef<Profile>[] = [
   { 
     accessorKey: "createdAt",
     header: "Joined",
+    cell: ({ row }) => <DateTimeCell dateStr={row.getValue("createdAt")} />
+
   },
   {
     id: "actions",

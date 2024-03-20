@@ -12,6 +12,7 @@ import {
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuLabel, 
+  DropdownMenuSeparator, 
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
@@ -63,18 +64,13 @@ export const CellAction: React.FC<CellActionProps> = ({
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuContent align="end"> 
           <DropdownMenuItem
-            onClick={() => onCopy(data.id)}
-          >
-            <Copy className="mr-2 h-4 w-4" /> Copy Id
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => router.push(`/${params.storeId}/billboards/${data.id}`)}
+            onClick={() => router.push(`/organisation/employee/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
+          <DropdownMenuSeparator/>
           <DropdownMenuItem
             onClick={() => setOpen(true)}
           >

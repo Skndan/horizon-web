@@ -20,8 +20,8 @@ const MobileNav = () => {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button variant="ghost" size="icon" className="md:hidden">
-          <Menu />
+        <Button asChild variant="ghost" size="icon" className="md:hidden">
+          <Menu className='h-6 w-6'/>
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="p-0">

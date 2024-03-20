@@ -19,6 +19,7 @@ import { Department } from "@/types/profile";
 import { useDepartmentSheet } from "@/store/sheet/use-department-sheet";
 import { DepartmentForm } from "../department-form";
 import apiClient from "@/lib/api/api-client";
+import { useUpdateStore } from "@/store/use-update-store";
 
 
 interface CellActionProps {
@@ -33,12 +34,13 @@ export const CellAction: React.FC<CellActionProps> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openForm, setOpenForm] = useState(false);
-  const { isOpen, set, reset } = useDepartmentSheet();
-  
+  const { set } = useUpdateStore();
+
   const onConfirm = async () => {
     try {
       setLoading(true);
       await apiClient.delete(`/department/${data.id}`);
+      set(data?.id ?? '');
       toast.success('Department deleted.');
       router.refresh();
     } catch (error) {
@@ -58,13 +60,14 @@ export const CellAction: React.FC<CellActionProps> = ({
         loading={loading}
       />
 
-      {/* <DepartmentForm
+      <DepartmentForm
         isOpen={openForm}
         onClose={() => {
-          setOpenForm(false); 
+          setOpenForm(false);
+          set(data?.id ?? '');
         }}
         initialData={data}
-      /> */}
+      />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -76,7 +79,7 @@ export const CellAction: React.FC<CellActionProps> = ({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => set(data)}
+            onClick={() => setOpenForm(true)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>

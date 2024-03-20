@@ -10,14 +10,17 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { columns } from "./components/columns";
 import { DepartmentForm } from "./department-form";
 import { Heading } from "@/components/ui/heading";
-import { Plus } from "lucide-react";
+import { Loader, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useUpdateStore } from "@/store/use-update-store";
+import { EmptyStateTable } from "@/components/common/empty-state-table";
 
 export const DepartmentPage = () => {
     const router = useRouter();
 
     const [data, setData] = useState<Department[]>([])
-    const [isLoading, setLoading] = useState(false)
+    const [isLoading, setLoading] = useState(true)
+    const [isOpen, setOpen] = useState(false);
 
     async function fetchData() {
         setLoading(true)
@@ -27,11 +30,13 @@ export const DepartmentPage = () => {
                 setLoading(false)
             });
     }
+    const { flag } = useUpdateStore();
+
     useEffect(() => {
         fetchData();
-    }, [])
+    }, [flag])
 
-    const { isOpen, set, reset, department } = useDepartmentSheet();
+
 
     return (
         <div className="flex-col">
@@ -39,7 +44,7 @@ export const DepartmentPage = () => {
                 <div className="flex items-center justify-between">
                     <Heading title={`Departments (${data.length})`} description="Manage your departments" />
                     <Button onClick={() => {
-                        set(null);
+                        setOpen(true);
                     }}>
                         <Plus className="mr-2 h-4 w-4" /> Add
                     </Button>
@@ -47,13 +52,28 @@ export const DepartmentPage = () => {
                 <DepartmentForm
                     isOpen={isOpen}
                     onClose={() => {
-                        reset();
+                        setOpen(false);
                         fetchData();
                     }}
-                    initialData={department}
+                    initialData={null}
                 />
                 <Separator />
-                <DataTable searchKey="name" columns={columns} data={data} />
+                {isLoading ? (
+                    <div className="grid h-screen place-items-center">
+                        <Loader />
+                    </div>
+                ) :
+
+                    data.length == 0 ? <EmptyStateTable
+                        title={"No departments added"}
+                        description={"You have not added any departments. Add one below."}
+                        action={"Add Department"}
+                        onClick={() => setOpen(true)}
+                    /> : <DataTable searchKey="name" columns={columns} data={data} />
+
+                }
+
+
             </div>
         </div>)
 }

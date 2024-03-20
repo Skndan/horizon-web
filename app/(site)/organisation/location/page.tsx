@@ -11,17 +11,17 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { columns } from "./components/columns";
 import { useDeleteStore } from "@/store/use-delete-store";
+import { EmptyStateTable } from "@/components/common/empty-state-table";
 
 export const LocationPage = () => {
 
     const router = useRouter();
     const [data, setData] = useState<Location[]>([])
-    const [isLoading, setLoading] = useState(false)
+    const [isLoading, setLoading] = useState(true)
     const { flag } = useDeleteStore();
 
     async function fetchData() {
         setLoading(true)
-        console.log(`fetchingAgain`)
         await apiClient.get('/location').then((res) => res.data)
             .then((data) => {
                 console.log(`setting value`)
@@ -50,7 +50,16 @@ export const LocationPage = () => {
                         <Loader />
                     </div>
                 ) : (
-                    <DataTable searchKey="name" columns={columns} data={data} />
+
+
+                    data.length == 0 ?
+                        <EmptyStateTable
+                            title={"No location added"}
+                            description={"You have not added any locations. Add one below."}
+                            action={"Add Location"}
+                            onClick={() => router.push(`/organisation/location/new`)} />
+                        : <DataTable searchKey="name" columns={columns} data={data} />
+
                 )}
 
             </div>

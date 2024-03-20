@@ -30,7 +30,7 @@ import apiClient from "@/lib/api/api-client";
 import { useDepartmentSheet } from "@/store/sheet/use-department-sheet"; 
 
 interface DepartmentFormProps {
-    initialData?: Department;
+    initialData: Department | null;
     isOpen: boolean;
     onClose: () => void;
 }

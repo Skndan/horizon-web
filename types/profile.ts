@@ -9,9 +9,10 @@ export interface Profile {
     email: string
     mobile: string
     employeeId: any
+    employeeStatus: string,
     organisation: Organisation
     department: Department
-    location: any
+    location: Location
     designation: any
     dateOfJoining: any
     reportingManager: any
@@ -70,7 +71,7 @@ export interface Profile {
   
 
   export interface Department {
-    id?: string
+    id: string
     createdAt?: string
     updatedAt?: string
     createdBy?: string
@@ -81,7 +82,7 @@ export interface Profile {
   }
   
   export interface Location {
-    id?: string
+    id: string
     createdAt?: string
     updatedAt?: string
     createdBy?: string
