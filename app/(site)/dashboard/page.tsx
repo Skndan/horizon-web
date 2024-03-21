@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Card,
     CardContent,
@@ -6,142 +8,149 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Overview } from "@/components/dashboard/overview";
-import { RecentSales } from "@/components/dashboard/recent-sales";
+import { RecentActivities } from "@/components/dashboard/recent-activities";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarDateRangePicker } from "@/components/dashboard/date-range-picker";
 import { Button } from "@/components/ui/button";
+import { AlarmClock, AlarmClockMinus, AlarmClockOff, DoorOpen, MonitorCheck, Users } from "lucide-react";
+import ActivityPage from "./components/activity";
+import { ComingSoonPage } from "@/components/common/coming-soon";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export const OverviewPage = () => {
+
+
+    const d = new Date();
+    const [currentTime, setCurrentTime] = useState('');
+
+    const [clockedIn, setClockedIn] = useState(false);
+
+    useEffect(() => {
+
+        const date = d.getHours() + 'h : ' + d.getMinutes() + 'm : ' + d.getSeconds() + 's';
+        const timer = setInterval(() => {
+            setCurrentTime(date);
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [currentTime]);
+
+
+
+
     return (
         <>
             <div className="flex-col md:flex">
                 <div className="flex-1 space-y-4 p-8 pt-6">
-                    {/* <div className="sticky top-20 z-40 bg-background"> */}
                     <div className="flex items-center justify-between space-y-2">
                         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
                     </div>
-                    {/* </div> */} 
                     <Tabs defaultValue="overview" className="space-y-4">
                         <TabsList>
                             <TabsTrigger value="overview">Overview</TabsTrigger>
-                            <TabsTrigger value="analytics">
-                                Analytics
+                            <TabsTrigger value="activity">
+                                Activity
                             </TabsTrigger>
-                            <TabsTrigger value="reports">
-                                Reports
+                            <TabsTrigger value="approvals">
+                                Approvals
                             </TabsTrigger>
-                            <TabsTrigger value="notifications">
-                                Notifications
+                            <TabsTrigger value="timesheets">
+                                Timesheets
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="overview" className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                                 <Card>
-                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium">
-                                            Total Revenue
+                                    <CardHeader className="flex flex-row items-top justify-between space-y-0 pb-2">
+                                        <CardTitle className="text-md font-medium">
+                                            My Time
                                         </CardTitle>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            className="h-4 w-4 text-muted-foreground"
-                                        >
-                                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                                        </svg>
+                                        <Button className={` ${!clockedIn ? "bg-green-600" : "bg-red-600"}  `} onClick={() => {
+                                            setClockedIn(!clockedIn);
+                                            if (!clockedIn) {
+                                                toast.success('You have clocked in',{icon: '🤝' });
+                                            } else {
+                                                toast.success('You have clocked out', { icon: '👋' });
+                                            }
+                                        }}>
+                                            {
+                                                !clockedIn ?
+                                                    <AlarmClock className="mr-2 h-4 w-4" /> :
+                                                    <AlarmClockOff className="mr-2 h-4 w-4" />
+                                            }
+                                            {` ${!clockedIn ? "Check In" : "Check Out"} `}
+                                        </Button>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-2xl font-bold">$45,231.89</div>
-                                        <p className="text-xs text-muted-foreground">
-                                            +20.1% from last month
+                                        {/* <AlarmClock /> */}
+                                        {/* <AlarmClockOff /> */}
+                                        <div className="flex flex-row items-bottom space-y-0">
+                                            <div className={`text-2xl ${!clockedIn ? "text-green-600" : "text-red-600"} font-bold`}>{currentTime}</div>
+                                            {/* {
+                                                !clockedIn ?
+                                                    <AlarmClock className="ml-2 h-6 w-6 pt-1 text-green-500" /> :
+                                                    <AlarmClockOff className="ml-2 h-6 w-6 pt-1 text-green-500" />
+                                            } */}
+                                        </div>
+                                        <p className="text-sm text-muted-foreground pt-1">
+                                            Checked In: Today at 10:14 AM
                                         </p>
                                     </CardContent>
                                 </Card>
                                 <Card>
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium">
-                                            Subscriptions
+                                        <CardTitle className="text-md font-medium">
+                                            Time Off Requests
                                         </CardTitle>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            className="h-4 w-4 text-muted-foreground"
-                                        >
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                            <circle cx="9" cy="7" r="4" />
-                                            <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                                        </svg>
+                                        <AlarmClockMinus />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-2xl font-bold">+2350</div>
-                                        <p className="text-xs text-muted-foreground">
+                                        <div className="text-2xl font-bold">#1</div>
+                                        <p className="text-sm text-muted-foreground">
                                             +180.1% from last month
                                         </p>
                                     </CardContent>
                                 </Card>
                                 <Card>
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            className="h-4 w-4 text-muted-foreground"
-                                        >
-                                            <rect width="20" height="14" x="2" y="5" rx="2" />
-                                            <path d="M2 10h20" />
-                                        </svg>
+                                        <CardTitle className="text-md font-medium">Whos Out</CardTitle>
+                                        <DoorOpen />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-2xl font-bold">+12,234</div>
-                                        <p className="text-xs text-muted-foreground">
-                                            +19% from last month
+                                        <div className="text-2xl font-bold">#12</div>
+                                        <p className="text-sm text-muted-foreground">
+                                            +2 since last hour
                                         </p>
                                     </CardContent>
                                 </Card>
                                 <Card>
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium">
+                                        <CardTitle className="text-md font-medium">
                                             Active Now
                                         </CardTitle>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            className="h-4 w-4 text-muted-foreground"
-                                        >
-                                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                                        </svg>
+                                        <MonitorCheck />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-2xl font-bold">+573</div>
-                                        <p className="text-xs text-muted-foreground">
-                                            +201 since last hour
+                                        <div className="text-2xl font-bold">#5</div>
+                                        <p className="text-sm text-muted-foreground">
+                                            +2 since last hour
                                         </p>
                                     </CardContent>
                                 </Card>
                             </div>
                             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                                 <Card className="col-span-4">
-                                    <CardHeader>
-                                        <CardTitle>Overview</CardTitle>
+                                    <CardHeader className="flex flex-row items-top justify-between">
+                                        <CardTitle>Headcount</CardTitle>
+                                        <div className="flex flex-col">
+                                            <div className="flex flex-row items-center">
+                                                <Users className="mr-2 h-6 w-6" />
+                                                <div className="text-2xl font-bold">17</div>
+                                            </div>
+                                            <p className="text-sm text-muted-foreground">
+                                                Total Employees
+                                            </p>
+                                        </div>
                                     </CardHeader>
                                     <CardContent className="pl-2">
                                         <Overview />
@@ -149,21 +158,21 @@ export const OverviewPage = () => {
                                 </Card>
                                 <Card className="col-span-3">
                                     <CardHeader>
-                                        <CardTitle>Recent Sales</CardTitle>
+                                        <CardTitle>Recent Activities</CardTitle>
                                         <CardDescription>
-                                            You made 265 sales this month.
+                                            You have 5 pending requests for approvals.
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent>
-                                        <RecentSales />
+                                        <RecentActivities />
                                     </CardContent>
                                 </Card>
                             </div>
                         </TabsContent>
-                        <TabsContent  value="analytics" className="space-y-4"><p>Analytics</p></TabsContent>
-                        <TabsContent  value="reports" className="space-y-4"><p>Reports</p></TabsContent>
-                        <TabsContent  value="notifications" className="space-y-4"><p>Notifications</p></TabsContent>
-                    </Tabs> 
+                        <TabsContent value="activity" className="space-y-4"><ActivityPage /></TabsContent>
+                        <TabsContent value="approvals" className="space-y-4"><ComingSoonPage /></TabsContent>
+                        <TabsContent value="timesheets" className="space-y-4"><ComingSoonPage /></TabsContent>
+                    </Tabs>
                 </div>
             </div>
         </>

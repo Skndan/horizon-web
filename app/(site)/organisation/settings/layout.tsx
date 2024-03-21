@@ -20,6 +20,10 @@ const sidebarNavItems = [
         href: "/organisation/settings/notifications",
     },
     {
+        title: "Holiday",
+        href: "/organisation/settings/holiday",
+    },
+    {
         title: "Reports",
         href: "/organisation/settings/reports",
     },
@@ -39,8 +43,8 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
                     <aside className="-mx-4 lg:w-1/6">
                         <SidebarNav items={sidebarNavItems} />
                     </aside>
-                    <div className="flex-1 lg:max-w-2xl">{children}</div>
-                </div>
+                    <div className="flex-1">{children}</div>
+                </div> 
             </div>
         </>
     )

@@ -30,6 +30,12 @@ export function MainNav({
       active: pathname.match(`/dashboard`),
       children: []
     },
+    // {
+    //   href: `/my-space`,
+    //   label: "My Space",
+    //   active: pathname.match(`/my-space`),
+    //   children: []
+    // },
     {
       href: `/organisation`,
       label: "Organisation",
@@ -61,11 +67,42 @@ export function MainNav({
       ]
     },
     {
-      href: '/payroll-management',
-      label: 'Payroll Management',
-      active: pathname.match(`/payroll-management`),
+      href: '/payroll',
+      label: 'Payroll',
+      active: pathname.match(`/payroll`),
+      children: [
+        {
+          href: `/payroll/runs`,
+          label: "Payroll Runs",
+          description:
+            "Manage payroll runs",
+        },
+        {
+          href: `/payroll/settings`,
+          label: "Settings",
+          description:
+            "Manage payroll settings",
+        }
+      ]
+    },
+    {
+      href: `/leave-tracker`,
+      label: "Leave Tracker",
+      active: pathname.match(`/leave-tracker`),
       children: []
     },
+    {
+      href: `/attendance`,
+      label: "Attendance",
+      active: pathname.match(`/attendance`),
+      children: []
+    },
+    {
+      href: `/reports`,
+      label: "Reports",
+      active: pathname.match(`/reports`),
+      children: []
+    }
   ];
 
   return (

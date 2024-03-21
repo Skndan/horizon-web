@@ -135,24 +135,12 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   const onSubmit = async (data: EmployeeFormValues) => {
     try {
 
-      
       if (data.organisation?.id == null) { data.organisation = null; }
       if (data.department?.id == null) { data.department = null; }
       if (data.location?.id == null) { data.location = null; }
       if (data.designation?.id == null) { data.designation = null; }
       if (data.reportingManager?.id == null) { data.reportingManager = null; }
-
-      console.log(data); 
-      // setLoading(true);
-      // if (initialData) {
-      //   await axios.patch(`/api/${params.storeId}/products/${params.productId}`, data);
-      // } else {
-      //   await axios.post(`/api/${params.storeId}/products`, data);
-      // }
-      // router.refresh();
-      // router.push(`/${params.storeId}/products`);
-      // toast.success(toastMessage);
-
+ 
       setLoading(true);
  
       if (initialData) {

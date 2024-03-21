@@ -16,16 +16,16 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           <div className="flex h-16 items-center px-4">
             <MobileNav />
             <Image
-              src="/logo-white.svg"
-              className="hidden dark:block"
-              width="100"
+              src="/horizon-light.svg"
+              className="hidden dark:block pl-3"
+              width="136"
               height="56"
               alt="Logo"
             />
             <Image
-              src="/logo-black.svg"
-              className="block dark:hidden"
-              width="100"
+              src="/horizon-dark.svg"
+              className="block dark:hidden pl-3"
+              width="136"
               height="56"
               alt="Logo"
             />
