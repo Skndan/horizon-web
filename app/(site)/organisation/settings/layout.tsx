@@ -1,6 +1,6 @@
-import { Separator } from "@/components/ui/separator" 
-import { SidebarNav } from "./components/side-bar-nav"
+import { Separator } from "@/components/ui/separator"  
 import { Heading } from "@/components/ui/heading" 
+import { SidebarNav } from "@/components/common/side-bar-nav"
 
 const sidebarNavItems = [
     {

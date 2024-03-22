@@ -5,19 +5,8 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import Login from "@/components/login";
 import Image from "next/image";
-// import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 const AuthenticationPage = () => {
-  // const session = useSession();
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   if (session?.status === "authenticated") {
-  //     // router.push("/overview");
-  //   }
-  // }, [session?.status, router]);
-
   return (
     <>
       <div className="relative h-full flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -25,16 +14,16 @@ const AuthenticationPage = () => {
           <div className="absolute inset-0" />
           <div className="relative z-20 flex items-center ">
             <Image
-              src="/logo-white.svg"
+              src="/horizon-light.svg"
               className="hidden dark:block"
-              width="100"
+              width="150"
               height="56"
               alt="Logo"
             />
             <Image
-              src="/logo-black.svg"
+              src="/horizon-dark.svg"
               className="block dark:hidden"
-              width="100"
+              width="150"
               height="56"
               alt="Logo"
             />
@@ -56,7 +45,6 @@ const AuthenticationPage = () => {
         <div className="lg:p-8">
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-2 text-center">
-              
             </div>
             <Login />
             <p className="px-8 text-center text-sm text-muted-foreground pb-6">

@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { isAfter, startOfDay } from 'date-fns'; // Add isAfter and startOfDay to the import
+import { Label } from '@/components/ui/label';
 interface Employee {
   name: string;
   attendance: Record<string, number>; // Date in 'yyyy-MM-dd' format as key
@@ -42,7 +43,7 @@ export default function AttendanceTable() {
 
   return (
     <div>
-      <div className='flex justify-end'>
+      <div className='flex flex-row  justify-center pb-4'>
         <select value={format(selectedMonth, 'yyyy-MM')} className='w-[180px] flex h-10 items-center justify-end rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1' onChange={handleMonthChange}>
           {Array.from({ length: 12 }).map((_, index) => (
             <option key={index} value={`${format(selectedMonth, 'yyyy')}-${String(index + 1).padStart(2, '0')}`}>
@@ -52,52 +53,36 @@ export default function AttendanceTable() {
         </select>
       </div>
 
-      {/* <Select value={format(selectedMonth, 'yyyy-MM')} >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select a fruit" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {Array.from({ length: 12 }).map((_, index) => (
-              <SelectItem key={index} value={`${format(selectedMonth, 'yyyy')}-${String(index + 1).padStart(2, '0')}`}>
-                {format(new Date(format(selectedMonth, 'yyyy'), index), 'MMMM yyyy')}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select> */}
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Employee</TableHead>
-            {[...Array(daysInMonth)].map((_, index) => (
-              <TableHead key={index}>{format(addDays(new Date(monthYear), index), 'dd')}</TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-
-          {employees.map(employee => (
-            <TableRow key={employee.name}>
-              <TableCell>{employee.name}</TableCell>
-              {[...Array(daysInMonth)].map((_, index) => {
-                const dateKey = format(addDays(new Date(monthYear), index), 'yyyy-MM-dd');
-                console.log(dateKey);
-                const currentDate = addDays(new Date(monthYear), index);
-                const isFutureDate = isAfter(startOfDay(currentDate), startOfDay(new Date())); // Check if the date is in the future 
-                return <TableCell key={index}>
-                  {
-                    isFutureDate ? '⚪' : employee.attendance[dateKey] == 1 ? '🟢' : employee.attendance[dateKey] == 2 ? '🟡' : '🔴'
-                  }
-
-
-                </TableCell>;
-              })}
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className='min-w-48'>Employee</TableHead>
+              {[...Array(daysInMonth)].map((_, index) => (
+                <TableHead key={index}>{format(addDays(new Date(monthYear), index), 'dd')}</TableHead>
+              ))}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {employees.map(employee => (
+              <TableRow key={employee.name}>
+                <TableCell>{employee.name}</TableCell>
+                {[...Array(daysInMonth)].map((_, index) => {
+                  const dateKey = format(addDays(new Date(monthYear), index), 'yyyy-MM-dd');
+                  const currentDate = addDays(new Date(monthYear), index);
+                  const isFutureDate = isAfter(startOfDay(currentDate), startOfDay(new Date())); // Check if the date is in the future 
+                  return <TableCell key={index}>
+                    {
+                      isFutureDate ? '⚪' : employee.attendance[dateKey] == 1 ? '🟢' : employee.attendance[dateKey] == 2 ? '🟡' : '🔴'
+                    }
+                  </TableCell>;
+                })}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
     </div>
   );
 }

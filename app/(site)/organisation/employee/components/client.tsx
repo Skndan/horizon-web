@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { columns } from "./columns";
 import { Profile } from "@/types/profile";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
+import Link from "next/link";
 
 
 interface EmployeeClientProps {
@@ -26,9 +27,11 @@ export const EmployeeClient: React.FC<EmployeeClientProps> = ({
     <>
       <div className="flex items-center justify-between">
         <Heading title={`Employees (${data.length})`} description="Manage your employees" />
-        <Button onClick={() => router.push(`/organisation/employee/new`)}>
-          <Plus className="mr-2 h-4 w-4" /> Add
-        </Button>
+        <Link href={`/organisation/employee/new`}>
+          <Button>
+            <Plus className="mr-2 h-4 w-4" /> Add
+          </Button>
+        </Link>
       </div>
       <Separator />
 

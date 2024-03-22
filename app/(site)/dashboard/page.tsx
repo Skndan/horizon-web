@@ -65,7 +65,7 @@ export const OverviewPage = () => {
                                         <CardTitle className="text-md font-medium">
                                             My Time
                                         </CardTitle>
-                                        <Button className={` ${!clockedIn ? "bg-green-600" : "bg-red-600"}  `} onClick={() => {
+                                        <Button className={` text-black ${!clockedIn ? "bg-emerald-500" : "bg-red-500"}  `} onClick={() => {
                                             setClockedIn(!clockedIn);
                                             if (!clockedIn) {
                                                 toast.success('You have clocked in',{icon: '🤝' });
@@ -85,7 +85,7 @@ export const OverviewPage = () => {
                                         {/* <AlarmClock /> */}
                                         {/* <AlarmClockOff /> */}
                                         <div className="flex flex-row items-bottom space-y-0">
-                                            <div className={`text-2xl ${!clockedIn ? "text-green-600" : "text-red-600"} font-bold`}>{currentTime}</div>
+                                            <div className={`text-2xl ${!clockedIn ? "text-emerald-500" : "text-red-500"} font-bold`}>{currentTime}</div>
                                             {/* {
                                                 !clockedIn ?
                                                     <AlarmClock className="ml-2 h-6 w-6 pt-1 text-green-500" /> :

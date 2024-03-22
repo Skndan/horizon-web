@@ -12,6 +12,7 @@ import { useParams, useRouter } from "next/navigation";
 import { columns } from "./components/columns";
 import { useDeleteStore } from "@/store/use-delete-store";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
+import Link from "next/link";
 
 export const LocationPage = () => {
 
@@ -39,10 +40,12 @@ export const LocationPage = () => {
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">
                 <div className="flex items-center justify-between">
-                    <Heading title={`Locations (${data.length})`} description="Manage your office locations" />
-                    <Button onClick={() => router.push(`/organisation/location/new`)}>
-                        <Plus className="mr-2 h-4 w-4" /> Add
-                    </Button>
+                    <Heading title={`Locations (${data.length})`} description="Manage your office locations" /> 
+                    <Link href={`/organisation/location/new`}>
+                        <Button>
+                            <Plus className="mr-2 h-4 w-4" /> Add
+                        </Button>
+                    </Link>
                 </div>
                 <Separator />
                 {isLoading ? (

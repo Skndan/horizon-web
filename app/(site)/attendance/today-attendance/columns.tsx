@@ -10,14 +10,10 @@ import AvatarCell from "@/components/common/avatar-cell";
 
 export const columns: ColumnDef<Attendance>[] = [
   { 
-    accessorKey: "avatar",
-    header: "",
-    cell: ({ row }) => <AvatarCell avatarUrl ={row.getValue("avatar")} />
-  },
-  {
     accessorKey: "name",
     header: "Name",
-  },
+    cell: ({ row }) => <AvatarCell avatarUrl={row.getValue("avatar")} employeeName={row.getValue("name")} employeeId={"HZ-1"} />
+  }, 
   {
     accessorKey: "firstIn",
     header: "First In",
