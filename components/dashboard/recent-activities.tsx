@@ -1,9 +1,9 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; 
 
-export function RecentSales() {
+export function RecentActivities() {
   return (
-    <div className="space-y-8">
-      <div className="flex items-center">
+    <div>
+      <div className="flex items-center hover:bg-muted hover:cursor-pointer  hover:rounded-lg py-4">
         <Avatar className="h-9 w-9">
           <AvatarImage src="#" alt="Avatar" />
           <AvatarFallback>OM</AvatarFallback>
@@ -11,23 +11,23 @@ export function RecentSales() {
         <div className="ml-4 space-y-1">
           <p className="text-sm font-medium leading-none">Olivia Martin</p>
           <p className="text-sm text-muted-foreground">
-            olivia.martin@email.com
+            I`m requesting 40 hours of Vacation for Apr 15, 2024 - Apr 19, 2024
           </p>
         </div>
-        <div className="ml-auto font-medium">+$1,999.00</div>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center hover:bg-muted hover:cursor-pointer hover:rounded-lg py-4">
         <Avatar className="flex h-9 w-9 items-center justify-center space-y-0 border">
           <AvatarImage src="#" alt="Avatar" />
           <AvatarFallback>JL</AvatarFallback>
         </Avatar>
         <div className="ml-4 space-y-1">
           <p className="text-sm font-medium leading-none">Jackson Lee</p>
-          <p className="text-sm text-muted-foreground">jackson.lee@email.com</p>
+          <p className="text-sm text-muted-foreground">
+            Hours are ready for your approval
+            </p>
         </div>
-        <div className="ml-auto font-medium">+$39.00</div>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center hover:bg-muted hover:cursor-pointer hover:rounded-lg py-4">
         <Avatar className="h-9 w-9">
           <AvatarImage src="#" alt="Avatar" />
           <AvatarFallback>IN</AvatarFallback>
@@ -35,32 +35,33 @@ export function RecentSales() {
         <div className="ml-4 space-y-1">
           <p className="text-sm font-medium leading-none">Isabella Nguyen</p>
           <p className="text-sm text-muted-foreground">
-            isabella.nguyen@email.com
+            I`m requesting an Asset Request change for Amy Granger
           </p>
         </div>
-        <div className="ml-auto font-medium">+$299.00</div>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center hover:bg-muted hover:cursor-pointer hover:rounded-lg py-4">
         <Avatar className="h-9 w-9">
           <AvatarImage src="#" alt="Avatar" />
           <AvatarFallback>WK</AvatarFallback>
         </Avatar>
         <div className="ml-4 space-y-1">
           <p className="text-sm font-medium leading-none">William Kim</p>
-          <p className="text-sm text-muted-foreground">will@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+$99.00</div>
+          <p className="text-sm text-muted-foreground">
+            I`m requesting a Compensation Change for Karin Petty.
+          </p>
+        </div> 
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center hover:bg-muted hover:cursor-pointer hover:rounded-lg py-4 ">
         <Avatar className="h-9 w-9">
           <AvatarImage src="#" alt="Avatar" />
           <AvatarFallback>SD</AvatarFallback>
         </Avatar>
         <div className="ml-4 space-y-1">
           <p className="text-sm font-medium leading-none">Sofia Davis</p>
-          <p className="text-sm text-muted-foreground">sofia.davis@email.com</p>
+          <p className="text-sm text-muted-foreground">
+            I`m requesting a Job Informtion Change for Karin Petty
+          </p>
         </div>
-        <div className="ml-auto font-medium">+$39.00</div>
       </div>
     </div>
   );

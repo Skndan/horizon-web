@@ -1,0 +1,581 @@
+"use client"
+
+import * as z from "zod"
+import axios from "axios"
+import { useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { toast } from "react-hot-toast"
+import { Trash } from "lucide-react"
+import { useParams, useRouter } from "next/navigation"
+
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Separator } from "@/components/ui/separator"
+import { Heading } from "@/components/ui/heading"
+import { AlertModal } from "@/components/modals/alert-modal"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { CalendarIcon, SlashIcon } from "@radix-ui/react-icons"
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+
+import { Department, Location, Profile } from "@/types/profile"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
+import { format } from "date-fns"
+import { SubHeading } from "@/components/ui/sub-heading"
+import apiClient from "@/lib/api/api-client"
+
+const formSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().min(1),
+  mobile: z.string().min(1),
+  employeeId: z.string().min(1), 
+  dateOfJoining: z.any().optional(),
+  gender: z.string().min(1).optional(),
+  dateOfBirth: z.any().optional(),
+  organisation: z.any().optional(), 
+  employeeStatus: z.any().optional(),
+  department: z.any().optional(),
+  location: z.any().optional(),
+  designation: z.any().optional(),
+  reportingManager: z.any().optional()
+});
+
+type EmployeeFormValues = z.infer<typeof formSchema>
+
+interface EmployeeFormProps {
+  initialData: Profile | null;
+  // designation: Designation[];
+  department: Department[];
+  location: Location[];
+  profile: Profile[];
+  orgId: any;
+};
+
+const gender = [
+  {
+    value: "MALE",
+    label: "Male",
+  },
+  {
+    value: "FEMALE",
+    label: "Female",
+  }
+]
+
+const employeeStatus = [
+  {
+    value: "PROBATION",
+    label: "Probation",
+  },
+  {
+    value: "ACTIVE",
+    label: "Active",
+  },
+  {
+    value: "NOTICE",
+    label: "Notice",
+  },
+  {
+    value: "RESIGNED",
+    label: "Resigned",
+  },
+  {
+    value: "TERMINATED",
+    label: "Terminated",
+  },
+  {
+    value: "DECEASED",
+    label: "Deceased",
+  },
+]
+
+
+export const EmployeeForm: React.FC<EmployeeFormProps> = ({
+  initialData,
+  department,
+  location,
+  profile,
+  orgId
+}) => {
+  const params = useParams();
+  const router = useRouter();
+
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const title = initialData ? 'Edit employee ✨' : 'Create Employee ✨';
+  const description = initialData ? 'Edit a employee.' : 'Add a new employee';
+  const toastMessage = initialData ? 'Employee updated.' : 'Employee created.';
+  const action = initialData ? 'Save changes' : 'Create';
+
+  const form = useForm<EmployeeFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: initialData || {}
+  });
+
+  const onSubmit = async (data: EmployeeFormValues) => {
+    try {
+
+      if (data.organisation?.id == null) { data.organisation = null; }
+      if (data.department?.id == null) { data.department = null; }
+      if (data.location?.id == null) { data.location = null; }
+      if (data.designation?.id == null) { data.designation = null; }
+      if (data.reportingManager?.id == null) { data.reportingManager = null; }
+ 
+      setLoading(true);
+ 
+      if (initialData) {
+        await apiClient
+          .put(`/profile/${initialData.id}`, data)
+          .then((res) => res.data)
+          .then((data) => {
+            toast.success(toastMessage);
+            router.refresh();
+            router.push(`../employee`);
+          });
+      } else {
+        await apiClient
+          .post("/profile", data)
+          .then((res) => res.data)
+          .then((data) => {
+            toast.success(toastMessage);
+            router.refresh();
+            router.push(`../employee`);
+          });
+      }
+
+    } catch (error: any) {
+      toast.error('Something went wrong.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onDelete = async () => {
+    try {
+      setLoading(true);
+      await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
+      router.refresh();
+      router.push(`/${params.storeId}/products`);
+      toast.success('Product deleted.');
+    } catch (error: any) {
+      toast.error('Something went wrong.');
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
+  }
+
+  return (
+    <>
+      <AlertModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+        loading={loading}
+      />
+      <div className="flex items-center justify-between">
+        <Heading title={title} description={description} />
+        <Breadcrumb className="sm:block hidden">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/organisation/employee">Employee</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <SlashIcon />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Form</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        {/* {initialData && (
+          <Button
+            disabled={loading}
+            variant="destructive"
+            size="sm"
+            onClick={() => setOpen(true)}
+          >
+            <Trash className="h-4 w-4" />
+          </Button>
+        )} */}
+      </div>
+      <Separator />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+
+          <FormField
+            control={form.control}
+            name="organisation.id"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input type="hidden" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+
+          {/* Basic Information */}
+          <SubHeading title={"Basic Information"} />
+
+          <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
+
+            <FormField
+              control={form.control}
+              name="employeeId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Employee ID <span className="text-red-600">*</span></FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Employee ID" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name <span className="text-red-600">*</span></FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Employee name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="mobile"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mobile <span className="text-red-600">*</span></FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Employee Mobile" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Office Email <span className="text-red-600">*</span></FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Employee Office Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select a gender" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {gender.map((category) => (
+                        <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="dateOfBirth"
+              render={({ field }) => (
+                <FormItem className="flex flex-col pt-2">
+                  <FormLabel>Date of birth</FormLabel>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent align="start" className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          captionLayout="dropdown-buttons"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          fromYear={1970}
+                          toYear={new Date().getFullYear()}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormDescription>
+                    Date of birth is used to calculate employee`s age.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <Separator />
+
+          {/* Work Information */}
+          <SubHeading title={"Work Information"} />
+
+          <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
+            {/* <FormField
+              control={form.control}
+              name="designation.id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Designation</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select the designation" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {designation.map((size) => (
+                        <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+
+            <FormField
+              control={form.control}
+              name="department.id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Department</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select a department" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {department.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="location.id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Office</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select the working location" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {location.map((size) => (
+                        <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="reportingManager.id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Reporting Manager</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select the Reporting Manager" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {profile.map((size) => (
+                        <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="dateOfJoining"
+              render={({ field }) => (
+                <FormItem className="flex flex-col pt-2">
+                  <FormLabel>Date of joining</FormLabel>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent align="start" className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          captionLayout="dropdown-buttons"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          fromYear={1970}
+                          toYear={new Date().getFullYear()}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="employeeStatus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Employee Status</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select a Employee Status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {employeeStatus.map((category) => (
+                        <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+          </div>
+          <Button disabled={loading} className="ml-auto" type="submit">
+            {action}
+          </Button>
+        </form>
+      </Form>
+    </>
+  );
+};
+
+
+{ /* <FormField
+control={form.control}
+name="dateOfJoining"
+render={({ field }) => (
+  <FormItem className="flex flex-col pt-2">
+    <FormLabel>Date of birth</FormLabel>
+    <FormControl>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant={"outline"}
+            className={cn("justify-start text-left font-normal", !date && "text-muted-foreground")}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {date ? format(date, "PPP") : <span>Pick a date</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent align="start" className="w-auto p-0">
+          <Calendar
+            mode="single"
+            captionLayout="dropdown-buttons"
+            selected={date}
+            onSelect={setDate}
+            fromYear={1970}
+            toYear={new Date().getFullYear()}
+          />
+        </PopoverContent>
+      </Popover>
+    </FormControl>
+    <FormDescription>
+      Date of birth is used to calculate employee`s age.
+    </FormDescription>
+    <FormMessage />
+  </FormItem>
+)}
+/> */ }

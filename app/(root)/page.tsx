@@ -5,19 +5,8 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import Login from "@/components/login";
 import Image from "next/image";
-// import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 const AuthenticationPage = () => {
-  // const session = useSession();
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   if (session?.status === "authenticated") {
-  //     // router.push("/overview");
-  //   }
-  // }, [session?.status, router]);
-
   return (
     <>
       <div className="relative h-full flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -25,16 +14,16 @@ const AuthenticationPage = () => {
           <div className="absolute inset-0" />
           <div className="relative z-20 flex items-center ">
             <Image
-              src="/logo-white.svg"
-              className="hidden dark:hidden"
-              width="100"
+              src="/horizon-light.svg"
+              className="hidden dark:block"
+              width="150"
               height="56"
               alt="Logo"
             />
             <Image
-              src="/logo-black.svg"
-              className="block dark:block"
-              width="100"
+              src="/horizon-dark.svg"
+              className="block dark:hidden"
+              width="150"
               height="56"
               alt="Logo"
             />
@@ -44,12 +33,12 @@ const AuthenticationPage = () => {
               Give your business everything it need to grow
             </h1>
             <p className="mt-4 text-lg">
-              Give it an extra sales channel with ZERO listing costs.
+              Manage your business at one place
             </p>
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
-              <p className="text-lg">Copyright &copy; Acme Inc 2023</p>
+              <p className="text-lg">Copyright &copy; skndan 2023</p>
             </blockquote>
           </div>
         </div>
