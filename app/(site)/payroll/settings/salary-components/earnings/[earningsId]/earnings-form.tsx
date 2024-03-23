@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
@@ -15,9 +15,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Banknote, Search, SquarePercent } from "lucide-react"
+import { Banknote, SquarePercent } from "lucide-react"
 import toast from "react-hot-toast"
 import { useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -27,7 +26,8 @@ const earningsFormSchema = z.object({
     nameInPayslip: z.string().min(1),
     type: z.string().min(1),
     value: z.any(),
-    isActive: z.any()
+    isBasic: z.any(),
+    isActive: z.any(),
 })
 
 type EarningsFormValues = z.infer<typeof earningsFormSchema>
@@ -101,6 +101,25 @@ export function EarningsForm() {
                         )}
                     />
                 </div>
+                <FormField
+                    control={form.control}
+                    name="isBasic"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                            <FormControl>
+                                <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                                <FormLabel>
+                                    Mark this as Basic
+                                </FormLabel>
+                            </div>
+                        </FormItem>
+                    )}
+                />
                 <p className="mb-2 text-sm pt-4">Calculation Type <span className="text-red-600">*</span></p>
                 <RadioGroup defaultValue="flat" className="space-y-2" onValueChange={handleMenuItemClick}>
                     <div className="flex items-center space-x-2">
@@ -114,7 +133,7 @@ export function EarningsForm() {
                 </RadioGroup>
                 <p className="mb-2 text-sm pt-4">{type == "flat" ? "Enter amount" : "Enter percentage"} <span className="text-red-600">*</span></p>
                 <div className="relative w-40">
-                    {type == "flat" ? <Banknote className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" /> : <SquarePercent className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />}
+                    {type == "flat" ? <Banknote className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" /> : <SquarePercent className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />}
                     <Input placeholder={type == "flat" ? "Amount" : "Percentage"} type="number" className="pl-8" />
                 </div>
                 <FormField

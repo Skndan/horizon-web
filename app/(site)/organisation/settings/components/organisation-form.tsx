@@ -15,11 +15,13 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import ImageUpload from "@/components/ui/image-upload"
 
 const organisationFormSchema = z.object({
     name: z.string().min(1),
     email: z.string().min(1),
     mobile: z.string().min(1),
+    logo: z.any(),
     type: z.any(),
 })
 
@@ -53,6 +55,23 @@ export function OrganisationForm() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
+                    name="logo"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Images</FormLabel>
+                            <FormControl>
+                                <ImageUpload
+                                    value={field.value ? [field.value] : []} 
+                                    onChange={(url) => field.onChange(url)}
+                                    onRemove={() => field.onChange('')}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
                     name="name"
                     render={({ field }) => (
                         <FormItem>
@@ -73,7 +92,7 @@ export function OrganisationForm() {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel> 
+                                <FormLabel>Email</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Organisation email" {...field} />
                                 </FormControl>
@@ -89,7 +108,7 @@ export function OrganisationForm() {
                         name="mobile"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Mobile</FormLabel> 
+                                <FormLabel>Mobile</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Organisation mobile" {...field} />
                                 </FormControl>
@@ -100,7 +119,7 @@ export function OrganisationForm() {
                             </FormItem>
                         )}
                     />
-                </div> 
+                </div>
                 <Button type="submit">Update Profile</Button>
             </form>
         </Form>

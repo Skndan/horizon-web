@@ -1,12 +1,12 @@
-import { ComingSoonPage } from "@/components/common/coming-soon";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TemplateForm } from "./template-form";
 
-
-export const PayrollPage = () => {
+export const TemplatePage = () => {
     return (
         <>
-           <ComingSoonPage />
+            <div className="space-y-6 lg:max-w-4xl">
+                <TemplateForm />
+            </div>
         </>)
 }
 
-export default PayrollPage;
+export default TemplatePage;

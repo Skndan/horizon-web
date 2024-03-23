@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
 import ProgressBarProvider from "@/providers/progress-bar-provider";
 import SessionProvider from "@/providers/session-provider";
+import DesignerContextProvider from "@/context/DesignerContext";
 
 export const metadata: Metadata = {
   title: "Horizon",
@@ -27,10 +28,12 @@ export default function RootLayout({
       <body className={urbanist.className}>
         <SessionProvider>
           <ProgressBarProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <ToastProvider />
-              {children}
-            </ThemeProvider>
+            <DesignerContextProvider>
+              <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                <ToastProvider />
+                {children}
+              </ThemeProvider>
+            </DesignerContextProvider>
           </ProgressBarProvider>
         </SessionProvider>
       </body>

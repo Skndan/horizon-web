@@ -15,14 +15,21 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Checkbox } from "@/components/ui/checkbox"
 
 const addressFormSchema = z.object({
+    label: z.string().min(1),
     addressLine1: z.string().min(1),
     addressLine2: z.string().min(1),
     city: z.string().min(1),
     state: z.string().min(1),
-    pincode: z.string().min(1)
+    pincode: z.string().min(1),
+    isBillingAddress: z.any()
 })
+
+interface AddressFormProps {
+    onClose: () => void;
+}
 
 type AddressFormValues = z.infer<typeof addressFormSchema>
 
@@ -30,7 +37,13 @@ type AddressFormValues = z.infer<typeof addressFormSchema>
 const defaultValues: Partial<AddressFormValues> = {
 }
 
-export function AddressForm() {
+export const AddressForm: React.FC<AddressFormProps> = ({
+    onClose,
+}) => {
+
+
+
+
     const form = useForm<AddressFormValues>({
         resolver: zodResolver(addressFormSchema),
         defaultValues,
@@ -56,13 +69,25 @@ export function AddressForm() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
                     control={form.control}
+                    name="label"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormControl>
+                                <Input placeholder="Office name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
                     name="addressLine1"
                     render={({ field }) => (
                         <FormItem>
-                          
+
                             <FormControl>
                                 <Input placeholder="No. 6, Vivekanandar Lane" {...field} />
-                            </FormControl> 
+                            </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -71,10 +96,10 @@ export function AddressForm() {
                     control={form.control}
                     name="addressLine2"
                     render={({ field }) => (
-                        <FormItem> 
+                        <FormItem>
                             <FormControl>
                                 <Input placeholder="Cross Street" {...field} />
-                            </FormControl> 
+                            </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -112,7 +137,7 @@ export function AddressForm() {
                             </FormItem>
                         )}
                     />
-                     <FormField
+                    <FormField
                         control={form.control}
                         name="pincode"
                         render={({ field }) => (
@@ -129,7 +154,27 @@ export function AddressForm() {
                         )}
                     />
                 </div>
+                <FormField
+                    control={form.control}
+                    name="isBillingAddress"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 ">
+                            <FormControl>
+                                <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                                <FormLabel>
+                                    Mark this as Billing address  <span className="text-muted-foreground pl-2"> {"(Existing billing address will be replaced)"}</span>
+                                </FormLabel>
+                            </div>
+                        </FormItem>
+                    )}
+                />
                 <Button type="submit">Update Address</Button>
+                <Button variant={"secondary"} className="m-4" onClick={onClose}>Cancel </Button>
             </form>
         </Form>
     )

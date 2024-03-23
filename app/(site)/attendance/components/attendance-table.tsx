@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table"
 import { isAfter, startOfDay } from 'date-fns'; // Add isAfter and startOfDay to the import
 import { Label } from '@/components/ui/label';
+import AvatarCell from '@/components/common/avatar-cell';
 interface Employee {
   name: string;
   attendance: Record<string, number>; // Date in 'yyyy-MM-dd' format as key
@@ -66,7 +67,7 @@ export default function AttendanceTable() {
           <TableBody>
             {employees.map(employee => (
               <TableRow key={employee.name}>
-                <TableCell>{employee.name}</TableCell>
+                <TableCell><AvatarCell avatarUrl={'https://i.pravatar.cc/300'} employeeName={employee.name} employeeId={employee.name} /></TableCell>
                 {[...Array(daysInMonth)].map((_, index) => {
                   const dateKey = format(addDays(new Date(monthYear), index), 'yyyy-MM-dd');
                   const currentDate = addDays(new Date(monthYear), index);
