@@ -11,7 +11,7 @@ import { attendance } from "../data";
 
 
 
-export const MonthlyAttendancePage = () => {
+export const TodayAttendancePage = () => {
 
 
     const [data, setData] = useState<Profile[]>([])
@@ -33,7 +33,7 @@ export const MonthlyAttendancePage = () => {
                 {!isLoading ?
                     (
                         <div className="grid h-screen place-items-center">
-                            <Loader />
+                            <Loader className="animate-spin h-5 w-5 mr-3" />
                         </div>
                     )
                     : (<TodayAttendanceClient data={attendance} />)}
@@ -41,4 +41,4 @@ export const MonthlyAttendancePage = () => {
         </div>)
 }
 
-export default MonthlyAttendancePage;
+export default TodayAttendancePage;

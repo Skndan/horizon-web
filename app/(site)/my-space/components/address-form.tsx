@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
@@ -25,15 +25,11 @@ const addressFormSchema = z.object({
 })
 
 type AddressFormValues = z.infer<typeof addressFormSchema>
-
-// This can come from your database or API.
-const defaultValues: Partial<AddressFormValues> = {
-}
-
+ 
 export function AddressForm() {
     const form = useForm<AddressFormValues>({
         resolver: zodResolver(addressFormSchema),
-        defaultValues,
+        defaultValues: {},
         mode: "onChange",
     })
 

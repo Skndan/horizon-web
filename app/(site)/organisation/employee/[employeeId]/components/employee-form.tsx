@@ -6,7 +6,7 @@ import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { Trash } from "lucide-react"
+import { Loader, Trash } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -35,7 +35,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-import { Department, Location, Profile } from "@/types/profile"
+import { Department, Address, Profile } from "@/types/profile"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { Calendar } from "@/components/ui/calendar"
@@ -47,11 +47,11 @@ const formSchema = z.object({
   name: z.string().min(1),
   email: z.string().min(1),
   mobile: z.string().min(1),
-  employeeId: z.string().min(1), 
+  employeeId: z.string().min(1),
   dateOfJoining: z.any().optional(),
   gender: z.string().min(1).optional(),
   dateOfBirth: z.any().optional(),
-  organisation: z.any().optional(), 
+  organisation: z.any().optional(),
   employeeStatus: z.any().optional(),
   department: z.any().optional(),
   location: z.any().optional(),
@@ -65,7 +65,7 @@ interface EmployeeFormProps {
   initialData: Profile | null;
   // designation: Designation[];
   department: Department[];
-  location: Location[];
+  location: Address[];
   profile: Profile[];
   orgId: any;
 };
@@ -140,9 +140,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
       if (data.location?.id == null) { data.location = null; }
       if (data.designation?.id == null) { data.designation = null; }
       if (data.reportingManager?.id == null) { data.reportingManager = null; }
- 
+
       setLoading(true);
- 
+
       if (initialData) {
         await apiClient
           .put(`/profile/${initialData.id}`, data)
@@ -434,7 +434,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {location.map((size) => (
-                        <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
+                        <SelectItem key={size.id} value={size.id}>{size.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -534,6 +534,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
+            {loading &&
+              <Loader className="animate-spin h-5 w-5 mr-3" />}
             {action}
           </Button>
         </form>

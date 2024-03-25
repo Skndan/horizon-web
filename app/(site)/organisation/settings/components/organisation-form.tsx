@@ -1,9 +1,8 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
-
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -15,45 +14,60 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import ImageUpload from "@/components/ui/image-upload"
+import { Organisation } from "@/types/profile"
+import { useState } from "react"
+import apiClient from "@/lib/api/api-client"
+import toast from "react-hot-toast"
 
 const organisationFormSchema = z.object({
     name: z.string().min(1),
     email: z.string().min(1),
     mobile: z.string().min(1),
-    logo: z.any(),
     type: z.any(),
 })
 
 type ProfileFormValues = z.infer<typeof organisationFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-}
+interface OrganisationFormProps {
+    initialData: Organisation;
+};
 
-export function OrganisationForm() {
+export const OrganisationForm: React.FC<OrganisationFormProps> = ({
+    initialData
+}) => {
+
+
+
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(organisationFormSchema),
-        defaultValues,
+        defaultValues: initialData || {},
         mode: "onChange",
     })
 
-    function onSubmit(data: ProfileFormValues) {
+    const [loading, setLoading] = useState(false);
+
+    async function onSubmit(data: ProfileFormValues) {
         console.log(data);
-        // toast({
-        //   title: "You submitted the following values:",
-        //   description: (
-        //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-        //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        //     </pre>
-        //   ),
-        // })
+        console.log(initialData);
+        try {
+            setLoading(true);
+            await apiClient
+                .put(`/organisation/${initialData?.id}`, data)
+                .then((res) => res.data)
+                .then((data) => {
+                    toast.success("Organisation profile updated");
+                });
+        } catch (error: any) {
+            toast.error('Something went wrong.');
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
+                {/* <FormField
                     control={form.control}
                     name="logo"
                     render={({ field }) => (
@@ -69,15 +83,15 @@ export function OrganisationForm() {
                             <FormMessage />
                         </FormItem>
                     )}
-                />
+                /> */}
                 <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Organisation Name</FormLabel>
+                            <FormLabel>Organisation Name {initialData.name}</FormLabel>
                             <FormControl>
-                                <Input placeholder="Organisation name" {...field} />
+                                <Input disabled={loading} placeholder="Organisation name" {...field} />
                             </FormControl>
                             <FormDescription>
                                 This is your registered business name which will appear in all the forms and payslips.
@@ -94,7 +108,7 @@ export function OrganisationForm() {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Organisation email" {...field} />
+                                    <Input disabled={loading} placeholder="Organisation email" {...field} />
                                 </FormControl>
                                 <FormDescription>
                                     This email address will receive the notification from Horizon
@@ -110,7 +124,7 @@ export function OrganisationForm() {
                             <FormItem>
                                 <FormLabel>Mobile</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Organisation mobile" {...field} />
+                                    <Input disabled={loading} placeholder="Organisation mobile" {...field} />
                                 </FormControl>
                                 <FormDescription>
                                     This mobile number will used for KYC

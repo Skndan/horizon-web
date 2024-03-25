@@ -27,7 +27,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Department } from "@/types/profile";
 import apiClient from "@/lib/api/api-client";
-import { useDepartmentSheet } from "@/store/sheet/use-department-sheet"; 
+import { useDepartmentSheet } from "@/store/sheet/use-department-sheet";
+import { Loader } from "lucide-react";
 
 interface DepartmentFormProps {
     initialData: Department | null;
@@ -46,7 +47,7 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
     initialData,
     isOpen,
     onClose,
-}) => { 
+}) => {
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
 
@@ -82,13 +83,13 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
     const title = initialData ? "Edit department" : "Create department";
     const description = initialData ? "Edit a department." : "Add a new department";
     const toastMessage = initialData ? "Department updated." : "Department created.";
-    const action = initialData ? "Save changes" : "Create"; 
+    const action = initialData ? "Save changes" : "Create";
 
     const form = useForm<DepartmentFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: formData || {},
         mode: "onChange",
-    }); 
+    });
 
     return (
         <Sheet key="right" open={isOpen} onOpenChange={onClose}>
@@ -107,8 +108,8 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Name*</FormLabel> 
-                                        <FormLabel> {formData?.name}</FormLabel> 
+                                        <FormLabel>Name*</FormLabel>
+                                        <FormLabel> {formData?.name}</FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={loading}
@@ -139,6 +140,8 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                             />
                         </div>
                         <Button disabled={loading} className="ml-auto" type="submit">
+                            {loading &&
+                                <Loader className="animate-spin h-5 w-5 mr-3" />}
                             {action}
                         </Button>
                     </form>

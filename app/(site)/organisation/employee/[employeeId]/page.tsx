@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { EmployeeForm } from "./components/employee-form";
 import apiClient from "@/lib/api/api-client";
 import { Loader } from "lucide-react";
-import { Department, Location, Profile } from "@/types/profile";
+import { Department, Address, Profile } from "@/types/profile";
 
 
 const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
@@ -15,7 +15,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
     const [isLoading, setLoading] = useState(false)
 
     const [department, setDepartment] = useState<Department[]>([])
-    const [location, setLocation] = useState<Location[]>([])
+    const [location, setLocation] = useState<Address[]>([])
     const [profile, setProfile] = useState<Profile[]>([])
 
     useEffect(() => {
@@ -33,7 +33,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
             const departments = await apiClient.get(`/department`);
             setDepartment(departments.data.content)
 
-            const locations = await apiClient.get(`/location`);
+            const locations = await apiClient.get(`/address`);
             setLocation(locations.data.content)
 
             const profiles = await apiClient.get(`/profile`);
@@ -49,7 +49,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
 
                 {isLoading ? (
                     <div className="grid h-screen place-items-center">
-                        <Loader />
+                        <Loader className="animate-spin h-5 w-5 mr-3" />
                     </div>
                 ) : (
                     <EmployeeForm 

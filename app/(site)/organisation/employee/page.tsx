@@ -9,9 +9,8 @@ import { useEffect, useState } from "react";
 
 
 
-export const DirectoryPage = () => {
-
-
+export const DirectoryPage = () => { 
+    
     const [data, setData] = useState<Profile[]>([])
     const [isLoading, setLoading] = useState(true)
 
@@ -31,7 +30,7 @@ export const DirectoryPage = () => {
                 {isLoading ?
                     (
                         <div className="grid h-screen place-items-center">
-                            <Loader />
+                            <Loader className="animate-spin h-5 w-5 mr-3" />
                         </div>
                     )
                     : (<EmployeeClient data={data} />)}

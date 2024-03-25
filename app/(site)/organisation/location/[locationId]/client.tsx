@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { Trash } from "lucide-react"
+import { Loader, Trash } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -229,6 +229,8 @@ export const LocationFormPage: React.FC<LocationFormProps> = ({
                             />
                         </div>
                         <Button disabled={loading} className="ml-auto" type="submit">
+                            {loading &&
+                                <Loader className="animate-spin h-5 w-5 mr-3" />}
                             {action}
                         </Button>
                     </form>

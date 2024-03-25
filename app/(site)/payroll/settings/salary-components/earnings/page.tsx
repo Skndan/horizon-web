@@ -17,7 +17,7 @@ export const EarningsPage = () => {
                 {!isLoading ?
                     (
                         <div className="grid h-screen place-items-center">
-                            <Loader />
+                            <Loader className="animate-spin h-5 w-5 mr-3" />
                         </div>
                     )
                     : (<EarningClient data={allowances} />)}

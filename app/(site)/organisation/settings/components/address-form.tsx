@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Address } from "@/types/profile"
+import apiClient from "@/lib/api/api-client"
+import toast from "react-hot-toast"
 
 const addressFormSchema = z.object({
     label: z.string().min(1),
@@ -24,10 +27,12 @@ const addressFormSchema = z.object({
     city: z.string().min(1),
     state: z.string().min(1),
     pincode: z.string().min(1),
-    isBillingAddress: z.any()
+    organisation: z.any(),
+    isPrimary: z.any()
 })
 
 interface AddressFormProps {
+    initialData: Address | null;
     onClose: () => void;
 }
 
@@ -38,30 +43,59 @@ const defaultValues: Partial<AddressFormValues> = {
 }
 
 export const AddressForm: React.FC<AddressFormProps> = ({
+    initialData,
     onClose,
 }) => {
 
-
-
-
     const form = useForm<AddressFormValues>({
         resolver: zodResolver(addressFormSchema),
-        defaultValues,
+        defaultValues: initialData || {},
         mode: "onChange",
     })
 
-    function onSubmit(data: AddressFormValues) {
+    const toastMessage = initialData ? 'Address updated.' : 'Address created.';
+    const action = initialData ? 'Save changes' : 'Create';
+
+    async function onSubmit(data: AddressFormValues) {
+
+        const orgId = localStorage.getItem('orgId');
+
+        data.organisation = {
+            id: orgId
+        }
 
         console.log(data);
 
-        // toast({
-        //   title: "You submitted the following values:",
-        //   description: (
-        //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-        //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        //     </pre>
-        //   ),
-        // })
+        // {
+        //   "label": "sf",
+        //   "addressLine1": "sdfsdfs",
+        //   "addressLine2": "dfsdfs",
+        //   "city": "fdsfs",
+        //   "state": "fds",
+        //   "pincode": "dfsdfs",
+        //   "isPrimary": true,
+        //   "organisation": {
+        //     "id": "3305b43f-9b7b-4a1a-80f4-60cc5487789d"
+        //   }
+        // }
+
+        if (initialData) {
+            await apiClient
+                .put(`/address/${initialData.id}`, data)
+                .then((res) => res.data)
+                .then((data) => {
+                    toast.success(toastMessage);
+                    onClose();
+                });
+        } else {
+            await apiClient
+                .post("/address", data)
+                .then((res) => res.data)
+                .then((data) => {
+                    toast.success(toastMessage);
+                    onClose();
+                });
+        }
     }
 
     return (
@@ -156,7 +190,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                 </div>
                 <FormField
                     control={form.control}
-                    name="isBillingAddress"
+                    name="isPrimary"
                     render={({ field }) => (
                         <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 ">
                             <FormControl>
@@ -173,7 +207,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Update Address</Button>
+                <Button type="submit">{action}</Button>
                 <Button variant={"secondary"} className="m-4" onClick={onClose}>Cancel </Button>
             </form>
         </Form>

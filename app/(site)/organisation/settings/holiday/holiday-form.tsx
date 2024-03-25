@@ -31,7 +31,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader } from "lucide-react";
 
 interface HolidayFormProps {
     initialData: Holiday | null;
@@ -200,7 +200,7 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
                                                         numberOfMonths={2}
                                                     />
                                                 </PopoverContent>
-                                            </Popover> 
+                                            </Popover>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -208,6 +208,8 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
                             />
                         </div>
                         <Button disabled={loading} className="ml-auto" type="submit">
+                            {loading &&
+                                <Loader className="animate-spin h-5 w-5 mr-3" />}
                             {action}
                         </Button>
                     </form>

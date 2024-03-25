@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";  
-import { Attendance } from "@/app/(site)/attendance/data";
+import { Attendance } from "@/app/(site)/attendance/tracking/data";
  
 
 interface CellActionProps {

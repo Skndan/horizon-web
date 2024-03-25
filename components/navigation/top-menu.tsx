@@ -86,17 +86,30 @@ export function MainNav({
       ]
     },
     {
+      href: `/attendance`,
+      label: "Attendance",
+      active: pathname.match(`/attendance`),
+      children: [
+        {
+          href: `/attendance/tracking`,
+          label: "Tracking",
+          description:
+            "Track employee attendance",
+        },
+        {
+          href: `/attendance/shifts`,
+          label: "Shifts",
+          description:
+            "Manage employee shifts",
+        }
+      ]
+    },
+    {
       href: `/leave-tracker`,
       label: "Leave Tracker",
       active: pathname.match(`/leave-tracker`),
       children: []
-    },
-    {
-      href: `/attendance`,
-      label: "Attendance",
-      active: pathname.match(`/attendance`),
-      children: []
-    },
+    }, 
     {
       href: `/reports`,
       label: "Reports",

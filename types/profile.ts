@@ -80,16 +80,19 @@ export interface Department {
   code?: string
 }
 
-export interface Location {
+export interface Address {
   id: string
-  createdAt?: string
-  updatedAt?: string
-  createdBy?: string
-  updatedBy?: string
-  active?: boolean
-  name?: string
-  address?: string
-  country?: string
-  state?: string
-  pincode?: string
+  createdAt: string
+  updatedAt: string
+  createdBy: string
+  updatedBy: string
+  active: boolean
+  isPrimary: boolean
+  label: string
+  addressLine1: string
+  addressLine2: string
+  city: string
+  state: string
+  country: string
+  pincode: string
 }
