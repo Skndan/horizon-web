@@ -2,27 +2,34 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 
-import { CellAction } from "./cell-action"
-import { Location } from "@/types/profile";
-import { formatDate } from "date-fns";
+import { CellAction } from "./cell-action" 
 
 
 export const columns: ColumnDef<Location>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "label",
     header: "Name",
   },
   {
-    accessorKey: "address",
-    header: "Address",
+    accessorKey: "addressLine1",
+    header: "Address Line 1",
   },
+  
   {
-    accessorKey: "country",
-    header: "Country",
+    accessorKey: "addressLine2",
+    header: "Address Line 2",
   },
+  // {
+  //   accessorKey: "country",
+  //   header: "Country",
+  // },
   {
     accessorKey: "state",
     header: "State",
+  },
+  {
+    accessorKey: "city",
+    header: "City",
   },
   {
     accessorKey: "pincode",

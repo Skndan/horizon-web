@@ -45,7 +45,8 @@ interface HolidayFormProps {
 
 const formSchema = z.object({
     name: z.string().min(1),
-    from: z.any().optional(),
+    holiday: z.any().optional(),
+    organisation: z.any().optional(),
 });
 
 type HolidayFormValues = z.infer<typeof formSchema>;
@@ -58,9 +59,15 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
 
+    const orgId = localStorage.getItem("orgId");
+
     const onSubmit = async (data: HolidayFormValues) => {
         try {
             setLoading(true);
+
+            data.organisation.id = orgId;
+
+            console.log(data);
             if (initialData) {
                 await apiClient
                     .put(`/holiday/${initialData.id}`, data)
@@ -94,7 +101,11 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
 
     const form = useForm<HolidayFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: formData || {},
+        defaultValues: formData || {
+            organisation: {
+                id: ''
+            }
+        },
         mode: "onChange",
     });
 
@@ -120,7 +131,7 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
                                         <FormControl>
                                             <Input
                                                 disabled={loading}
-                                                placeholder="Department name"
+                                                placeholder="Holiday name"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -130,12 +141,12 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
                             />
                             <FormField
                                 control={form.control}
-                                name="from"
+                                name="holiday"
                                 render={({ field }) => (
                                     <FormItem className="flex flex-col pt-2">
-                                        <FormLabel>From*</FormLabel>
+                                        <FormLabel>Holiday*</FormLabel>
                                         <FormControl>
-                                            {/* <Popover>
+                                            <Popover>
                                                 <PopoverTrigger asChild>
                                                     <FormControl>
                                                         <Button
@@ -164,8 +175,8 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
                                                         toYear={new Date().getFullYear()}
                                                     />
                                                 </PopoverContent>
-                                            </Popover> */}
-                                            <Popover>
+                                            </Popover>
+                                            {/* <Popover>
                                                 <PopoverTrigger asChild>
                                                     <Button
                                                         id="date"
@@ -193,14 +204,14 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
                                                 <PopoverContent className="w-auto p-0" align="start">
                                                     <Calendar
                                                         initialFocus
-                                                        mode="range"
+                                                        mode="single"
                                                         defaultMonth={field.value?.from}
                                                         selected={field.value}
                                                         onSelect={field.onChange}
                                                         numberOfMonths={2}
                                                     />
                                                 </PopoverContent>
-                                            </Popover>
+                                            </Popover> */}
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

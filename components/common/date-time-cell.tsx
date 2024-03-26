@@ -1,14 +1,39 @@
-const DateTimeCell = ({ dateStr }: { dateStr: string }) => {
-    const date = new Date(dateStr);
-    const formattedDate = new Intl.DateTimeFormat('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-    }).format(date);
 
+interface DateTimeCellProps {
+    dateStr: string;
+    isTime: number;
+}
+
+const DateTimeCell = ({ dateStr, isTime }: DateTimeCellProps) => {
+    const date = new Date(dateStr);
+    let formattedDate = "";  
+    
+    switch (isTime) {
+        case 0:
+            formattedDate = new Intl.DateTimeFormat('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric', 
+            }).format(date);
+            break;
+        case 1:
+            formattedDate = new Intl.DateTimeFormat('en-US', { 
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).format(date);
+            break;
+        default:
+            formattedDate = new Intl.DateTimeFormat('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).format(date);
+
+    } 
     return <div>{formattedDate}</div>;
 };
 

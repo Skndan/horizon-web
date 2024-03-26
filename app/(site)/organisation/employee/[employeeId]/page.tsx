@@ -5,18 +5,21 @@ import { EmployeeForm } from "./components/employee-form";
 import apiClient from "@/lib/api/api-client";
 import { Loader } from "lucide-react";
 import { Department, Address, Profile } from "@/types/profile";
+import { Shift } from "@/types/attendance";
 
 
 const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
 
     const [data, setData] = useState(null);
-    const [org, setOrg] = useState(null);
 
     const [isLoading, setLoading] = useState(false)
 
     const [department, setDepartment] = useState<Department[]>([])
     const [location, setLocation] = useState<Address[]>([])
     const [profile, setProfile] = useState<Profile[]>([])
+    const [shifts, setShifts] = useState<Shift[]>([])
+
+    const orgId = localStorage.getItem("orgId");
 
     useEffect(() => {
         (async () => {
@@ -27,22 +30,22 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
                 setData(employees.data)
             }
 
-            // var orgId = localStorage.getItem("orgId");
-            // setOrg(orgId);
-
             const departments = await apiClient.get(`/department`);
             setDepartment(departments.data.content)
 
-            const locations = await apiClient.get(`/address`);
-            setLocation(locations.data.content)
+            const locations = await apiClient.get(`/address/get-by-organisation/${orgId}`);
+            setLocation(locations.data)
 
             const profiles = await apiClient.get(`/profile`);
-            setProfile(profiles.data.content) 
+            setProfile(profiles.data.content)
+
+            const shifts = await apiClient.get(`/shift`);
+            setShifts(shifts.data.content)
 
             setLoading(false);
         })()
     }, [])
- 
+
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">
@@ -52,12 +55,13 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
                         <Loader className="animate-spin h-5 w-5 mr-3" />
                     </div>
                 ) : (
-                    <EmployeeForm 
+                    <EmployeeForm
                         department={department}
-                        location={location}
-                        profile={profile} 
+                        address={location}
+                        profile={profile}
+                        shifts={shifts}
                         initialData={data}
-                        orgId={org}
+                        orgId={null}
                     />)}
             </div>
         </div>)

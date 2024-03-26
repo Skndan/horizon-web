@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import apiClient from "@/lib/api/api-client";
-import { Location } from "@/types/profile";
+import apiClient from "@/lib/api/api-client"; 
 import { Loader, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -23,7 +22,7 @@ export const LocationPage = () => {
 
     async function fetchData() {
         setLoading(true)
-        await apiClient.get('/location').then((res) => res.data)
+        await apiClient.get('/address').then((res) => res.data)
             .then((data) => {
                 console.log(`setting value`)
                 setData(data.content)

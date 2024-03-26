@@ -17,12 +17,14 @@ import {
 import { AlertModal } from "@/components/modals/alert-modal";
 import { useDepartmentSheet } from "@/store/sheet/use-department-sheet";
 import apiClient from "@/lib/api/api-client";
-import { Location } from "@/types/profile";
 import { revalidatePath } from "next/cache";
 import { useDeleteStore } from "@/store/use-delete-store";
+import { HolidayForm } from "../holiday-form";
+import { useUpdateStore } from "@/store/use-update-store";
+import { Holiday } from "@/types/holiday";
 
 interface CellActionProps {
-  data: Location;
+  data: Holiday;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
@@ -32,14 +34,13 @@ export const CellAction: React.FC<CellActionProps> = ({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { set } = useDeleteStore();
 
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await apiClient.delete(`/location/${data.id}`);
-      toast.success('Location deleted.');
-      set(`delete-location-${data.id}`);
+      await apiClient.delete(`/holiday/${data.id}`);
+      toast.success('Holiday deleted.');
+      set(`delete-holiday-${data.id}`);
     } catch (error) {
       toast.error('Make sure you re-assign all employees using this location first.' + error);
     } finally {
@@ -47,6 +48,9 @@ export const CellAction: React.FC<CellActionProps> = ({
       setLoading(false);
     }
   };
+
+  const [openForm, setOpenForm] = useState(false);
+  const { set } = useUpdateStore();
 
   return (
     <>
@@ -56,6 +60,15 @@ export const CellAction: React.FC<CellActionProps> = ({
         onConfirm={onConfirm}
         loading={loading}
       />
+
+      <HolidayForm 
+        isOpen={openForm}
+        onClose={() => {
+          setOpenForm(false);
+          set(data?.id ?? '');
+        }}
+        initialData={data}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -63,16 +76,15 @@ export const CellAction: React.FC<CellActionProps> = ({
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          
+        <DropdownMenuContent align="end"> 
           <DropdownMenuItem
-            onClick={() => router.push(`/organisation/location/${data.id}`)}
+            onClick={() => setOpenForm(true)}
           >
-            <Edit className="mr-2 h-4 w-4" /> Update
+            <Edit className="mr-2 h-4 w-4" /> Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={() => setOpen(true)}    className="text-red-600"
+            onClick={() => setOpen(true)} className="text-red-600"
           >
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>

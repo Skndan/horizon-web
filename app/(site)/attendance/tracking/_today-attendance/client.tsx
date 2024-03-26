@@ -1,29 +1,27 @@
 "use client";
- 
+
 import { useRouter } from "next/navigation";
-  
-import { DataTable } from "@/components/ui/data-table"; 
+
+import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
-import { Attendance } from "../data";
+import { Daylog } from "@/types/attendance";
 
 
 interface AttendanceClientProps {
-  data: Attendance[];
+  data: Daylog[] | [];
 }
 
 export const TodayAttendanceClient: React.FC<AttendanceClientProps> = ({
   data
 }) => { 
-  const router = useRouter();
-
   return (
     <>
       {data.length == 0 ? <EmptyStateTable
-        title={"No employees added"}
-        description={"You have not added any employees. Add one below."}
-        action={"Add Empoyee"}
-        onClick={() => router.push(`/organisation/employee/new`)}
+        title={"No logs recorded"}
+        description={"You can see who are logged in today"}
+        action={null}
+        onClick={()=>{}}
       /> : <DataTable searchKey="name" columns={columns} data={data} />}
     </>
   );

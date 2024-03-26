@@ -1,3 +1,5 @@
+import { Shift } from "./attendance"
+
 export interface Profile {
   id: string
   createdAt: string
@@ -12,11 +14,12 @@ export interface Profile {
   employeeStatus: string,
   organisation: Organisation
   department: Department
-  location: Location
+  address: Address
   designation: any
   dateOfJoining: any
   reportingManager: any
   gender: any
+  shift: Shift
   dateOfBirth: any
   user: User
 }

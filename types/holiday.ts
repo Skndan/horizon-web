@@ -6,6 +6,5 @@ export interface Holiday {
     updatedBy: any
     active: boolean
     name: string
-    from: string
-    to: string
+    holiday: string 
   }

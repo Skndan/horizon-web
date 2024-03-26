@@ -42,6 +42,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import { SubHeading } from "@/components/ui/sub-heading"
 import apiClient from "@/lib/api/api-client"
+import { Shift } from "@/types/attendance"
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -54,7 +55,8 @@ const formSchema = z.object({
   organisation: z.any().optional(),
   employeeStatus: z.any().optional(),
   department: z.any().optional(),
-  location: z.any().optional(),
+  address: z.any().optional(),
+  shift: z.any().optional(),
   designation: z.any().optional(),
   reportingManager: z.any().optional()
 });
@@ -64,8 +66,9 @@ type EmployeeFormValues = z.infer<typeof formSchema>
 interface EmployeeFormProps {
   initialData: Profile | null;
   // designation: Designation[];
+  shifts: Shift[];
   department: Department[];
-  location: Address[];
+  address: Address[];
   profile: Profile[];
   orgId: any;
 };
@@ -112,7 +115,8 @@ const employeeStatus = [
 export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   initialData,
   department,
-  location,
+  address,
+  shifts,
   profile,
   orgId
 }) => {
@@ -135,14 +139,15 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   const onSubmit = async (data: EmployeeFormValues) => {
     try {
 
-      if (data.organisation?.id == null) { data.organisation = null; }
-      if (data.department?.id == null) { data.department = null; }
-      if (data.location?.id == null) { data.location = null; }
+      data.organisation.id = orgId;
+
+      if (data.department?.id == null) { data.department = null; } 
+      if (data.address?.id == null) { data.address = null; }
       if (data.designation?.id == null) { data.designation = null; }
       if (data.reportingManager?.id == null) { data.reportingManager = null; }
 
       setLoading(true);
-
+ 
       if (initialData) {
         await apiClient
           .put(`/profile/${initialData.id}`, data)
@@ -229,7 +234,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input type="hidden" {...field} />
+                  <Input type="hidden" value={orgId}/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -374,20 +379,20 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           <SubHeading title={"Work Information"} />
 
           <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
-            {/* <FormField
+            <FormField
               control={form.control}
-              name="designation.id"
+              name="shift.id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Designation</FormLabel>
+                  <FormLabel>Shift</FormLabel>
                   <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select the designation" />
+                        <SelectValue defaultValue={field.value} placeholder="Select the shift" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {designation.map((size) => (
+                      {shifts.map((size) => (
                         <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
                       ))}
                     </SelectContent>
@@ -395,7 +400,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
+            />
 
             <FormField
               control={form.control}
@@ -422,7 +427,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
             <FormField
               control={form.control}
-              name="location.id"
+              name="address.id"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Office</FormLabel>
@@ -433,7 +438,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {location.map((size) => (
+                      {address.map((size) => (
                         <SelectItem key={size.id} value={size.id}>{size.label}</SelectItem>
                       ))}
                     </SelectContent>

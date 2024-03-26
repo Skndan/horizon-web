@@ -1,9 +1,6 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; 
-import { ComingSoonPage } from "@/components/common/coming-soon";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TodayAttendancePage from "./_today-attendance/today-attendance";
-import AttendanceTable from "./_components/attendance-table";
-import ShiftSchedule from "../test";
-import ShiftCalendar from "./_shift-calendar/shift-calendar";
+import { MonthlyAttendancePage } from "./_monthy-attendance/monthly-attendance";
 
 export const AttendancePage = () => {
     return (
@@ -16,11 +13,11 @@ export const AttendancePage = () => {
                     <Tabs defaultValue="today" className="space-y-4">
                         <TabsList>
                             <TabsTrigger value="today">Today</TabsTrigger>
-                            <TabsTrigger value="activity">Monthly</TabsTrigger> 
+                            <TabsTrigger value="activity">Monthly</TabsTrigger>
                             {/* <TabsTrigger value="shift_calendar">Shifts Calendar</TabsTrigger>  */}
                         </TabsList>
                         <TabsContent value="today" className="space-y-4"><TodayAttendancePage /></TabsContent>
-                        <TabsContent value="activity" className="space-y-4"><AttendanceTable /></TabsContent> 
+                        <TabsContent value="activity" className="space-y-4"><MonthlyAttendancePage /></TabsContent>
                         {/* <TabsContent value="shift_calendar" className="space-y-4"><ShiftSchedule /></TabsContent>  */}
                     </Tabs>
                 </div>

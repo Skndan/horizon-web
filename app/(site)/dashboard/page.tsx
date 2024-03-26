@@ -16,14 +16,18 @@ import ActivityPage from "./components/activity";
 import { ComingSoonPage } from "@/components/common/coming-soon";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import apiClient from "@/lib/api/api-client";
+import { formatDate } from "@/lib/utils/time-utils";
 
 export const OverviewPage = () => {
 
 
     const d = new Date();
     const [currentTime, setCurrentTime] = useState('');
+    const [clockedIn, setClockedIn] = useState(true);
+    const [lastCheckInTime, setLastCheckInTime] = useState("");
 
-    const [clockedIn, setClockedIn] = useState(false);
+    const profileId = localStorage.getItem("profileId");
 
     useEffect(() => {
 
@@ -35,8 +39,73 @@ export const OverviewPage = () => {
         return () => clearInterval(timer);
     }, [currentTime]);
 
+    useEffect(() => {
+        const checkClock = async () => {
+            try {
+                await apiClient.get(`/time-sheet/get-clock/${profileId}`)
+                    .then((res) => {
+                        console.log(res.data);
+                        console.log(res.status);
 
+                        if (res.status === 200) {
+                            if (res.data.status == "IN") {
+                                // SET OUT
+                                setClockedIn(false);
 
+                            } else {
+                                // SET IN
+                                setClockedIn(true);
+                            }
+
+                            setLastCheckInTime(res.data.createdAt);
+                        }
+
+                        if (res.status === 204) {
+                            // SET IN
+                            setClockedIn(false);
+                        }
+                    });
+            } catch (error) {
+                toast.error('Unable to punch your clock');
+            } finally {
+
+            }
+        };
+
+        checkClock();
+    }, []);
+
+    const onClockChanged = async () => {
+        try {
+            // http://localhost:8080/api/time-sheet/clock/31c852fe-64ab-427e-9694-503be730841e
+            // const profileId = localStorage.getItem("profileId");
+            await apiClient.get(`/time-sheet/clock/${profileId}`).then((res) => {
+                console.log(res.data);
+                console.log(res.status);
+
+                if (res.status === 200) {
+                    if (res.data.status == "IN") {
+                        // SET OUT
+                        setClockedIn(false);
+                        toast.success('You have clocked out', { icon: '👋' });
+
+                    } else {
+                        // SET IN
+                        setClockedIn(true);
+                        toast.success('You have clocked in', { icon: '🤝' });
+                    }
+
+                    setLastCheckInTime(res.data.createdAt);
+                } 
+
+            }); 
+
+        } catch (error) {
+            toast.error('Unable to punch your clock');
+        } finally {
+
+        }
+    };
 
     return (
         <>
@@ -65,27 +134,20 @@ export const OverviewPage = () => {
                                         <CardTitle className="text-md font-medium">
                                             My Time
                                         </CardTitle>
-                                        <Button className={` text-black ${!clockedIn ? "bg-emerald-500" : "bg-red-500"}  `} onClick={() => {
-                                            setClockedIn(!clockedIn);
-                                            if (!clockedIn) {
-                                                toast.success('You have clocked in',{icon: '🤝' });
-                                            } else {
-                                                toast.success('You have clocked out', { icon: '👋' });
-                                            }
-                                        }}>
+                                        <Button className={`${clockedIn ? "bg-emerald-500" : "bg-red-500"}  `} onClick={onClockChanged}>
                                             {
-                                                !clockedIn ?
+                                                clockedIn ?
                                                     <AlarmClock className="mr-2 h-4 w-4" /> :
                                                     <AlarmClockOff className="mr-2 h-4 w-4" />
                                             }
-                                            {` ${!clockedIn ? "Check In" : "Check Out"} `}
+                                            {` ${clockedIn ? "Check In" : "Check Out"} `}
                                         </Button>
                                     </CardHeader>
                                     <CardContent>
                                         {/* <AlarmClock /> */}
                                         {/* <AlarmClockOff /> */}
                                         <div className="flex flex-row items-bottom space-y-0">
-                                            <div className={`text-2xl ${!clockedIn ? "text-emerald-500" : "text-red-500"} font-bold`}>{currentTime}</div>
+                                            <div className={`text-2xl ${clockedIn ? "text-emerald-500" : "text-red-500"} font-bold`}>{currentTime}</div>
                                             {/* {
                                                 !clockedIn ?
                                                     <AlarmClock className="ml-2 h-6 w-6 pt-1 text-green-500" /> :
@@ -93,7 +155,7 @@ export const OverviewPage = () => {
                                             } */}
                                         </div>
                                         <p className="text-sm text-muted-foreground pt-1">
-                                            Checked In: Today at 10:14 AM
+                                            Checked In: Today at {lastCheckInTime && formatDate(lastCheckInTime, "hh: mm a")}
                                         </p>
                                     </CardContent>
                                 </Card>

@@ -2,31 +2,20 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 
-import { CellAction } from "./cell-action"
-import { Location } from "@/types/profile";
-import { formatDate } from "date-fns";
+import { CellAction } from "./cell-action" 
+import DateTimeCell from "@/components/common/date-time-cell";
+import { Holiday } from "@/types/holiday";
 
 
-export const columns: ColumnDef<Location>[] = [
+export const columns: ColumnDef<Holiday>[] = [
   {
-    accessorKey: "name",
     header: "Name",
+    accessorKey: "name",
   },
   {
-    accessorKey: "address",
-    header: "Address",
-  },
-  {
-    accessorKey: "country",
-    header: "Country",
-  },
-  {
-    accessorKey: "state",
-    header: "State",
-  },
-  {
-    accessorKey: "pincode",
-    header: "Pincode",
+    header: "Date",
+    accessorKey: "holiday",
+    cell: ({ row }) => <DateTimeCell dateStr={row.getValue("holiday")} isTime={0} /> 
   },
   {
     accessorKey: "createdAt",

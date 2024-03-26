@@ -5,7 +5,7 @@ import Image from "next/image";
 interface HeadingProps {
     title: string;
     description: string;
-    action: string;
+    action: string | null;
     onClick: () => void;
 }
 
@@ -20,10 +20,10 @@ export const EmptyStateTable: React.FC<HeadingProps> = ({
 
     return (
         <div className="flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed">
-            <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center"> 
+            <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
 
                 <Image
-                    src="/empty-folder2.png" 
+                    src="/empty-folder2.png"
                     width="100"
                     height="56"
                     alt="Empty-Folder"
@@ -33,9 +33,10 @@ export const EmptyStateTable: React.FC<HeadingProps> = ({
                 <p className="mb-4 mt-2 text-sm text-muted-foreground">
                     {description}
                 </p>
-                <Button size="sm" className="relative" onClick={onClick}>
+                {action && <Button size="sm" className="relative" onClick={onClick}>
                     {action}
-                </Button>
+                </Button>}
+
             </div>
         </div>
     )

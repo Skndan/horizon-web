@@ -1,3 +1,5 @@
+import { Profile } from "./profile"
+
 export interface Shift {
     id: string
     name: string
@@ -14,6 +16,22 @@ export interface ShiftSchedule {
     weekNumber: number
     workDays: string[]
 }
+
+export interface Daylog {
+    id: string
+    createdAt: string
+    updatedAt: string
+    createdBy: any
+    updatedBy: any
+    active: boolean
+    totalWork: number
+    totalBreak: number
+    profile: Profile
+    status: string
+    endTime: any
+    timeSheetPrepared: boolean
+  }
+  
 
 // {
 //     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",

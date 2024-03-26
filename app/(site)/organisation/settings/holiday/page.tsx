@@ -1,34 +1,35 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
-import { Heading } from "@/components/ui/heading";
+import { DataTable } from "@/components/ui/data-table"; 
 import { Separator } from "@/components/ui/separator";
-import apiClient from "@/lib/api/api-client";
-import { Location } from "@/types/profile";
+import apiClient from "@/lib/api/api-client"; 
 import { Loader, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { columns } from "./components/columns";
 import { useDeleteStore } from "@/store/use-delete-store";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { SubHeading } from "@/components/ui/sub-heading";
-import { DepartmentForm } from "../../department/department-form";
 import { HolidayForm } from "./holiday-form";
+import { format } from "date-fns";
+import { Holiday } from "@/types/holiday";
 
 export const HolidayPage = () => {
     const router = useRouter();
-    const [data, setData] = useState<Location[]>([])
+    const [data, setData] = useState<Holiday[]>([])
     const [isLoading, setLoading] = useState(true)
     const { flag } = useDeleteStore();
     const [isOpen, setOpen] = useState(false);
 
+    const orgId = localStorage.getItem("orgId");
+
     async function fetchData() {
         setLoading(true)
-        await apiClient.get('/location').then((res) => res.data)
+        await apiClient.get(`/holiday/${orgId}/${format(new Date(), "yyyy")}`).then((res) => res.data)
             .then((data) => {
                 console.log(`setting value`)
-                setData(data.content)
+                setData(data)
                 setLoading(false)
             });
         setLoading(false)
@@ -63,7 +64,7 @@ export const HolidayPage = () => {
                         <Loader className="animate-spin h-5 w-5 mr-3" />
                     </div>
                 ) : (
-                    data.length != 0 ?
+                    data.length == 0 ?
                         <EmptyStateTable
                             title={"No Holidays added"}
                             description={"You have not added any holidays. Add one below."}

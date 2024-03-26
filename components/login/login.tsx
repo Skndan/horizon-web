@@ -120,9 +120,7 @@ const Login = () => {
 
               toast.success("Welcome");
               router.push("/dashboard");
-            });
-
-
+            }); 
         });
     } catch (error: any) {
       toast.error("Something went wrong.");
