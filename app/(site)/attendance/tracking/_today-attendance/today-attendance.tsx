@@ -10,24 +10,36 @@ import { Daylog } from "@/types/attendance";
 import { format, getDaysInMonth } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { formatDate } from "@/lib/utils/time-utils";
+import toast from "react-hot-toast";
 
 export const TodayAttendancePage = () => {
 
     const [data, setData] = useState<Daylog[]>([])
     const [isLoading, setLoading] = useState(true)
 
-    const orgId = localStorage.getItem("orgId");
+
 
     const [date, setDate] = useState<Date | undefined>(new Date())
 
+
     useEffect(() => {
-        apiClient.get(`/time-sheet/day-log-by-organisation/day-wise/${orgId}/${formatDate(date!.toISOString(), "yyyy-MM-dd")}`).then((res) => res.data)
-            .then((data) => {
-                setData(data)
-                setLoading(false)
-            });
+        const onLoad = async () => {
+            try {
+                const orgId = localStorage.getItem("orgId");
+                await apiClient.get(`/time-sheet/day-log-by-organisation/day-wise/${orgId}/${formatDate(date!.toISOString(), "yyyy-MM-dd")}`).then((res) => res.data)
+                    .then((data) => {
+                        setData(data)
+                        setLoading(false)
+                    });
+            } catch (error) {
+                toast.error('');
+            } finally {
+
+            }
+        }; 
+        onLoad();
     }, [date])
- 
+
     return (
         <div className="flex-col">
             <div className="flex-1">

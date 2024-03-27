@@ -8,11 +8,11 @@ export interface Shift {
     isDynamic: boolean
     schedules: ShiftSchedule[]
     workDays: string[]
-} 
+}
 
 export interface ShiftSchedule {
     id: string
-    shift: Shift  
+    shift: Shift
     weekNumber: number
     workDays: string[]
 }
@@ -30,8 +30,14 @@ export interface Daylog {
     status: string
     endTime: any
     timeSheetPrepared: boolean
-  }
-  
+}
+
+
+export interface MonthlyDaylog {
+    log: string[]
+    profile: Profile
+}
+
 
 // {
 //     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",

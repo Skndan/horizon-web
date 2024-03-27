@@ -1,7 +1,7 @@
 "use client";
 
 import apiClient from "@/lib/api/api-client";
-import { Daylog } from "@/types/attendance";
+import { Daylog, MonthlyDaylog } from "@/types/attendance";
 import { addDays, format, formatDate, getDaysInMonth } from "date-fns";
 import { useState, useEffect } from "react";
 import { Loader } from "lucide-react";
@@ -24,14 +24,14 @@ import { isWeekend } from "@/lib/utils/time-utils";
 
 export const MonthlyAttendancePage = () => {
 
-    const [data, setData] = useState<Daylog[]>([])
+    const [data, setData] = useState<MonthlyDaylog[]>([])
     const [holiday, setHoliday] = useState<String[]>([])
 
 
     const [isLoading, setLoading] = useState(true)
 
     const orgId = localStorage.getItem("orgId");
- 
+
     const [selectedMonth, setSelectedMonth] = useState(new Date());
 
 
@@ -100,24 +100,25 @@ export const MonthlyAttendancePage = () => {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        { 
+                                        {
                                             data.map(dayLog => (
-                                                <TableRow key={dayLog.id}>
+                                                <TableRow key={dayLog.profile.id}>
                                                     <TableCell className='sticky min-w-56 left-0 bg-background'><AvatarCell avatarUrl={''} employeeName={dayLog.profile.name} employeeId={dayLog.profile.employeeId} /></TableCell>
                                                     {[...Array(daysInMonth)].map((_, index) => {
                                                         const dateKey = format(addDays(new Date(monthYear), index), 'yyyy-MM-dd');
                                                         const currentDate = addDays(new Date(monthYear), index);
                                                         const isFutureDate = isAfter(startOfDay(currentDate), startOfDay(new Date())); // Check if the date is in the future 
-                                                    
+
                                                         const isHoliday = holiday.includes(dateKey);
-                                                        console.log(`${dateKey} ${isHoliday}`)
-                                                        const icon = isFutureDate ? '⚪' 
-                                                                    : format(dayLog.createdAt, 'yyyy-MM-dd') === dateKey ? '🟢' 
-                                                                        : isWeekend(dateKey) ? '🔵' 
-                                                                            : isHoliday ? '✨' // Change this icon to whatever you use for holidays
-                                                                                : '🔴'; 
-                                                       return <TableCell key={index}>
-                                                            {icon} 
+                                                        console.log(`${dateKey} ${isHoliday} ${dayLog.log.includes(dateKey)}`)
+
+                                                        const icon = isFutureDate ? '⚪'
+                                                            : dayLog.log.includes(dateKey) ? '🟢'
+                                                                : isWeekend(dateKey) ? '🔵'
+                                                                    : isHoliday ? '✨' // Change this icon to whatever you use for holidays
+                                                                        : '🔴';
+                                                        return <TableCell key={index}>
+                                                            {icon}
                                                         </TableCell>;
                                                     })}
                                                 </TableRow>
