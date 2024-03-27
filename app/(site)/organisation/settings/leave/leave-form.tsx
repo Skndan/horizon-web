@@ -24,25 +24,30 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
-import { Department } from "@/types/profile";
-import apiClient from "@/lib/api/api-client";
+import { toast } from "react-hot-toast"; 
+import apiClient from "@/lib/api/api-client"; 
 import { Loader } from "lucide-react";
+import { LeaveType } from "@/types/leave";
 
-interface DepartmentFormProps {
-    initialData: Department | null;
+interface LeaveTypeFormProps {
+    initialData: LeaveType | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
+// name
+// from
+// to
+
 const formSchema = z.object({
     name: z.string().min(1),
-    code: z.string().min(1),
+    organisation: z.any(),
+    count: z.any()
 });
 
-type DepartmentFormValues = z.infer<typeof formSchema>;
+type LeaveTypeFormValues = z.infer<typeof formSchema>;
 
-export const DepartmentForm: React.FC<DepartmentFormProps> = ({
+export const LeaveTypeForm: React.FC<LeaveTypeFormProps> = ({
     initialData,
     isOpen,
     onClose,
@@ -50,12 +55,18 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
 
-    const onSubmit = async (data: DepartmentFormValues) => {
+    const orgId = localStorage.getItem("orgId");
+
+    const onSubmit = async (data: LeaveTypeFormValues) => {
         try {
             setLoading(true);
+
+            data.organisation.id = orgId;
+
+            console.log(data);
             if (initialData) {
                 await apiClient
-                    .put(`/department/${initialData.id}`, data)
+                    .put(`/leave/type/${initialData.id}`, data)
                     .then((res) => res.data)
                     .then((data) => {
                         toast.success(toastMessage);
@@ -63,7 +74,7 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                     });
             } else {
                 await apiClient
-                    .post("/department", data)
+                    .post("/leave/type", data)
                     .then((res) => res.data)
                     .then((data) => {
                         toast.success(toastMessage);
@@ -79,14 +90,18 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
         }
     };
 
-    const title = initialData ? "Edit department" : "Create department";
-    const description = initialData ? "Edit a department." : "Add a new department";
-    const toastMessage = initialData ? "Department updated." : "Department created.";
+    const title = initialData ? "Edit Leave Type" : "Create Leave Type";
+    const description = initialData ? "Edit a Leave Type." : "Add a new Leave Type";
+    const toastMessage = initialData ? "Leave type updated." : "Leave type created.";
     const action = initialData ? "Save changes" : "Create";
 
-    const form = useForm<DepartmentFormValues>({
+    const form = useForm<LeaveTypeFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: formData || {},
+        defaultValues: formData || {
+            organisation: {
+                id: ''
+            }
+        },
         mode: "onChange",
     });
 
@@ -112,7 +127,7 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                                         <FormControl>
                                             <Input
                                                 disabled={loading}
-                                                placeholder="Department name"
+                                                placeholder="Leave type name"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -120,16 +135,18 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                                     </FormItem>
                                 )}
                             />
+
                             <FormField
                                 control={form.control}
-                                name="code"
+                                name="count"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Code*</FormLabel>
+                                        <FormLabel>Total Leave *</FormLabel>
+                                        <FormLabel> {formData?.name}</FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={loading}
-                                                placeholder="Department code"
+                                                placeholder="Total Leave"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -137,6 +154,7 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                                     </FormItem>
                                 )}
                             />
+
                         </div>
                         <Button disabled={loading} className="ml-auto" type="submit">
                             {loading &&

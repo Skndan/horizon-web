@@ -14,19 +14,21 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { Department } from "@/types/profile"; 
-import { DepartmentForm } from "../department-form";
 import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
+import { LeaveRequest } from "@/types/leave";
+import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
+
 
 interface CellActionProps {
-  data: Department;
+  data: LeaveRequest;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
   data,
 }) => {
-  const router = useRouter(); 
+  const router = useRouter();
+  const params = useParams();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openForm, setOpenForm] = useState(false);
@@ -35,9 +37,9 @@ export const CellAction: React.FC<CellActionProps> = ({
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await apiClient.delete(`/department/${data.id}`);
+      await apiClient.delete(`/leave-request/${data.id}`);
       set(data?.id ?? '');
-      toast.success('Department deleted.');
+      toast.success('Leave request deleted.');
       router.refresh();
     } catch (error) {
       toast.error('Make sure you re-assign all employees using this department first.');
@@ -54,17 +56,7 @@ export const CellAction: React.FC<CellActionProps> = ({
         onClose={() => setOpen(false)}
         onConfirm={onConfirm}
         loading={loading}
-      />
-
-      <DepartmentForm
-        isOpen={openForm}
-        onClose={() => {
-          setOpenForm(false);
-          set(data?.id ?? '');
-        }}
-        initialData={data}
-      />
-
+      /> 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -73,12 +65,12 @@ export const CellAction: React.FC<CellActionProps> = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => setOpenForm(true)}
+            onClick={() => router.push(`/my-space/leave-request/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Edit
           </DropdownMenuItem>
+          <DropdownMenuSeparator/>
           <DropdownMenuItem
             onClick={() => setOpen(true)}
           >

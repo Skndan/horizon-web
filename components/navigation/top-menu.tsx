@@ -30,12 +30,12 @@ export function MainNav({
       active: pathname.match(`/dashboard`),
       children: []
     },
-    // {
-    //   href: `/my-space`,
-    //   label: "My Space",
-    //   active: pathname.match(`/my-space`),
-    //   children: []
-    // },
+    {
+      href: `/my-space`,
+      label: "My Space",
+      active: pathname.match(`/my-space`),
+      children: []
+    },
     {
       href: `/organisation`,
       label: "Organisation",

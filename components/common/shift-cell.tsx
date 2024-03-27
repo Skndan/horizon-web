@@ -25,9 +25,8 @@ const ShiftCell = ({ shiftName, shiftWorkDays, shiftStartDate, shiftEndDate }: {
                     </div>
                 </div>
             </HoverCardTrigger>
-            <HoverCardContent className="w-90">
-
-                <ToggleGroup disabled type="multiple" className="justify-start" size={"sm"} variant="outline" value={shiftWorkDays}>
+            <HoverCardContent className="w-90"> 
+                <ToggleGroup type="multiple" className="justify-start" size={"sm"} variant="outline" value={shiftWorkDays}>
                     <ToggleGroupItem value="SUN">SUN</ToggleGroupItem>
                     <ToggleGroupItem value="MON">MON</ToggleGroupItem>
                     <ToggleGroupItem value="TUE">TUE</ToggleGroupItem>

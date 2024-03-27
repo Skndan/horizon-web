@@ -1,24 +1,25 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { OrganisationForm } from "../components/organisation-form";
+import { BasicCard } from "../components/basic-card";
 import { SubHeading } from "@/components/ui/sub-heading";
 import { useEffect, useState } from "react";
-import { Organisation } from "@/types/profile";
+import { Organisation, Profile } from "@/types/profile";
 import apiClient from "@/lib/api/api-client";
-import { AddressForm } from "../components/address-form";
+import { WorkCard } from "../components/work-card";
 
 export const OrgSettingsPage = () => {
 
 
-    const [data, setData] = useState<Organisation[]>([])
+    const [data, setData] = useState(null)
     const [isLoading, setLoading] = useState(false)
 
     useEffect(() => {
         setLoading(true)
-        apiClient.get('/profile').then((res) => res.data)
+        const profileId = localStorage.getItem('profileId');
+        apiClient.get(`/profile/${profileId}`).then((res) => res.data)
             .then((data) => {
-                setData(data.content)
+                setData(data)
                 setLoading(false)
             });
     }, [])
@@ -27,12 +28,10 @@ export const OrgSettingsPage = () => {
     return (
         <>
             <div className="space-y-6">
-                <SubHeading title="Organisation Profile" description="Manage your organisation profile here" />
-                <Separator />
-                <OrganisationForm />
-                <Separator />
-                <SubHeading title="Address" description="Manage your organisation address here" />
-                <AddressForm />
+                <SubHeading title="Basic Information" description="" />
+                <BasicCard profile={data} />
+                <SubHeading title="Work Information" description="" />
+                <WorkCard profile={data} />
             </div>
         </>)
 }

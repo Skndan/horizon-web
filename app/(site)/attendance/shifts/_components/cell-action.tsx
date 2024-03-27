@@ -7,17 +7,18 @@ import { toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Shift } from "@/types/attendance";
- 
+import Link from "next/link";
+
 
 interface CellActionProps {
   data: Shift;
@@ -35,7 +36,7 @@ export const CellAction: React.FC<CellActionProps> = ({
     try {
       setLoading(true);
       await axios.delete(`/api/${params.storeId}/billboards/${data.id}`);
-      toast.success('Billboard deleted.'); 
+      toast.success('Billboard deleted.');
     } catch (error) {
       toast.error('Make sure you removed all categories using this billboard first.');
     } finally {
@@ -51,8 +52,8 @@ export const CellAction: React.FC<CellActionProps> = ({
 
   return (
     <>
-      <AlertModal 
-        isOpen={open} 
+      <AlertModal
+        isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onConfirm}
         loading={loading}
@@ -64,16 +65,14 @@ export const CellAction: React.FC<CellActionProps> = ({
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end"> 
-          <DropdownMenuItem
-            onClick={() => router.push(`/attendance/shifts/${data.id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" /> Edit
-          </DropdownMenuItem>
-          <DropdownMenuSeparator/>
-          <DropdownMenuItem
-            onClick={() => setOpen(true)}
-          >
+        <DropdownMenuContent align="end">
+          <Link href={`/attendance/shifts/${data.id}`}>
+            <DropdownMenuItem>
+              <Edit className="mr-2 h-4 w-4" /> Edit
+            </DropdownMenuItem>
+          </Link> 
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setOpen(true)} >
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

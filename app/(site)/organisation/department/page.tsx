@@ -1,10 +1,8 @@
 "use client";
-
-import { useRouter } from "next/navigation";
+ 
 import apiClient from "@/lib/api/api-client";
 import { Department } from "@/types/profile";
 import { useState, useEffect } from "react";
-import { useDepartmentSheet } from "@/store/sheet/use-department-sheet";
 import { DataTable } from "@/components/ui/data-table";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { columns } from "./components/columns";
@@ -15,8 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useUpdateStore } from "@/store/use-update-store";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 
-export const DepartmentPage = () => {
-    const router = useRouter();
+export const DepartmentPage = () => { 
 
     const [data, setData] = useState<Department[]>([])
     const [isLoading, setLoading] = useState(true)

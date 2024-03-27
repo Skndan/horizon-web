@@ -3,49 +3,50 @@
 import { useState } from "react";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
+  DropdownMenuItem, 
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { AlertModal } from "@/components/modals/alert-modal";
-import { Department } from "@/types/profile"; 
-import { DepartmentForm } from "../department-form";
-import apiClient from "@/lib/api/api-client";
-import { useUpdateStore } from "@/store/use-update-store";
+import { AlertModal } from "@/components/modals/alert-modal"; 
+import apiClient from "@/lib/api/api-client"; 
+import { useUpdateStore } from "@/store/use-update-store"; 
+import { LeaveType } from "@/types/leave";
+import { LeaveTypeForm } from "../leave-form";
 
 interface CellActionProps {
-  data: Department;
+  data: LeaveType;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
   data,
 }) => {
-  const router = useRouter(); 
+ 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [openForm, setOpenForm] = useState(false);
-  const { set } = useUpdateStore();
 
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await apiClient.delete(`/department/${data.id}`);
-      set(data?.id ?? '');
-      toast.success('Department deleted.');
-      router.refresh();
+      await apiClient.delete(`/leave/type/${data.id}`);
+      toast.success('Leave deleted.');
+      set(`delete-leave-${data.id}`);
     } catch (error) {
-      toast.error('Make sure you re-assign all employees using this department first.');
+      toast.error('Make sure you re-assign all employees using this location first.' + error);
     } finally {
       setOpen(false);
       setLoading(false);
     }
   };
+
+  const [openForm, setOpenForm] = useState(false);
+
+  const { set } = useUpdateStore();
 
   return (
     <>
@@ -56,11 +57,11 @@ export const CellAction: React.FC<CellActionProps> = ({
         loading={loading}
       />
 
-      <DepartmentForm
+      <LeaveTypeForm 
         isOpen={openForm}
         onClose={() => {
           setOpenForm(false);
-          set(data?.id ?? '');
+          set(`${data?.id} ${Math.random()}`);
         }}
         initialData={data}
       />
@@ -72,15 +73,15 @@ export const CellAction: React.FC<CellActionProps> = ({
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuContent align="end"> 
           <DropdownMenuItem
             onClick={() => setOpenForm(true)}
           >
             <Edit className="mr-2 h-4 w-4" /> Edit
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={() => setOpen(true)}
+            onClick={() => setOpen(true)} className="text-red-600"
           >
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>

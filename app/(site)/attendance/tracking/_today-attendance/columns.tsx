@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 
-import { CellAction } from "./cell-action"
 import AvatarCell from "@/components/common/avatar-cell";
 import { Daylog } from "@/types/attendance";
 import DateTimeCell from "@/components/common/date-time-cell";
@@ -27,7 +26,7 @@ export const columns: ColumnDef<Daylog>[] = [
     accessorKey: "createdAt",
     cell: ({ row }) => {
       const status = row.original.status;
-      return  <>
+      return <>
         <div className="flex flex-row items-center gap-2">
           <DateTimeCell dateStr={row.getValue("createdAt")} isTime={1} />
           {status == "IN" ? <span className="relative flex h-3 w-3">

@@ -1,15 +1,11 @@
-import { Separator } from "@/components/ui/separator"  
-import { Heading } from "@/components/ui/heading" 
+import { Separator } from "@/components/ui/separator"
+import { Heading } from "@/components/ui/heading"
 import { SidebarNav } from "@/components/common/side-bar-nav"
 
 const sidebarNavItems = [
     {
         title: "Organisation",
         href: "/organisation/settings",
-    },
-    {
-        title: "Account",
-        href: "/organisation/settings/accounts",
     },
     {
         title: "Payroll",
@@ -22,11 +18,16 @@ const sidebarNavItems = [
     {
         title: "Holiday",
         href: "/organisation/settings/holiday",
+    }, 
+    {
+        title: "Leave",
+        href: "/organisation/settings/leave",
     },
     {
         title: "Reports",
         href: "/organisation/settings/reports",
     },
+
 ]
 
 interface SettingsLayoutProps {
@@ -44,7 +45,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
                         <SidebarNav items={sidebarNavItems} />
                     </aside>
                     <div className="flex-1">{children}</div>
-                </div> 
+                </div>
             </div>
         </>
     )

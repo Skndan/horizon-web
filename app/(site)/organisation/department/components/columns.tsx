@@ -19,7 +19,7 @@ export const columns: ColumnDef<Department>[] = [
   { 
     accessorKey: "createdAt",
     header: "Created At",
-    cell: ({ row }) => <DateTimeCell dateStr={row.getValue("createdAt")} /> 
+    cell: ({ row }) => <DateTimeCell dateStr={row.getValue("createdAt")} isTime={0} /> 
   },
   {
     id: "actions",
