@@ -109,8 +109,8 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             )}
           </div>
           <Separator />
-          <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
-            {mail.description}
+          <div className="flex-1 whitespace-pre-wrap p-4 text-sm"> 
+            <p dangerouslySetInnerHTML={{ __html: mail.description }}></p>
           </div>
           <Separator className="mt-auto" />
 

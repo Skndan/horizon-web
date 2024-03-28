@@ -44,6 +44,10 @@ import { Loader } from "lucide-react";
 import apiClient from "@/lib/api/api-client";
 import { Profile } from "@/types/profile";
 
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 const formSchema = z.object({
     name: z.string().min(1),
     description: z.string().min(1),
@@ -119,27 +123,27 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
     const onSubmit = async (data: EmployeeFormValues) => {
         try {
-        const profileId = localStorage.getItem("profileId");
-        data.initiator.id = profileId;
-        
-        const profile : Profile = data.attendies.map((option: Option) => {
-            return {
-                id : option.value
-            };
-        });
-        
-        data.attendies = profile;
+            const profileId = localStorage.getItem("profileId");
+            data.initiator.id = profileId;
 
-        console.log(data);
-        
-        setLoading(true);
-        await apiClient
-            .post("/activity", data)
-            .then((res) => res.data)
-            .then((data) => {
-                toast.success(toastMessage);
-                router.push(`/dashboard`);
+            const profile: Profile = data.attendies.map((option: Option) => {
+                return {
+                    id: option.value
+                };
             });
+
+            data.attendies = profile;
+
+            console.log(data);
+
+            setLoading(true);
+            await apiClient
+                .post("/activity", data)
+                .then((res) => res.data)
+                .then((data) => {
+                    toast.success(toastMessage);
+                    router.push(`/dashboard`);
+                });
         } catch (error: any) {
             toast.error('Something went wrong.');
         } finally {
@@ -194,23 +198,9 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Name <span className="text-red-600">*</span></FormLabel>
+                                        <FormLabel>Event/Activity Name <span className="text-red-600">*</span></FormLabel>
                                         <FormControl>
                                             <Input disabled={loading} placeholder="Name" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Description <span className="text-red-600">*</span></FormLabel>
-                                        <FormControl>
-                                            <Textarea disabled={loading} placeholder="Description" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -387,6 +377,25 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
                         </div>
 
+
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Description <span className="text-red-600">*</span></FormLabel>
+                                    <FormControl>
+                                        <ReactQuill
+                                            className={cn(
+                                                "rounded-md border border-input bg-background "
+                                            )}
+                                              value={field.value} onChange={field.onChange} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+ 
                         <Button disabled={loading} className="ml-auto" type="submit">
                             {loading &&
                                 <Loader className="animate-spin h-5 w-5 mr-3" />}

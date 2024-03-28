@@ -62,8 +62,8 @@ export function MailList({ items }: MailListProps) {
                   </div>
                   <div className="text-md font-medium">{item.name}</div>
                 </div>
-                <div className="line-clamp-2 text-xs text-muted-foreground">
-                  {item.description.substring(0, 300)}
+                <div className="line-clamp-2 text-xs text-muted-foreground"> 
+                  <p dangerouslySetInnerHTML={{ __html: item.description.substring(0, 300) }}></p>
                 </div>
                 {item.attendies.length ? (
                   <div className="flex items-center gap-2">
