@@ -41,138 +41,28 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip" 
-import { Mail } from "./data"
+} from "@/components/ui/tooltip"
+import { Activity } from "@/types/activity"
+import { formatDate } from "date-fns"
+import { Badge } from "@/components/ui/badge"
+import { toTitleCase } from "@/lib/utils/string-utils"
+import { Textarea } from "@/components/ui/textarea"
+import { Switch } from "@/components/ui/switch"
 
 interface MailDisplayProps {
-  mail: Mail | null
+  mail: Activity | null
 }
 
 export function MailDisplay({ mail }: MailDisplayProps) {
   const today = new Date()
 
   return (
-    <div className="flex h-full flex-col lg:w-1/2">
+    <div className="flex-1 h-full flex-col">
       <div className="flex items-center p-2">
-        <div className="flex items-center gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
-                <Archive className="h-4 w-4" />
-                <span className="sr-only">Archive</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Archive</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
-                <ArchiveX className="h-4 w-4" />
-                <span className="sr-only">Move to junk</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Move to junk</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
-                <Trash2 className="h-4 w-4" />
-                <span className="sr-only">Move to trash</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Move to trash</TooltipContent>
-          </Tooltip>
-          <Separator orientation="vertical" className="mx-1 h-6" />
-          <Tooltip>
-            <Popover>
-              <PopoverTrigger asChild>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" disabled={!mail}>
-                    <Clock className="h-4 w-4" />
-                    <span className="sr-only">Snooze</span>
-                  </Button>
-                </TooltipTrigger>
-              </PopoverTrigger>
-              <PopoverContent className="flex w-[535px] p-0">
-                <div className="flex flex-col gap-2 border-r px-2 py-4">
-                  <div className="px-4 text-sm font-medium">Snooze until</div>
-                  <div className="grid min-w-[250px] gap-1">
-                    <Button
-                      variant="ghost"
-                      className="justify-start font-normal"
-                    >
-                      Later today{" "}
-                      <span className="ml-auto text-muted-foreground">
-                        {/* {format(addHours(today, 4), "E, h:m b")} */}
-                      </span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="justify-start font-normal"
-                    >
-                      Tomorrow
-                      <span className="ml-auto text-muted-foreground">
-                        {/* {format(addDays(today, 1), "E, h:m b")} */}
-                      </span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="justify-start font-normal"
-                    >
-                      This weekend
-                      <span className="ml-auto text-muted-foreground">
-                        {/* {format(nextSaturday(today), "E, h:m b")} */}
-                      </span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="justify-start font-normal"
-                    >
-                      Next week
-                      <span className="ml-auto text-muted-foreground">
-                        {/* {format(addDays(today, 7), "E, h:m b")} */}
-                      </span>
-                    </Button>
-                  </div>
-                </div>
-                <div className="p-2">
-                  <Calendar />
-                </div>
-              </PopoverContent>
-            </Popover>
-            <TooltipContent>Snooze</TooltipContent>
-          </Tooltip>
-        </div>
         <div className="ml-auto flex items-center gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
-                <Reply className="h-4 w-4" />
-                <span className="sr-only">Reply</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Reply</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
-                <ReplyAll className="h-4 w-4" />
-                <span className="sr-only">Reply all</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Reply all</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
-                <Forward className="h-4 w-4" />
-                <span className="sr-only">Forward</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Forward</TooltipContent>
-          </Tooltip>
+
         </div>
-        <Separator orientation="vertical" className="mx-2 h-6" />
+        {/* <Separator orientation="vertical" className="mx-2 h-6" /> */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" disabled={!mail}>
@@ -181,10 +71,10 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Mark as unread</DropdownMenuItem>
+            {/* <DropdownMenuItem>Mark as unread</DropdownMenuItem>
             <DropdownMenuItem>Star thread</DropdownMenuItem>
             <DropdownMenuItem>Add label</DropdownMenuItem>
-            <DropdownMenuItem>Mute thread</DropdownMenuItem>
+            <DropdownMenuItem>Mute thread</DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -194,63 +84,67 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           <div className="flex items-start p-4">
             <div className="flex items-start gap-4 text-sm">
               <Avatar>
-                <AvatarImage alt={mail.name} />
+                <AvatarImage alt={mail.initiator.name} />
                 <AvatarFallback>
-                  {mail.name
+                  {mail.initiator.name
                     .split(" ")
                     .map((chunk: any) => chunk[0])
                     .join("")}
                 </AvatarFallback>
               </Avatar>
               <div className="grid gap-1">
-                <div className="font-semibold">{mail.name}</div>
-                <div className="line-clamp-1 text-xs">{mail.subject}</div>
-                <div className="line-clamp-1 text-xs">
-                  <span className="font-medium">Reply-To:</span> {mail.email}
-                </div>
+                <div className="font-semibold">{mail.initiator.name}</div>
+                <div className="line-clamp-1 text-xs">{mail.name}</div>
               </div>
             </div>
-            {mail.date && (
-              <div className="ml-auto text-xs text-muted-foreground">
-                {/* {format(new Date(mail.date), "PPpp")} */}
+            {mail.updatedAt && (
+              <div className="ml-auto items-end flex flex-col space-y-1">
+                <div className="text-xs text-muted-foreground">
+                  {formatDate(new Date(mail.updatedAt), "PPpp")}
+                </div>
+                <Badge className={`${mail.type == "ACTIVITY" ? "bg-green-400" : "bg-amber-400"}`}>
+                  {toTitleCase(mail.type)}
+                </Badge>
               </div>
             )}
           </div>
           <Separator />
           <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
-            {mail.text}
+            {mail.description}
           </div>
           <Separator className="mt-auto" />
-          <div className="p-4">
-            {/* <form>
-              <div className="grid gap-4">
-                <Textarea
-                  className="p-4"
-                  placeholder={`Reply ${mail.name}...`}
-                />
-                <div className="flex items-center">
-                  <Label
-                    htmlFor="mute"
-                    className="flex items-center gap-2 text-xs font-normal"
-                  >
-                    <Switch id="mute" aria-label="Mute thread" /> Mute this
-                    thread
-                  </Label>
-                  <Button
-                    onClick={(e) => e.preventDefault()}
-                    size="sm"
-                    className="ml-auto"
-                  >
-                    Send
-                  </Button>
-                </div>
+
+
+          <div className="grid">
+            <div className="flex flex-col p-4 hover:bg-muted">
+              <Label className="text-muted-foreground">Location</Label>
+              <Label className="text-md pt-1">{mail.location}</Label>
+            </div>
+            <div className="grid grid-cols-4">
+              <div className="flex flex-col p-4 hover:bg-muted">
+                <Label className="text-muted-foreground">Start Date</Label>
+                <Label className="text-md pt-1">{formatDate(mail.startDate, "dd MMM yyyy")}</Label>
               </div>
-            </form> */}
+              <div className="flex flex-col p-4 hover:bg-muted">
+                <Label className="text-muted-foreground">Due Date</Label>
+                <Label className="text-md pt-1">{formatDate(mail.dueDate, "dd MMM yyyy")}</Label>
+              </div>
+              {/* <div className="flex flex-col p-4 hover:bg-muted">
+                <Label className="text-muted-foreground">Employee</Label>
+                <Label className="text-md pt-1">employeeId</Label>
+              </div>
+              <div className="flex flex-col p-4 hover:bg-muted">
+                <Label className="text-muted-foreground">Employee</Label>
+                <Label className="text-md pt-1">employeeId</Label>
+              </div> */}
+            </div> 
           </div>
+
+
         </div>
       ) : (
         <div className="p-8 text-center text-muted-foreground">
-          No message selected
+          No activity selected
         </div>
       )}
     </div>

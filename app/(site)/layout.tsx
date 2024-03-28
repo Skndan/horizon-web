@@ -6,6 +6,7 @@ import Image from "next/image";
 import { UserNav } from "@/components/dashboard/user-nav";
 import { MainNav } from "@/components/navigation/top-menu";
 import MobileNav from "@/components/navigation/top-menu-mobile";
+import { CommandMenu } from "@/components/common/command-center";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -33,6 +34,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             <div className="ml-auto flex items-center space-x-4">
               <ThemeModeToggle />
               <UserNav />
+              <CommandMenu />
             </div>
           </div>
         </header>

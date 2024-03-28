@@ -15,8 +15,7 @@ const OnboardingPage = ({ params }: { params: { shiftId: string } }) => {
  
     useEffect(() => {
         (async () => {
-            setLoading(true);
-
+            setLoading(true); 
             if (params.shiftId != 'new') {
                 const employees = await apiClient.get(`/shift/${params.shiftId}`);
                 setData(employees.data)
