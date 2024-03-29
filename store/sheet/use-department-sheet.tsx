@@ -12,12 +12,14 @@ interface useDepartmentSheetInterface {
 }
  
 export const useDepartmentSheet = create(persist<useDepartmentSheetInterface>((set, get) => ({
-  department: {},
+  department: {
+    id: ""
+  },
   isOpen: false,
   departmentList: [],
   set: (department: Department) => set({ department, isOpen: true }),
   setList: (departmentList: any) => set({ departmentList }),
-  reset: () => set({ department: {}, isOpen: false }),
+  reset: () => set({ department: { id: ""}, isOpen: false }),
 }), { name: 'department_tag' })); 
 
 

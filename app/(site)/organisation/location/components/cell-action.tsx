@@ -17,12 +17,12 @@ import {
 import { AlertModal } from "@/components/modals/alert-modal";
 import { useDepartmentSheet } from "@/store/sheet/use-department-sheet";
 import apiClient from "@/lib/api/api-client";
-import { Location } from "@/types/profile";
+import { Address } from "@/types/profile";
 import { revalidatePath } from "next/cache";
 import { useDeleteStore } from "@/store/use-delete-store";
 
 interface CellActionProps {
-  data: Location;
+  data: Address;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({

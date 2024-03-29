@@ -44,7 +44,12 @@ const profileFormSchema = z.object({
         .string(),
     description: z
         .string(),
-    earnings: z.any(),
+    earnings: z.array(
+        z.object({
+            id: z.string(), // Assuming each earning has an ID
+            value: z.string(), // Assuming amount is a number 
+          })
+    ),
     deduction: z.any()
 })
 
@@ -63,21 +68,21 @@ export function TemplateForm() {
         mode: "onChange",
     })
 
-    const {
-        fields: fieldsList1,
-        remove: removeList1,
-        append: appendList1 } = useFieldArray({
-            name: "earnings",
-            control: form.control,
-        })
+    // const {
+    //     fields: fieldsList1,
+    //     remove: removeList1,
+    //     append: appendList1 } = useFieldArray({
+    //         name: "earnings",
+    //         control: form.control,
+    //     })
 
-    const {
-        fields: fieldsList2,
-        remove: removeList2,
-        append: appendList2 } = useFieldArray({
-            name: "deduction",
-            control: form.control,
-        })
+    // const {
+    //     fields: fieldsList2,
+    //     remove: removeList2,
+    //     append: appendList2 } = useFieldArray({
+    //         name: "deduction",
+    //         control: form.control,
+    //     })
 
     function onSubmit(data: ProfileFormValues) {
         toast.success(JSON.stringify(data));
@@ -140,7 +145,7 @@ export function TemplateForm() {
                                 </TableHeader>
                                 <TableBody>
 
-                                    {fieldsList1.map((field, index) => (
+                                    {/* {fieldsList1.map((field: any, index: any) => (
                                         <TableRow key={field.id}>
                                             <TableCell>
                                                 <FormField
@@ -212,7 +217,7 @@ export function TemplateForm() {
                                         <TableCell> </TableCell>
                                     </TableRow>
 
-                                    {fieldsList2.map((field, index) => (
+                                    {fieldsList2.map((field: any, index: any) => (
                                         <TableRow key={field.id}>
                                             <TableCell>
                                                 <FormField
@@ -284,7 +289,7 @@ export function TemplateForm() {
 
                                         </TableCell>
                                         <TableCell> </TableCell>
-                                    </TableRow>
+                                    </TableRow> */}
 
                                     <TableRow>
                                         <TableCell>

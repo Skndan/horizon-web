@@ -16,7 +16,7 @@ import { Banknote, Edit, Plus, SquarePercent } from "lucide-react";
 import { useRouter } from "next/navigation";
 import DeductionsPage from "./deductions/page";
 
-export const PayrollPage = () => {
+const PayrollPage = () => {
 
     const router = useRouter();
 

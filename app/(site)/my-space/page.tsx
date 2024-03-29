@@ -1,6 +1,6 @@
 import { ComingSoonPage } from "@/components/common/coming-soon"; 
 
-export const ActivityPage = () => {
+const ActivityPage = () => {
     return (
         <>
             <ComingSoonPage/>

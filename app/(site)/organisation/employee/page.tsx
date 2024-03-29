@@ -7,9 +7,7 @@ import { Loader } from "lucide-react";
 
 import { useEffect, useState } from "react";
 
-
-
-export const DirectoryPage = () => { 
+const DirectoryPage = () => { 
     
     const [data, setData] = useState<Profile[]>([])
     const [isLoading, setLoading] = useState(true)

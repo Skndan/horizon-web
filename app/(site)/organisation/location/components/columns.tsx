@@ -3,9 +3,10 @@
 import { ColumnDef } from "@tanstack/react-table"
 
 import { CellAction } from "./cell-action" 
+import { Address } from "@/types/profile";
 
 
-export const columns: ColumnDef<Location>[] = [
+export const columns: ColumnDef<Address>[] = [
   {
     accessorKey: "label",
     header: "Name",

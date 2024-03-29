@@ -12,7 +12,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { formatDate } from "@/lib/utils/time-utils";
 import toast from "react-hot-toast";
 
-export const TodayAttendancePage = () => {
+const TodayAttendancePage = () => {
 
     const [data, setData] = useState<Daylog[]>([])
     const [isLoading, setLoading] = useState(true)

@@ -12,11 +12,12 @@ import { columns } from "./components/columns";
 import { useDeleteStore } from "@/store/use-delete-store";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import Link from "next/link";
+import { Address } from "@/types/profile";
 
-export const LocationPage = () => {
+const LocationPage = () => {
 
     const router = useRouter();
-    const [data, setData] = useState<Location[]>([])
+    const [data, setData] = useState<Address[]>([])
     const [isLoading, setLoading] = useState(true)
     const { flag } = useDeleteStore();
 

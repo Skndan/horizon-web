@@ -20,7 +20,7 @@ import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
 import Link from "next/link";
 
-export const LeaveTrackerPage = () => {
+const LeaveTrackerPage = () => {
 
     const [data, setData] = useState<LeaveRequest[]>([])
     const [balance, setBalance] = useState<LeaveBalance[]>([])

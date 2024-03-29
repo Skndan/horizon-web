@@ -21,7 +21,7 @@ import Link from "next/link";
 import { columns } from "./columns";
 import { Daylog } from "@/types/attendance";
 
-export const MySpaceAttendancePage = () => {
+const MySpaceAttendancePage = () => {
 
     const [data, setData] = useState<Daylog[]>([])
     const [isLoading, setLoading] = useState(false)

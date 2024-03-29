@@ -28,8 +28,8 @@ export const columns: ColumnDef<AllowanceDetail>[] = [
     accessorKey: "status",
     header: "Status",
   },
-  {
-    id: "actions",
-    cell: ({ row }) => <CellAction data={row.original} />
-  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <CellAction data={row.original} />
+  // },
 ];

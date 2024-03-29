@@ -8,7 +8,7 @@ import { Organisation, Profile } from "@/types/profile";
 import apiClient from "@/lib/api/api-client";
 import { WorkCard } from "../components/work-card";
 
-export const OrgSettingsPage = () => {
+const OrgSettingsPage = () => {
 
 
     const [data, setData] = useState(null)

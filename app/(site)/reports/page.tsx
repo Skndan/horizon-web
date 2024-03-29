@@ -1,6 +1,6 @@
 import { ComingSoonPage } from "@/components/common/coming-soon";
 
-export const ReportPage = () => {
+const ReportPage = () => {
     return (
         <>
             <ComingSoonPage/>

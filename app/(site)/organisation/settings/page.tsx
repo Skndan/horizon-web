@@ -42,7 +42,7 @@ export interface Artwork {
 //     },
 // ]
 
-export const OrgSettingsPage = () => {
+const OrgSettingsPage = () => {
 
 
     const [orgData, setOrgData] = useState(null)

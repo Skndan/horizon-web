@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TodayAttendancePage from "./_today-attendance/today-attendance";
-import { MonthlyAttendancePage } from "./_monthy-attendance/monthly-attendance";
+import MonthlyAttendancePage from "./_monthy-attendance/monthly-attendance";
 
 const AttendancePage = () => {
     return (

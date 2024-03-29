@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useUpdateStore } from "@/store/use-update-store";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 
-export const DepartmentPage = () => { 
+const DepartmentPage = () => { 
 
     const [data, setData] = useState<Department[]>([])
     const [isLoading, setLoading] = useState(true)

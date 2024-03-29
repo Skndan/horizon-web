@@ -14,7 +14,7 @@ import { SubHeading } from "@/components/ui/sub-heading";
 import { LeaveTypeForm } from "./leave-form";
 import { useUpdateStore } from "@/store/use-update-store";
 
-export const LeaveSettingPage = () => {
+const LeaveSettingPage = () => {
     const router = useRouter();
     const [data, setData] = useState<LeaveType[]>([])
     const [isLoading, setLoading] = useState(true)
@@ -22,10 +22,10 @@ export const LeaveSettingPage = () => {
     const [isOpen, setOpen] = useState(false);
 
 
-
+ const orgId = localStorage.getItem("orgId");
     async function fetchData() {
         setLoading(true)
-        const orgId = localStorage.getItem("orgId");
+       
         await apiClient.get(`/leave/type/get-by-org/${orgId}`).then((res) => res.data)
             .then((data) => {
                 setData(data)

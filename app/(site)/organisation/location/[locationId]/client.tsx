@@ -34,8 +34,8 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Location } from "@/types/profile"
 import apiClient from "@/lib/api/api-client"
+import { Address } from "@/types/profile"
 
 
 const formSchema = z.object({
@@ -49,7 +49,7 @@ const formSchema = z.object({
 type LocationFormValues = z.infer<typeof formSchema>
 
 interface LocationFormProps {
-    initialData: Location | null;
+    initialData: Address | null;
 };
 
 

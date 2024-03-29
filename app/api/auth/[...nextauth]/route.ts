@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
     providers: [
 
         CredentialsProvider({ 

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 
-const ShiftTable = ({ employees , updateShift }) => {
+const ShiftTable = ({ employees , updateShift } : {employees: any, updateShift: any}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedShift, setSelectedShift] = useState(null);
 
@@ -19,7 +19,7 @@ const ShiftTable = ({ employees , updateShift }) => {
 
   const weekDays = getWeekDays(selectedDate);
 
-  const handleChangeShift = (employeeId, date, newShift) => {
+  const handleChangeShift = (employeeId: any, date: any, newShift: string) => {
     updateShift(employeeId, date, newShift);
     setSelectedShift(null); // Close the dialog after updating
   };
@@ -52,11 +52,12 @@ const ShiftTable = ({ employees , updateShift }) => {
           </tr>
         </thead>
         <tbody>
-          {employees.map(employee => (
+          {employees.map((employee: any) => (
             <tr key={employee.id}>
               <td>{employee.name}</td>
               {weekDays.map(day => (
-                <td key={day.toISOString()} onClick={() => setSelectedShift({ employee, day })}>
+                <td key={day.toISOString()}>
+                  {/*  onClick={() => setSelectedShift({ employee, day })} */}
                   {employee.shifts[day.toLocaleDateString()] || 'Off'}
                 </td>
               ))}
@@ -65,14 +66,14 @@ const ShiftTable = ({ employees , updateShift }) => {
         </tbody>
       </table>
 
-      {selectedShift && (
+      {/* {selectedShift && (
         <div className="dialog">
           <p>Edit Shift for {selectedShift.employee.name} on {selectedShift.day.toLocaleDateString()}</p>
           <button onClick={() => handleChangeShift(selectedShift.employee.id, selectedShift.day, 'Morning')}>Morning</button>
           <button onClick={() => handleChangeShift(selectedShift.employee.id, selectedShift.day, 'Evening')}>Evening</button>
           <button onClick={() => setSelectedShift(null)}>Cancel</button>
         </div>
-      )}
+      )} */}
     </>
   );
 };

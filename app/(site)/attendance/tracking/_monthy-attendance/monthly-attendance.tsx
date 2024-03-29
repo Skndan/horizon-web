@@ -22,7 +22,7 @@ import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { Holiday } from "@/types/holiday";
 import { isWeekend } from "@/lib/utils/time-utils";
 
-export const MonthlyAttendancePage = () => {
+const MonthlyAttendancePage = () => {
 
     const [data, setData] = useState<MonthlyDaylog[]>([])
     const [holiday, setHoliday] = useState<String[]>([])
@@ -46,7 +46,7 @@ export const MonthlyAttendancePage = () => {
     useEffect(() => {
         apiClient.get(`/holiday/${orgId}/${formatDate(selectedMonth!.toISOString(), "yyyy")}`).then((res) => res.data)
             .then((data) => {
-                const holidayDates = data.filter((holiday: Holiday) => holiday.active).map((holiday: Holiday) => format(holiday.holiday, 'yyyy-MM-dd'));
+                const holidayDates = data.filter((holiday: Holiday) => holiday.active).map((holiday: Holiday) => format(holiday.holiday!, 'yyyy-MM-dd'));
                 setHoliday(holidayDates)
                 setLoading(false)
             });
@@ -76,7 +76,8 @@ export const MonthlyAttendancePage = () => {
                             <select value={format(selectedMonth, 'yyyy-MM')} className='w-[180px] flex h-10 items-center justify-end rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1' onChange={handleMonthChange}>
                                 {Array.from({ length: 12 }).map((_, index) => (
                                     <option key={index} value={`${format(selectedMonth, 'yyyy')}-${String(index + 1).padStart(2, '0')}`}>
-                                        {format(new Date(format(selectedMonth, 'yyyy'), index), 'MMMM yyyy')}
+                                        {/* {format(new Date(format(selectedMonth, 'yyyy'), index), 'MMMM yyyy')} */}
+                                        {format(new Date(parseInt(format(selectedMonth, 'yyyy'), 10), index), 'MMMM yyyy')}
                                     </option>
                                 ))}
                             </select>

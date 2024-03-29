@@ -21,7 +21,7 @@ import Link from "next/link";
 import { columns } from "./columns";
 import { Heading } from "@/components/ui/heading";
 
-export const LeaveTrackerPage = () => {
+const LeaveTrackerPage = () => {
 
     const [data, setData] = useState<LeaveRequest[]>([])
     const [isLoading, setLoading] = useState(false)

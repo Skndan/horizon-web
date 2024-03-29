@@ -5,7 +5,7 @@ import { useState } from "react";
 import { DeductionClient } from "./client";
 import { allowances } from "../../../data";
 
-export const DeductionsPage = () => {
+const DeductionsPage = () => {
 
     const [isLoading, setLoading] = useState(true)
 

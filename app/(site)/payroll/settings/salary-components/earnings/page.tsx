@@ -5,7 +5,7 @@ import { useState } from "react";
 import { EarningClient } from "./client";
 import { allowances } from "../../../data";
 
-export const EarningsPage = () => {
+const EarningsPage = () => {
 
 
     // const [data, setData] = useState<Profile[]>([])

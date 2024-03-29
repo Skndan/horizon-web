@@ -15,7 +15,7 @@ import { HolidayForm } from "./holiday-form";
 import { format } from "date-fns";
 import { Holiday } from "@/types/holiday";
 
-export const HolidayPage = () => {
+const HolidayPage = () => {
     const router = useRouter();
     const [data, setData] = useState<Holiday[]>([])
     const [isLoading, setLoading] = useState(true)

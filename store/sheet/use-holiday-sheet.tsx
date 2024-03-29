@@ -12,12 +12,12 @@ interface useHolidaySheetInterface {
 }
  
 export const useHolidaySheet = create(persist<useHolidaySheetInterface>((set, get) => ({
-  holiday: {},
+  holiday: { id: ""},
   isOpen: false,
   holidayList: [],
   set: (holiday: Holiday) => set({ holiday, isOpen: true }),
   setList: (holidayList: any) => set({ holidayList }),
-  reset: () => set({ holiday: {}, isOpen: false }),
+  reset: () => set({ holiday: { id: ""}, isOpen: false }),
 }), { name: 'holiday_tag' })); 
 
 

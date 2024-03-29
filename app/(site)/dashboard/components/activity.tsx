@@ -34,7 +34,8 @@ import { MailDisplay } from "./mail-display";
 import { useMail } from "@/store/use-mail-store";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-export const ActivityPage = () => {
+
+const ActivityPage = () => {
 
 
     const [data, setData] = useState<Activity[]>([])

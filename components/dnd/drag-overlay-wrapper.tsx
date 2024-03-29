@@ -39,13 +39,13 @@ function DragOverlayWrapper() {
     if (!element) {
       node = <div>Element not found!</div>;
     } else {
-      const DesignerElementComponent =
-        FormElements[element.type].designerComponent;
-      node = (
-        <div className="flex h-[120px] w-full rounded-md border bg-accent px-4 py-2 opacity-60">
-          <DesignerElementComponent elementInstance={element} />
-        </div>
-      );
+      // const DesignerElementComponent =
+      //   FormElements[element.type].designerComponent;
+      // node = (
+      //   <div className="flex h-[120px] w-full rounded-md border bg-accent px-4 py-2 opacity-60">
+      //     <DesignerElementComponent elementInstance={element} />
+      //   </div>
+      // );
     }
   }
 

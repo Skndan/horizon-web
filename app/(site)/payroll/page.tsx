@@ -1,4 +1,4 @@
-export const PayrollPage = () => {
+const PayrollPage = () => {
     return (
         <>
             <p>Payroll working!</p>

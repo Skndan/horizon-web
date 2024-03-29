@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 import apiClient from "@/lib/api/api-client";
 import { formatDate } from "@/lib/utils/time-utils";
 
-export const OverviewPage = () => {
+const OverviewPage = () => {
 
 
     const d = new Date();
