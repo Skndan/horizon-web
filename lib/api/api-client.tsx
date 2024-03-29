@@ -4,7 +4,7 @@ import { decryptToken, encryptToken } from './crypto';
 const baseUrl = process.env.BASE_URL; // Use a secure key stored in env vars
 
 const apiClient = axios.create({
-    baseURL: "http://localhost:8080/api", // Replace with your actual API base URL
+    baseURL: "https://horizon-api-545b14d326aa.herokuapp.com/api", // Replace with your actual API base URL
     headers: {
         'Content-Type': 'application/json',
     },
