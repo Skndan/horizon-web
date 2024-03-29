@@ -8,7 +8,7 @@ import apiClient from "@/lib/api/api-client";
 import { Loader, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { columns } from "./components/columns"; 
+import { columns } from "./components/columns";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { SubHeading } from "@/components/ui/sub-heading";
 import { LeaveTypeForm } from "./leave-form";
@@ -22,11 +22,12 @@ const LeaveSettingPage = () => {
     const [isOpen, setOpen] = useState(false);
 
 
- const orgId = localStorage.getItem("orgId");
-    async function fetchData() {
+   
+    function fetchData() {
         setLoading(true)
-       
-        await apiClient.get(`/leave/type/get-by-org/${orgId}`).then((res) => res.data)
+//  const orgId = localStorage.getItem("orgId");
+        // apiClient.get(`/leave/type/get-by-org/${orgId}`).then((res) => res.data)
+        apiClient.get(`/leave/type/get-by-org`).then((res) => res.data)
             .then((data) => {
                 setData(data)
                 setLoading(false)

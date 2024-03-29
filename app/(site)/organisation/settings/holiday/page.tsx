@@ -22,11 +22,11 @@ const HolidayPage = () => {
     const { flag } = useDeleteStore();
     const [isOpen, setOpen] = useState(false);
 
-    const orgId = localStorage.getItem("orgId");
-
     async function fetchData() {
-        setLoading(true)
-        await apiClient.get(`/holiday/${orgId}/${format(new Date(), "yyyy")}`).then((res) => res.data)
+    //    const orgId = localStorage.getItem("orgId");
+       setLoading(true)
+        // await apiClient.get(`/holiday/${orgId}/${format(new Date(), "yyyy")}`).then((res) => res.data)
+        await apiClient.get(`/holiday/${format(new Date(), "yyyy")}`).then((res) => res.data)
             .then((data) => {
                 console.log(`setting value`)
                 setData(data)
@@ -35,7 +35,8 @@ const HolidayPage = () => {
         setLoading(false)
     }
 
-    useEffect(() => {
+    useEffect(() => { 
+        
         fetchData();
     }, [flag])
 

@@ -55,13 +55,13 @@ export const LeaveTypeForm: React.FC<LeaveTypeFormProps> = ({
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
 
-    const orgId = localStorage.getItem("orgId");
+    // const orgId = localStorage.getItem("orgId");
 
     const onSubmit = async (data: LeaveTypeFormValues) => {
         try {
             setLoading(true);
 
-            data.organisation.id = orgId;
+            data.organisation.id = "orgId";
 
             console.log(data);
             if (initialData) {
