@@ -7,7 +7,7 @@ import { ShiftTable } from "./_components/client";
 import { Shift } from "@/types/attendance";
 
 
-export const AttendanceShiftPage = () => {
+const AttendanceShiftPage = () => {
 
     const [data, setData] = useState<Shift[]>([])
     const [isLoading, setLoading] = useState(true)
