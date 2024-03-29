@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TodayAttendancePage from "./_today-attendance/today-attendance";
 import { MonthlyAttendancePage } from "./_monthy-attendance/monthly-attendance";
 
-export const AttendancePage = () => {
+const AttendancePage = () => {
     return (
         <>
             <div className="flex-col md:flex">
