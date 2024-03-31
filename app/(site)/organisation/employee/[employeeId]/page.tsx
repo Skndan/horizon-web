@@ -6,6 +6,7 @@ import apiClient from "@/lib/api/api-client";
 import { Loader } from "lucide-react";
 import { Department, Address, Profile } from "@/types/profile";
 import { Shift } from "@/types/attendance";
+import { useAuth } from "@/context/auth-provider";
 
 
 const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
@@ -18,8 +19,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
     const [location, setLocation] = useState<Address[]>([])
     const [profile, setProfile] = useState<Profile[]>([])
     const [shifts, setShifts] = useState<Shift[]>([])
-
-    const orgId = localStorage.getItem("orgId");
+    const {user} = useAuth();
 
     useEffect(() => {
         (async () => {
@@ -33,7 +33,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
             const departments = await apiClient.get(`/department`);
             setDepartment(departments.data.content)
 
-            const locations = await apiClient.get(`/address/get-by-organisation/${orgId}`);
+            const locations = await apiClient.get(`/address/get-by-organisation/${user?.orgId}`);
             setLocation(locations.data)
 
             const profiles = await apiClient.get(`/profile`);
@@ -44,7 +44,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
 
             setLoading(false);
         })()
-    }, [])
+    }, [params.employeeId])
 
     return (
         <div className="flex-col">

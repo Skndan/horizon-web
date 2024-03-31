@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table"; 
+import { DataTable } from "@/components/ui/data-table";
 import { Separator } from "@/components/ui/separator";
-import apiClient from "@/lib/api/api-client"; 
+import apiClient from "@/lib/api/api-client";
 import { Loader, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -14,29 +14,28 @@ import { SubHeading } from "@/components/ui/sub-heading";
 import { HolidayForm } from "./holiday-form";
 import { format } from "date-fns";
 import { Holiday } from "@/types/holiday";
+import { useUserStore } from "@/store/use-user-store";
+import { useAuth } from "@/context/auth-provider";
 
 const HolidayPage = () => {
     const router = useRouter();
     const [data, setData] = useState<Holiday[]>([])
     const [isLoading, setLoading] = useState(true)
-    const { flag } = useDeleteStore();
+    const { flag, set } = useDeleteStore();
     const [isOpen, setOpen] = useState(false);
+    const { user } = useAuth();
 
-    async function fetchData() {
-    //    const orgId = localStorage.getItem("orgId");
-       setLoading(true)
-        // await apiClient.get(`/holiday/${orgId}/${format(new Date(), "yyyy")}`).then((res) => res.data)
-        await apiClient.get(`/holiday/${format(new Date(), "yyyy")}`).then((res) => res.data)
-            .then((data) => {
-                console.log(`setting value`)
-                setData(data)
-                setLoading(false)
-            });
-        setLoading(false)
-    }
-
-    useEffect(() => { 
-        
+    useEffect(() => {
+        function fetchData() {
+            setLoading(true)
+            apiClient.get(`/holiday/${user?.orgId}/${format(new Date(), "yyyy")}`).then((res) => res.data)
+                .then((data) => {
+                    console.log(`setting value`)
+                    setData(data)
+                    setLoading(false)
+                });
+            setLoading(false)
+        }
         fetchData();
     }, [flag])
 
@@ -55,7 +54,7 @@ const HolidayPage = () => {
                     isOpen={isOpen}
                     onClose={() => {
                         setOpen(false);
-                        fetchData();
+                        set(`${Math.random()}`);
                     }}
                     initialData={null}
                 />

@@ -10,23 +10,23 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/auth-provider";
+import { signOut } from "@/lib/utils/sign-out";
 import { useUserStore } from "@/store/use-user-store";
-// import { useUserStore } from "@/store/use-user-store";
-import { getSession, signOut, useSession } from "next-auth/react";
+// import { useUserStore } from "@/store/use-user-store"; 
 import { useRouter } from "next/navigation";
 
 export function UserNav() {
   const router = useRouter();
- 
-  
-  const { profile } = useUserStore(); 
+
+  const { user } = useAuth();
 
 
-  const onLogOut = () => {
-    signOut({ redirect: false }).then(() => {
-      router.push("/"); // Redirect to the dashboard page after signing out
-    });
-  };
+  // const onLogOut = () => {
+  //   // signOut({ redirect: false }).then(() => {
+  //   //   router.push("/"); // Redirect to the dashboard page after signing out
+  //   // });
+  // };
 
   const refresh = async () => {
     // console.log(profile);
@@ -41,8 +41,8 @@ export function UserNav() {
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage
-              src="https://lh3.googleusercontent.com/a/ACg8ocKSpvyPl4EVUh8H6secozxGoEsdWQw8xap03MNTLoD8lQ=s96-c"
-              alt="@shadcn"
+              src=""
+              alt="@skndan"
             />
             <AvatarFallback>BM</AvatarFallback>
           </Avatar>
@@ -51,8 +51,8 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{profile.username}</p>
-            <p className="text-xs leading-none text-muted-foreground pt-2">{profile.email}</p>
+            <p className="text-sm font-medium leading-none">{user?.username}</p>
+            <p className="text-xs leading-none text-muted-foreground pt-2">{user?.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -70,8 +70,10 @@ export function UserNav() {
         <DropdownMenuSeparator /> */}
         <DropdownMenuItem
           className="text-red-600 cursor-pointer"
-          onClick={onLogOut}
-        >
+          onClick={() => {
+            signOut();
+            router.push("/");
+          }}>
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

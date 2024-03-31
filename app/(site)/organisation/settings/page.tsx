@@ -21,26 +21,12 @@ import { Button } from "@/components/ui/button";
 import { Edit, Loader, Plus } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
+import { useAuth } from "@/context/auth-provider";
 
 export interface Artwork {
     artist: string
     art: string
 }
-
-// export const works: Artwork[] = [
-//     {
-//         artist: "Ornella Binni",
-//         art: "https://images.unsplash.com/photo-1465869185982-5a1a7522cbcb?auto=format&fit=crop&w=300&q=80",
-//     },
-//     {
-//         artist: "Tom Byrom",
-//         art: "https://images.unsplash.com/photo-1548516173-3cabfa4607e9?auto=format&fit=crop&w=300&q=80",
-//     },
-//     {
-//         artist: "Vladimir Malyavko",
-//         art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-//     },
-// ]
 
 const OrgSettingsPage = () => {
 
@@ -52,11 +38,10 @@ const OrgSettingsPage = () => {
     const [isLoading, setLoading] = useState(true)
 
     const [isAddressOpen, setAddressOpen] = useState(false);
-
+    const { user, loading } = useAuth();
 
     async function loadAddress() {
-        const orgId = localStorage.getItem('orgId');
-        await apiClient.get(`/address/get-by-organisation/${orgId}`).then((res) => res.data)
+        await apiClient.get(`/address/get-by-organisation/${user?.orgId}`).then((res) => res.data)
             .then((data) => {
                 setAddressList(data);
             });
@@ -64,9 +49,8 @@ const OrgSettingsPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const orgId = localStorage.getItem('orgId');
             setLoading(true);
-            apiClient.get(`/organisation/${orgId}`).then((res) => res.data)
+            apiClient.get(`/organisation/${user?.orgId}`).then((res) => res.data)
                 .then((data) => {
                     setOrgData(data);
                 });

@@ -24,10 +24,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast"; 
-import apiClient from "@/lib/api/api-client"; 
+import { toast } from "react-hot-toast";
+import apiClient from "@/lib/api/api-client";
 import { Loader } from "lucide-react";
 import { LeaveType } from "@/types/leave";
+import { useAuth } from "@/context/auth-provider";
 
 interface LeaveTypeFormProps {
     initialData: LeaveType | null;
@@ -54,14 +55,14 @@ export const LeaveTypeForm: React.FC<LeaveTypeFormProps> = ({
 }) => {
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
+    const { user } = useAuth();
 
-    // const orgId = localStorage.getItem("orgId");
 
-    const onSubmit = async (data: LeaveTypeFormValues) => {
+    const onSubmit = async (data: LeaveTypeFormValues) => { 
         try {
             setLoading(true);
 
-            data.organisation.id = "orgId";
+            data.organisation.id = user?.orgId;
 
             console.log(data);
             if (initialData) {

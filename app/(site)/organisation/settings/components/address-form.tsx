@@ -19,6 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Address } from "@/types/profile"
 import apiClient from "@/lib/api/api-client"
 import toast from "react-hot-toast"
+import { useAuth } from "@/context/auth-provider"
 
 const addressFormSchema = z.object({
     label: z.string().min(1),
@@ -56,12 +57,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     const toastMessage = initialData ? 'Address updated.' : 'Address created.';
     const action = initialData ? 'Save changes' : 'Create';
 
+    const {user} = useAuth();
+
     async function onSubmit(data: AddressFormValues) {
-
-        const orgId = localStorage.getItem('orgId');
-
+ 
         data.organisation = {
-            id: orgId
+            id: user?.orgId
         }
 
         console.log(data);

@@ -7,17 +7,17 @@ import { useEffect, useState } from "react";
 import { Organisation, Profile } from "@/types/profile";
 import apiClient from "@/lib/api/api-client";
 import { WorkCard } from "../components/work-card";
+import { useAuth } from "@/context/auth-provider";
 
 const OrgSettingsPage = () => {
 
-
+    const {user} = useAuth();
     const [data, setData] = useState(null)
     const [isLoading, setLoading] = useState(false)
 
     useEffect(() => {
-        setLoading(true)
-        const profileId = localStorage.getItem('profileId');
-        apiClient.get(`/profile/${profileId}`).then((res) => res.data)
+        setLoading(true) 
+        apiClient.get(`/profile/${user?.profileId}`).then((res) => res.data)
             .then((data) => {
                 setData(data)
                 setLoading(false)

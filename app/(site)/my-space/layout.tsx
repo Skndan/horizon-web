@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarNav } from "./components/side-bar-nav"
 import { Heading } from "@/components/ui/heading"
 import { useUserStore } from "@/store/use-user-store"
+import { useAuth } from "@/context/auth-provider";
 
 const sidebarNavItems = [
     {
@@ -34,13 +35,12 @@ interface SettingsLayoutProps {
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
 
-
-    const { profile } = useUserStore();
-
+    const { user } = useAuth();
+    
     return (
         <>
             <div className="p-8 pb-16">
-                <Heading title={profile.username} description={"Manage your account"} />
+                <Heading title={user?.username ?? ''} description={"Manage your account"} />
                 <Separator className="my-6" />
                 <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
                     <aside className="-mx-4 lg:w-1/6">

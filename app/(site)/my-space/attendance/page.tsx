@@ -20,17 +20,18 @@ import { useUpdateStore } from "@/store/use-update-store";
 import Link from "next/link";
 import { columns } from "./columns";
 import { Daylog } from "@/types/attendance";
+import { useAuth } from "@/context/auth-provider";
 
 const MySpaceAttendancePage = () => {
 
     const [data, setData] = useState<Daylog[]>([])
     const [isLoading, setLoading] = useState(false)
     const [isOpen, setOpen] = useState(false);
+    const { user } = useAuth();
 
     async function fetchData() {
         setLoading(true)
-        const profileId = localStorage.getItem("profileId");
-        await apiClient.get(`/time-sheet/day-log-by-profile/day-wise/${profileId}`).then((res) => res.data)
+        await apiClient.get(`/time-sheet/day-log-by-profile/day-wise/${user?.profileId}`).then((res) => res.data)
             .then((data) => {
                 setData(data)
                 setLoading(false)
@@ -46,7 +47,7 @@ const MySpaceAttendancePage = () => {
     return (
         <>
             <div>
-                <SubHeading title="Attendance" description="Your attendance record" /> 
+                <SubHeading title="Attendance" description="Your attendance record" />
                 {isLoading ? (
                     <div className="grid h-screen place-items-center">
                         <Loader className="animate-spin h-5 w-5 mr-3" />

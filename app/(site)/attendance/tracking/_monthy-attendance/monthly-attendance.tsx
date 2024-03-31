@@ -21,22 +21,20 @@ import AvatarCell from '@/components/common/avatar-cell';
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { Holiday } from "@/types/holiday";
 import { isWeekend } from "@/lib/utils/time-utils";
+import { useAuth } from "@/context/auth-provider";
 
 const MonthlyAttendancePage = () => {
 
     const [data, setData] = useState<MonthlyDaylog[]>([])
     const [holiday, setHoliday] = useState<String[]>([])
-
+    const { user } = useAuth();
 
     const [isLoading, setLoading] = useState(true)
 
-    const orgId = localStorage.getItem("orgId");
-
     const [selectedMonth, setSelectedMonth] = useState(new Date());
 
-
     useEffect(() => {
-        apiClient.get(`/time-sheet/day-log-by-organisation/month-wise/${orgId}/${formatDate(selectedMonth!.toISOString(), "yyyy-MM-dd")}`).then((res) => res.data)
+        apiClient.get(`/time-sheet/day-log-by-organisation/month-wise/${user?.orgId}/${formatDate(selectedMonth!.toISOString(), "yyyy-MM-dd")}`).then((res) => res.data)
             .then((data) => {
                 setData(data)
                 setLoading(false)
@@ -44,7 +42,7 @@ const MonthlyAttendancePage = () => {
     }, [selectedMonth])
 
     useEffect(() => {
-        apiClient.get(`/holiday/${orgId}/${formatDate(selectedMonth!.toISOString(), "yyyy")}`).then((res) => res.data)
+        apiClient.get(`/holiday/${user?.orgId}/${formatDate(selectedMonth!.toISOString(), "yyyy")}`).then((res) => res.data)
             .then((data) => {
                 const holidayDates = data.filter((holiday: Holiday) => holiday.active).map((holiday: Holiday) => format(holiday.holiday!, 'yyyy-MM-dd'));
                 setHoliday(holidayDates)

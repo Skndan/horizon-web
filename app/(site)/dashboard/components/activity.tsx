@@ -34,6 +34,7 @@ import { MailDisplay } from "./mail-display";
 import { useMail } from "@/store/use-mail-store";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/context/auth-provider";
 
 const ActivityPage = () => {
 
@@ -41,15 +42,15 @@ const ActivityPage = () => {
     const [data, setData] = useState<Activity[]>([])
     const [isLoading, setLoading] = useState(true)
 
+    const {user} = useAuth();
+    
     async function fetchData() {
         setLoading(true)
-        const orgId = localStorage.getItem("orgId");
-        const profile = localStorage.getItem("profileId");
-
-        await apiClient.get(`/activity/get-by-org/${orgId}`).then((res) => res.data)
+      
+        await apiClient.get(`/activity/get-by-org/${user?.orgId}`).then((res) => res.data)
             .then(async (data) => {
                 setData(data.content)
-                await apiClient.get(`/activity/get-by-profile/${profile}`).then((res) => res.data)
+                await apiClient.get(`/activity/get-by-profile/${user?.profileId}`).then((res) => res.data)
                     .then((data) => {
                         setData(prev => prev.concat(...data))
                         setLoading(false)

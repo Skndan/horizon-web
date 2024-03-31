@@ -1,19 +1,21 @@
+import "./globals.css";
+
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ToastProvider } from "@/providers/toast-provider";
 
-import "./globals.css";
 import type { Metadata } from "next";
+
 import { Urbanist } from "next/font/google";
 import ProgressBarProvider from "@/providers/progress-bar-provider";
-import SessionProvider from "@/providers/session-provider";
-import DesignerContextProvider from "@/context/DesignerContext";
+import { AuthProvider } from "@/context/auth-provider";
+
+const urbanist = Urbanist({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Horizon",
   description: "HRMS",
 };
 
-const urbanist = Urbanist({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -26,16 +28,14 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className={urbanist.className}>
-        <SessionProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ProgressBarProvider>
-            <DesignerContextProvider>
-              <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-                <ToastProvider />
-                {children}
-              </ThemeProvider>
-            </DesignerContextProvider>
+            <AuthProvider>
+              <ToastProvider />
+              {children}
+            </AuthProvider>
           </ProgressBarProvider>
-        </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -18,19 +18,17 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import apiClient from "@/lib/api/api-client";
 import { formatDate } from "@/lib/utils/time-utils";
+import { useAuth } from "@/context/auth-provider";
 
 const OverviewPage = () => {
 
-
-    const d = new Date();
     const [currentTime, setCurrentTime] = useState('');
     const [clockedIn, setClockedIn] = useState(false);
     const [lastCheckInTime, setLastCheckInTime] = useState("");
-
-
+    const { user, loading: isLoading } = useAuth();
 
     useEffect(() => {
-
+        const d = new Date();
         const date = d.getHours() + 'h : ' + d.getMinutes() + 'm : ' + d.getSeconds() + 's';
         const timer = setInterval(() => {
             setCurrentTime(date);
@@ -42,12 +40,8 @@ const OverviewPage = () => {
     useEffect(() => {
         const checkClock = async () => {
             try {
-                const profileId = localStorage.getItem("profileId");
-                await apiClient.get(`/time-sheet/get-clock/${profileId}`)
+                await apiClient.get(`/time-sheet/get-clock/${user?.profileId}`)
                     .then((res) => {
-                        console.log(res.data);
-                        console.log(res.status);
-
                         if (res.status === 200) {
                             if (res.data.status == "IN") {
                                 // SET IN
@@ -74,16 +68,14 @@ const OverviewPage = () => {
             }
         };
 
-        checkClock();
+        if (!isLoading) {
+            checkClock();
+        }
     }, []);
 
     const onClockChanged = async () => {
         try {
-            // http://localhost:8080/api/time-sheet/clock/31c852fe-64ab-427e-9694-503be730841e
-            const profileId = localStorage.getItem("profileId");
-            await apiClient.get(`/time-sheet/clock/${profileId}`).then((res) => {
-                console.log(res.data);
-                console.log(res.status);
+            await apiClient.get(`/time-sheet/clock/${user?.profileId}`).then((res) => {
 
                 if (res.status === 200) {
                     if (res.data.status == "IN") {
@@ -98,9 +90,7 @@ const OverviewPage = () => {
 
                     setLastCheckInTime(res.data.createdAt);
                 }
-
             });
-
         } catch (error) {
             toast.error('Unable to punch your clock');
         } finally {
@@ -157,7 +147,7 @@ const OverviewPage = () => {
                                         </div>
 
                                         {
-                                            lastCheckInTime ? 
+                                            lastCheckInTime ?
                                                 <p className="text-sm text-muted-foreground pt-1">
                                                     Checked In: Today at {lastCheckInTime && formatDate(lastCheckInTime, "hh: mm a")}
                                                 </p> :
@@ -249,4 +239,4 @@ const OverviewPage = () => {
     );
 };
 
-export default OverviewPage;
+export default OverviewPage; 

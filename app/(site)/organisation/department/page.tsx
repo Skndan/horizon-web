@@ -1,5 +1,5 @@
 "use client";
- 
+
 import apiClient from "@/lib/api/api-client";
 import { Department } from "@/types/profile";
 import { useState, useEffect } from "react";
@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useUpdateStore } from "@/store/use-update-store";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 
-const DepartmentPage = () => { 
+const DepartmentPage = () => {
 
     const [data, setData] = useState<Department[]>([])
     const [isLoading, setLoading] = useState(true)

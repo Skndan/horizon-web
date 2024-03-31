@@ -44,6 +44,7 @@ import { SubHeading } from "@/components/ui/sub-heading"
 import apiClient from "@/lib/api/api-client"
 import { LeaveRequest, LeaveType } from "@/types/leave"
 import { Textarea } from "@/components/ui/textarea"
+import { useAuth } from "@/context/auth-provider"
 
 const formSchema = z.object({
     profile: z.any(),
@@ -76,6 +77,8 @@ export const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
     const toastMessage = initialData ? 'Leave request updated.' : 'Leave request created.';
     const action = initialData ? 'Save changes' : 'Create';
 
+    const {user} = useAuth();
+
     const form = useForm<LeaveRequestFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
@@ -83,15 +86,14 @@ export const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
                 id: ''
             }
         }
-    });
+    }); 
 
     const onSubmit = async (data: LeaveRequestFormValues) => {
         // try {
 
         setLoading(true);
-
-        const profileId = localStorage.getItem("profileId");
-        data.profile.id = profileId;
+ 
+        data.profile.id = user?.profileId;
 
         console.log(data);
         if (initialData) {

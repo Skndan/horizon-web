@@ -47,6 +47,7 @@ import { Profile } from "@/types/profile";
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useAuth } from "@/context/auth-provider";
 
 const formSchema = z.object({
     name: z.string().min(1),
@@ -86,9 +87,9 @@ const type = [
 
 const PostPage = ({ params }: { params: { postId: string } }) => {
 
-    const router = useRouter();
-
-    const [loading, setLoading] = useState(false);
+    const router = useRouter(); 
+    const [loading, setLoading] = useState(false); 
+    const {user} = useAuth();
 
     const title = 'Create Post ✨';
     const description = 'Add a new post';
@@ -123,8 +124,8 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
     const onSubmit = async (data: EmployeeFormValues) => {
         try {
-            const profileId = localStorage.getItem("profileId");
-            data.initiator.id = profileId;
+        
+            data.initiator.id = user?.profileId;
 
             const profile: Profile = data.attendies.map((option: Option) => {
                 return {

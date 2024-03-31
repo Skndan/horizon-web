@@ -1,10 +1,10 @@
-import { ComingSoonPage } from "@/components/common/coming-soon"; 
+import { ComingSoonPage } from "@/components/common/coming-soon";
 
 const OrgSettingsPage = () => {
-    return (
-        <>
-            <ComingSoonPage/>
-        </>)
+  return (
+    <>
+      <ComingSoonPage />
+    </>)
 }
 
-export default OrgSettingsPage;
+export default OrgSettingsPage; 

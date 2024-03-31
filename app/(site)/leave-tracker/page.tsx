@@ -20,16 +20,17 @@ import { useUpdateStore } from "@/store/use-update-store";
 import Link from "next/link";
 import { columns } from "./columns";
 import { Heading } from "@/components/ui/heading";
+import { useAuth } from "@/context/auth-provider";
 
 const LeaveTrackerPage = () => {
 
     const [data, setData] = useState<LeaveRequest[]>([])
     const [isLoading, setLoading] = useState(false)
-
+    const {user} = useAuth();
+    
     async function fetchData() {
-        setLoading(true)
-        const orgId = localStorage.getItem("orgId");
-        await apiClient.get(`/leave-request/get-by-organisation/${orgId}`).then((res) => res.data)
+        setLoading(true) 
+        await apiClient.get(`/leave-request/get-by-organisation/${user?.orgId}`).then((res) => res.data)
             .then((data) => {
                 setData(data)
                 setLoading(false)

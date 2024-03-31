@@ -5,6 +5,7 @@ import apiClient from "@/lib/api/api-client";
 import { Loader } from "lucide-react";
 import { LeaveRequestForm } from "../_components/leave-form";
 import { LeaveType } from "@/types/leave";
+import { useAuth } from "@/context/auth-provider";
 
 
 const OnboardingPage = ({ params }: { params: { leaveRequestId: string } }) => {
@@ -15,24 +16,23 @@ const OnboardingPage = ({ params }: { params: { leaveRequestId: string } }) => {
 
     const [leaveType, setLeaveType] = useState<LeaveType[]>([])
 
+    const {user} = useAuth();
 
     useEffect(() => {
         (async () => {
-            setLoading(true);
-
-            const orgId = localStorage.getItem("orgId");
+            setLoading(true); 
 
             if (params.leaveRequestId != 'new') {
                 const employees = await apiClient.get(`/leave-request/${params.leaveRequestId}`);
                 setData(employees.data)
             }
 
-            const departments = await apiClient.get(`/leave/type/get-by-org/${orgId}`);
+            const departments = await apiClient.get(`/leave/type/get-by-org/${user?.orgId}`);
             setLeaveType(departments.data)
 
             setLoading(false);
         })()
-    }, [])
+    }, [params.leaveRequestId])
 
     return (
         <div className="flex-col">

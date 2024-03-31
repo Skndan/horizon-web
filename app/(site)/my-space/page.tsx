@@ -3,8 +3,8 @@ import { ComingSoonPage } from "@/components/common/coming-soon";
 const ActivityPage = () => {
     return (
         <>
-            <ComingSoonPage/>
+            <ComingSoonPage />
         </>)
 }
 
-export default ActivityPage;
+export default ActivityPage; 

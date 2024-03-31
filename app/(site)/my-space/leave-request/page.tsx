@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
 import Link from "next/link";
+import { useAuth } from "@/context/auth-provider";
 
 const LeaveTrackerPage = () => {
 
@@ -26,16 +27,16 @@ const LeaveTrackerPage = () => {
     const [balance, setBalance] = useState<LeaveBalance[]>([])
     const [isLoading, setLoading] = useState(false)
     const [isOpen, setOpen] = useState(false);
+    const {user} = useAuth();
 
     async function fetchData() {
-        setLoading(true)
-        const profileId = localStorage.getItem("profileId");
+        setLoading(true) 
 
         // TODO: make it a chain
-        await apiClient.get(`/leave-request/get-by-profile/${profileId}`).then((res) => res.data)
+        await apiClient.get(`/leave-request/get-by-profile/${user?.profileId}`).then((res) => res.data)
             .then(async (data) => {
                 setData(data)
-                await apiClient.get(`/leave/balance/${profileId}`).then((res) => res.data)
+                await apiClient.get(`/leave/balance/${user?.profileId}`).then((res) => res.data)
                     .then((data) => {
                         setBalance(data)
                         setLoading(false)

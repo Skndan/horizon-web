@@ -1,7 +1,7 @@
 
 "use client"
 import { EmployeeClient } from "./components/client";
-import apiClient, { getAuthorizationHeader } from "@/lib/api/api-client";
+import apiClient from "@/lib/api/api-client";
 import { Profile } from "@/types/profile";
 import { Loader } from "lucide-react";
 

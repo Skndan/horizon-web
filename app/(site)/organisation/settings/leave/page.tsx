@@ -13,29 +13,30 @@ import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { SubHeading } from "@/components/ui/sub-heading";
 import { LeaveTypeForm } from "./leave-form";
 import { useUpdateStore } from "@/store/use-update-store";
+import { useUserStore } from "@/store/use-user-store";
+import { useAuth } from "@/context/auth-provider";
 
 const LeaveSettingPage = () => {
     const router = useRouter();
     const [data, setData] = useState<LeaveType[]>([])
     const [isLoading, setLoading] = useState(true)
-    const { flag } = useUpdateStore();
-    const [isOpen, setOpen] = useState(false);
-
-
-   
-    function fetchData() {
-        setLoading(true)
-//  const orgId = localStorage.getItem("orgId");
-        // apiClient.get(`/leave/type/get-by-org/${orgId}`).then((res) => res.data)
-        apiClient.get(`/leave/type/get-by-org`).then((res) => res.data)
-            .then((data) => {
-                setData(data)
-                setLoading(false)
-            });
-        setLoading(false)
-    }
+    const { flag, set } = useUpdateStore();
+    const [isOpen, setOpen] = useState(false);  
+    const {user} = useAuth();
 
     useEffect(() => {
+        function fetchData() {
+            setLoading(true)
+
+            // apiClient.get(`/leave/type/get-by-org`).then((res) => res.data)
+            apiClient.get(`/leave/type/get-by-org/${user?.orgId}`).then((res) => res.data)
+                .then((data) => {
+                    setData(data)
+                    setLoading(false)
+                });
+            setLoading(false)
+        }
+
         fetchData();
     }, [flag])
 
@@ -54,7 +55,7 @@ const LeaveSettingPage = () => {
                     isOpen={isOpen}
                     onClose={() => {
                         setOpen(false);
-                        fetchData();
+                        set(`${Math.random()}`);
                     }}
                     initialData={null}
                 />

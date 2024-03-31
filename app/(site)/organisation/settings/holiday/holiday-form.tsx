@@ -32,6 +32,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon, Loader } from "lucide-react";
+import { useUserStore } from "@/store/use-user-store";
+import { useAuth } from "@/context/auth-provider";
 
 interface HolidayFormProps {
     initialData: Holiday | null;
@@ -58,14 +60,13 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
 }) => {
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
-
-    // const orgId = localStorage.getItem("orgId");
+    const { user } = useAuth();
 
     const onSubmit = async (data: HolidayFormValues) => {
         try {
             setLoading(true);
 
-            data.organisation.id = "orgId";
+            data.organisation.id = user?.orgId;
 
             console.log(data);
             if (initialData) {

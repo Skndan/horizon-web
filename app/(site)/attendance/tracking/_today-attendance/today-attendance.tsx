@@ -1,22 +1,21 @@
 
 "use client"
 
-import apiClient, { getAuthorizationHeader } from "@/lib/api/api-client";
+import apiClient from "@/lib/api/api-client";
 import { Loader } from "lucide-react";
-
 import { useEffect, useState } from "react";
 import { TodayAttendanceClient } from "./client";
 import { Daylog } from "@/types/attendance";
-import { format, getDaysInMonth } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { formatDate } from "@/lib/utils/time-utils";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/auth-provider";
 
 const TodayAttendancePage = () => {
 
     const [data, setData] = useState<Daylog[]>([])
     const [isLoading, setLoading] = useState(true)
-
+    const { user } = useAuth();
 
 
     const [date, setDate] = useState<Date | undefined>(new Date())
@@ -25,8 +24,7 @@ const TodayAttendancePage = () => {
     useEffect(() => {
         const onLoad = async () => {
             try {
-                const orgId = localStorage.getItem("orgId");
-                await apiClient.get(`/time-sheet/day-log-by-organisation/day-wise/${orgId}/${formatDate(date!.toISOString(), "yyyy-MM-dd")}`).then((res) => res.data)
+                await apiClient.get(`/time-sheet/day-log-by-organisation/day-wise/${user?.orgId}/${formatDate(date!.toISOString(), "yyyy-MM-dd")}`).then((res) => res.data)
                     .then((data) => {
                         setData(data)
                         setLoading(false)
@@ -36,7 +34,7 @@ const TodayAttendancePage = () => {
             } finally {
 
             }
-        }; 
+        };
         onLoad();
     }, [date])
 
