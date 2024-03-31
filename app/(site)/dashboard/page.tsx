@@ -7,7 +7,6 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Overview } from "@/components/dashboard/overview";
 import { RecentActivities } from "@/components/dashboard/recent-activities";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -19,11 +18,14 @@ import toast from "react-hot-toast";
 import apiClient from "@/lib/api/api-client";
 import { formatDate } from "@/lib/utils/time-utils";
 import { useAuth } from "@/context/auth-provider";
+import Overview from "@/components/dashboard/overview";
+import { DashboardData } from "@/types/dashboard";
 
 const OverviewPage = () => {
 
     const [currentTime, setCurrentTime] = useState('');
     const [clockedIn, setClockedIn] = useState(false);
+    const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
     const [lastCheckInTime, setLastCheckInTime] = useState("");
     const { user, loading: isLoading } = useAuth();
 
@@ -68,8 +70,22 @@ const OverviewPage = () => {
             }
         };
 
+        const getDashboard = async () => {
+            try {
+                await apiClient.get(`/dashboard/get-by-org/${user?.orgId}`)
+                    .then((res) => {
+                        setDashboardData(res.data);
+                    });
+            } catch (error) {
+                toast.error('Unable to punch your clock');
+            } finally {
+
+            }
+        };
+
         if (!isLoading) {
             checkClock();
+            getDashboard();
         }
     }, []);
 
@@ -160,12 +176,12 @@ const OverviewPage = () => {
                                 <Card>
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                         <CardTitle className="text-md font-medium">
-                                            Time Off Requests
+                                            Leave Requests
                                         </CardTitle>
                                         <AlarmClockMinus />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-2xl font-bold">#1</div>
+                                        <div className="text-2xl font-bold">#{dashboardData?.leaveRequestCount}</div>
                                         <p className="text-sm text-muted-foreground">
                                             +180.1% from last month
                                         </p>
@@ -177,7 +193,7 @@ const OverviewPage = () => {
                                         <DoorOpen />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-2xl font-bold">#12</div>
+                                        <div className="text-2xl font-bold">#{dashboardData?.inBreakCount}</div>
                                         <p className="text-sm text-muted-foreground">
                                             +2 since last hour
                                         </p>
@@ -191,7 +207,7 @@ const OverviewPage = () => {
                                         <MonitorCheck />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-2xl font-bold">#5</div>
+                                        <div className="text-2xl font-bold">#{dashboardData?.activeCount}</div>
                                         <p className="text-sm text-muted-foreground">
                                             +2 since last hour
                                         </p>
@@ -205,7 +221,7 @@ const OverviewPage = () => {
                                         <div className="flex flex-col">
                                             <div className="flex flex-row items-center">
                                                 <Users className="mr-2 h-6 w-6" />
-                                                <div className="text-2xl font-bold">17</div>
+                                                <div className="text-2xl font-bold">{dashboardData?.totalHeadCount}</div>
                                             </div>
                                             <p className="text-sm text-muted-foreground">
                                                 Total Employees
@@ -213,7 +229,7 @@ const OverviewPage = () => {
                                         </div>
                                     </CardHeader>
                                     <CardContent className="pl-2">
-                                        <Overview />
+                                        <Overview data={dashboardData?.monthwiseHeadCount ?? []} />
                                     </CardContent>
                                 </Card>
                                 <Card className="col-span-3">
