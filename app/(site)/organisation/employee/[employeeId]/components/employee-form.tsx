@@ -58,7 +58,8 @@ const formSchema = z.object({
   address: z.any().optional(),
   shift: z.any().optional(),
   designation: z.any().optional(),
-  reportingManager: z.any().optional()
+  reportingManager: z.any().optional(),
+  user: z.any()
 });
 
 type EmployeeFormValues = z.infer<typeof formSchema>
@@ -81,6 +82,21 @@ const gender = [
   {
     value: "FEMALE",
     label: "Female",
+  }
+]
+
+const roles = [
+  {
+    value: "user",
+    label: "User",
+  },
+  {
+    value: "admin",
+    label: "Admin",
+  },
+  {
+    value: "hr",
+    label: "HR",
   }
 ]
 
@@ -141,13 +157,13 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
       data.organisation.id = orgId;
 
-      if (data.department?.id == null) { data.department = null; } 
+      if (data.department?.id == null) { data.department = null; }
       if (data.address?.id == null) { data.address = null; }
       if (data.designation?.id == null) { data.designation = null; }
       if (data.reportingManager?.id == null) { data.reportingManager = null; }
 
       setLoading(true);
- 
+
       if (initialData) {
         await apiClient
           .put(`/profile/${initialData.id}`, data)
@@ -234,7 +250,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input type="hidden" value={orgId}/>
+                  <Input type="hidden" value={orgId} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -528,6 +544,29 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {employeeStatus.map((category) => (
+                        <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="user.roles[0].roleName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select a Role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {roles.map((category) => (
                         <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
                       ))}
                     </SelectContent>

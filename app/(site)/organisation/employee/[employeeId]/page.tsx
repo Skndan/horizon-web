@@ -36,7 +36,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
             const locations = await apiClient.get(`/address/get-by-organisation/${user?.orgId}`);
             setLocation(locations.data)
 
-            const profiles = await apiClient.get(`/profile`);
+            const profiles = await apiClient.get(`/profile?pageSize=100`);
             setProfile(profiles.data.content)
 
             const shifts = await apiClient.get(`/shift`);
@@ -61,7 +61,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
                         profile={profile}
                         shifts={shifts}
                         initialData={data}
-                        orgId={null}
+                        orgId={user?.orgId}
                     />)}
             </div>
         </div>)

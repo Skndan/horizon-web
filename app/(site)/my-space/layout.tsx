@@ -12,6 +12,10 @@ const sidebarNavItems = [
         href: "/my-space",
     },
     {
+        title: "Tasks",
+        href: "/my-space/tasks",
+    },
+    {
         title: "Profile",
         href: "/my-space/profile",
     },

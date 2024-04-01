@@ -37,6 +37,18 @@ export function MainNav({
       children: []
     },
     {
+      href: `/tasks`,
+      label: "Tasks",
+      active: pathname.match(`/tasks`),
+      children: []
+    }, 
+    {
+      href: `/leave-tracker`,
+      label: "Leave Tracker",
+      active: pathname.match(`/leave-tracker`),
+      children: []
+    }, 
+    {
       href: `/organisation`,
       label: "Organisation",
       active: pathname.match(`/organisation`),
@@ -103,12 +115,6 @@ export function MainNav({
             "Manage employee shifts",
         }
       ]
-    },
-    {
-      href: `/leave-tracker`,
-      label: "Leave Tracker",
-      active: pathname.match(`/leave-tracker`),
-      children: []
     }, 
     {
       href: `/reports`,

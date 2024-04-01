@@ -68,21 +68,21 @@ export function TemplateForm() {
         mode: "onChange",
     })
 
-    // const {
-    //     fields: fieldsList1,
-    //     remove: removeList1,
-    //     append: appendList1 } = useFieldArray({
-    //         name: "earnings",
-    //         control: form.control,
-    //     })
+    //  const {
+    //      fields: fieldsList1,
+    //      remove: removeList1,
+    //      append: appendList1 } = useFieldArray({
+    //          name: "earnings",
+    //          control: form.control,
+    //      })
 
-    // const {
-    //     fields: fieldsList2,
-    //     remove: removeList2,
-    //     append: appendList2 } = useFieldArray({
-    //         name: "deduction",
-    //         control: form.control,
-    //     })
+    //  const {
+    //      fields: fieldsList2,
+    //      remove: removeList2,
+    //      append: appendList2 } = useFieldArray({
+    //          name: "deduction",
+    //          control: form.control,
+    //      })
 
     function onSubmit(data: ProfileFormValues) {
         toast.success(JSON.stringify(data));
