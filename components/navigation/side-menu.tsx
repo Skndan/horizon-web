@@ -7,10 +7,12 @@ import { BackpackIcon, BarChartIcon, CalendarIcon, CardStackIcon, ChevronDownIco
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "@/context/auth-provider";
 
 const SidebarNav = () => {
   const pathname = usePathname();
 
+  const { roles } = useAuth();
 
   const routes = [
     {
@@ -158,13 +160,12 @@ const SidebarNav = () => {
           </div> */}
 
           {routes.map((item, index) => {
-            return (
-
-              item.children.length != 0 ?
+            return ( 
+              item.role.includes(roles[0]) &&
+                item.children.length != 0 ?
                 <Disclosure as="div" className="-mx-3">
                   {({ open }) => (
                     <>
-
                       <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7">
                         <div className="flex flex-row items-center gap-2">
                           <item.icon className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -190,7 +191,7 @@ const SidebarNav = () => {
                     </>
                   )}
                 </Disclosure> :
-
+                item.role.includes(roles[0]) &&
                 <a
                   href={item.href}
                   className="-mx-3 rounded-lg px-3 py-2.5 text-base font-semibold leading-7 flex flex-row items-center"
