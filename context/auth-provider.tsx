@@ -25,6 +25,7 @@ type AuthContextData = {
   signIn(data: SignInCredentials): Promise<void>;
   isAuthenticated: boolean;
   loading: boolean;
+  roles: string[];
   user?: Profile;
 };
 
@@ -41,6 +42,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<Profile>();
+  const [roles, setRoles] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const isAuthenticated = !!user;
   const router = useRouter();
@@ -49,7 +51,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const { "nextauth.token": token } = parseCookies();
 
     if (token) {
-      const { jti } = parseJwt(token);
+      const { jti, groups } = parseJwt(token);
 
       apiClient.get(`/profile/get-by-user/${jti}`)
         .then((res) => res.data)
@@ -64,6 +66,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             mobile: data.mobile,
           };
           setUser(profile);
+          setRoles(groups);
           toast.success("Welcome");
           // No need to push to "/dashboard" here if you're already handling it in signIn
         }).catch(() => {
@@ -94,7 +97,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
 
-      const { jti } = parseJwt(token);
+      const { jti, groups } = parseJwt(token);
 
       await apiClient.get(`/profile/get-by-user/${jti}`)
         .then((res) => res.data)
@@ -110,6 +113,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           };
 
           setUser(profile);
+          setRoles(groups);
 
           toast.success("Welcome");
           router.push("/dashboard");
@@ -131,7 +135,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ signIn, isAuthenticated, user, loading: isLoading }}>
+    <AuthContext.Provider value={{ signIn, isAuthenticated, user, roles, loading: isLoading }}>
       {children}
     </AuthContext.Provider>
   );

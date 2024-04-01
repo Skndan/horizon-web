@@ -1,48 +1,134 @@
 "use client";
 
 import { usePathname } from "next/navigation";
- 
+
 import { Disclosure } from '@headlessui/react'
-import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { BackpackIcon, BarChartIcon, CalendarIcon, CardStackIcon, ChevronDownIcon, DashboardIcon, HomeIcon, PaperPlaneIcon, ReaderIcon, RocketIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import Image from "next/image"; 
- 
+import Image from "next/image";
+
 const SidebarNav = () => {
   const pathname = usePathname();
+
+
   const routes = [
     {
       href: `/dashboard`,
       label: "Dashboard",
+      icon: DashboardIcon,
       active: pathname.match(`/dashboard`),
+      role: ["hr", "admin", "user"],
       children: []
     },
     {
-      href: `/employee-management`,
-      label: "Employee Management",
-      active: pathname.match(`/employee-management`),
+      href: `/my-space`,
+      label: "My Space",
+      icon: RocketIcon,
+      active: pathname.match(`/my-space`),
+      role: ["hr", "admin", "user"],
+      children: []
+    },
+    {
+      href: `/tasks`,
+      label: "Tasks",
+      icon: CardStackIcon,
+      active: pathname.match(`/tasks`),
+      role: ["admin", "hr"],
+      children: []
+    },
+    {
+      href: `/leave-tracker`,
+      label: "Leave Tracker",
+      icon: ReaderIcon,
+      active: pathname.match(`/leave-tracker`),
+      role: ["admin", "hr"],
+      children: []
+    },
+    {
+      href: `/organisation`,
+      label: "Organisation",
+      icon: HomeIcon,
+      active: pathname.match(`/organisation`),
+      role: ["admin", "hr"],
+      children: [{
+        href: `/organisation/employee`,
+        label: "Employee",
+        description:
+          "View all your employees at one place",
+      },
+      {
+        href: `/organisation/department`,
+        label: "Department",
+        description:
+          "Define departments in your organisation",
+      },
+      {
+        href: `/organisation/location`,
+        label: "Locations",
+        description:
+          "Manage locations for your organisation",
+      },
+      {
+        href: `/organisation/settings`,
+        label: "Settings",
+        description:
+          "Manage organisation settings",
+      }
+      ]
+    },
+    {
+      href: '/payroll',
+      label: 'Payroll',
+      icon: PaperPlaneIcon,
+      active: pathname.match(`/payroll`),
+      role: ["admin", "hr"],
       children: [
         {
-          href: `/employee-management/directory`,
-          label: "Directory",
+          href: `/payroll/runs`,
+          label: "Payroll Runs",
           description:
-            "View all your employees at one place",
+            "Manage payroll runs",
         },
         {
-          href: `/employee-management/onboarding`,
-          label: "Onboarding",
+          href: `/payroll/settings`,
+          label: "Settings",
           description:
-            "Welcome new member to your organization",
+            "Manage payroll settings",
         }
       ]
     },
     {
-      href: '/payroll-management',
-      label: 'Payroll Management',
-      active: pathname.match(`/payroll-management`),
-      children: []
+      href: `/attendance`,
+      label: "Attendance",
+      icon: CalendarIcon,
+      active: pathname.match(`/attendance`),
+      role: ["admin", "hr"],
+      children: [
+        {
+          href: `/attendance/tracking`,
+          label: "Tracking",
+          description:
+            "Track employee attendance",
+        },
+        {
+          href: `/attendance/shifts`,
+          label: "Shifts",
+          description:
+            "Manage employee shifts",
+        }
+      ]
     },
+    {
+      href: `/reports`,
+      label: "Reports",
+      icon: BarChartIcon,
+      active: pathname.match(`/reports`),
+      role: ["admin", "hr"],
+      children: []
+    }
   ];
+
   return (
     <>
 
@@ -78,9 +164,12 @@ const SidebarNav = () => {
                 <Disclosure as="div" className="-mx-3">
                   {({ open }) => (
                     <>
+
                       <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7">
-                      
-                      {item.label}
+                        <div className="flex flex-row items-center gap-2">
+                          <item.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                          {item.label}
+                        </div>
                         <ChevronDownIcon
                           className={cn(open ? 'rotate-180' : '', 'h-5 w-5 flex-none')}
                           aria-hidden="true"
@@ -101,14 +190,16 @@ const SidebarNav = () => {
                     </>
                   )}
                 </Disclosure> :
+
                 <a
                   href={item.href}
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7"
+                  className="-mx-3 rounded-lg px-3 py-2.5 text-base font-semibold leading-7 flex flex-row items-center"
                 >
+                  <item.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                   {item.label}
                 </a>
             );
-          })} 
+          })}
 
         </div>
       </div>

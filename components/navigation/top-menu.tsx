@@ -15,7 +15,12 @@ import {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+
+import { BarChartIcon, CalendarIcon, CardStackIcon, DashboardIcon, HomeIcon, PaperPlaneIcon, ReaderIcon, RocketIcon } from "@radix-ui/react-icons";
+
 import React from "react";
+import { useAuth } from "@/context/auth-provider";
+import { Label } from "../ui/label";
 
 export function MainNav({
   className,
@@ -23,35 +28,49 @@ export function MainNav({
 }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
 
+  const { user, roles } = useAuth();
+
+
+
   const routes = [
     {
       href: `/dashboard`,
       label: "Dashboard",
+      icon: DashboardIcon,
       active: pathname.match(`/dashboard`),
+      role: ["hr", "admin", "user"],
       children: []
     },
     {
       href: `/my-space`,
       label: "My Space",
+      icon: RocketIcon,
       active: pathname.match(`/my-space`),
+      role: ["hr", "admin", "user"],
       children: []
     },
     {
       href: `/tasks`,
       label: "Tasks",
+      icon: CardStackIcon,
       active: pathname.match(`/tasks`),
+      role: ["admin", "hr"],
       children: []
-    }, 
+    },
     {
       href: `/leave-tracker`,
       label: "Leave Tracker",
+      icon: ReaderIcon,
       active: pathname.match(`/leave-tracker`),
+      role: ["admin", "hr"],
       children: []
-    }, 
+    },
     {
       href: `/organisation`,
       label: "Organisation",
+      icon: HomeIcon,
       active: pathname.match(`/organisation`),
+      role: ["admin", "hr"],
       children: [{
         href: `/organisation/employee`,
         label: "Employee",
@@ -63,7 +82,7 @@ export function MainNav({
         label: "Department",
         description:
           "Define departments in your organisation",
-      }, 
+      },
       {
         href: `/organisation/location`,
         label: "Locations",
@@ -81,7 +100,9 @@ export function MainNav({
     {
       href: '/payroll',
       label: 'Payroll',
+      icon: PaperPlaneIcon,
       active: pathname.match(`/payroll`),
+      role: ["admin", "hr"],
       children: [
         {
           href: `/payroll/runs`,
@@ -100,7 +121,9 @@ export function MainNav({
     {
       href: `/attendance`,
       label: "Attendance",
+      icon: CalendarIcon,
       active: pathname.match(`/attendance`),
+      role: ["admin", "hr"],
       children: [
         {
           href: `/attendance/tracking`,
@@ -115,30 +138,32 @@ export function MainNav({
             "Manage employee shifts",
         }
       ]
-    }, 
+    },
     {
       href: `/reports`,
       label: "Reports",
+      icon: BarChartIcon,
       active: pathname.match(`/reports`),
+      role: ["admin", "hr"],
       children: []
     }
   ];
-
   return (
     <NavigationMenu className="pl-8 hidden md:flex">
       <NavigationMenuList>
         {routes.map((route) => (
           route.children.length != 0 ?
+            route.role.includes(roles[0]) &&
             <NavigationMenuItem key={route.href}>
               <NavigationMenuTrigger
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-primary",
+                  "text-sm font-medium transition-colors hover:text-primary gap-2",
                   route.active
                     ? "text-black dark:text-white"
                     : "text-muted-foreground"
                 )}
 
-              >{route.label}</NavigationMenuTrigger>
+              ><route.icon /> {route.label}</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                   {route.children.map((component) => (
@@ -153,6 +178,7 @@ export function MainNav({
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem> :
+            route.role.includes(roles[0]) &&
             <NavigationMenuItem key={route.href}>
               <Link href={route.href} legacyBehavior passHref>
                 <NavigationMenuLink
@@ -162,9 +188,8 @@ export function MainNav({
                       ? "text-black dark:text-white"
                       : "text-muted-foreground"
                   )}
-
-
                 >
+                  <route.icon />
                   {route.label}
                   {/* <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">New</span> */}
                 </NavigationMenuLink>
