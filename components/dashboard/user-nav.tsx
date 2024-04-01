@@ -43,8 +43,13 @@ export function UserNav() {
             <AvatarImage
               src=""
               alt="@skndan"
-            />
-            <AvatarFallback>BM</AvatarFallback>
+            /> 
+            <AvatarFallback>
+              {user?.username
+                .split(" ")
+                .map((chunk) => chunk[0])
+                .join("")}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

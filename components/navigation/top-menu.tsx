@@ -161,9 +161,8 @@ export function MainNav({
                   route.active
                     ? "text-black dark:text-white"
                     : "text-muted-foreground"
-                )}
-
-              ><route.icon /> {route.label}</NavigationMenuTrigger>
+                )} 
+              > {route.label}</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                   {route.children.map((component) => (
@@ -188,8 +187,7 @@ export function MainNav({
                       ? "text-black dark:text-white"
                       : "text-muted-foreground"
                   )}
-                >
-                  <route.icon />
+                > 
                   {route.label}
                   {/* <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">New</span> */}
                 </NavigationMenuLink>

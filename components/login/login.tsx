@@ -28,10 +28,11 @@ import {
 
 import toast from 'react-hot-toast';
 import * as z from "zod";
-import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, EyeClosedIcon } from '@radix-ui/react-icons';
 import apiClient, { parseJwt } from '@/lib/api/api-client';
 import { useUserStore } from '@/store/use-user-store';
-import { useAuth } from '@/context/auth-provider'; 
+import { useAuth } from '@/context/auth-provider';
+import { Eye, Search } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().min(1),
@@ -46,6 +47,7 @@ const Login = () => {
 
   const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [eye, setEye] = useState(false);
 
   const title = open ? 'Sign In' : 'Forgot Password';
   const description = open ? 'Enter your email and password' : 'Enter your email to get reset email';
@@ -61,7 +63,8 @@ const Login = () => {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       setLoading(true);
-
+      data.email.trim();
+      data.password.trim();
       await signIn(data);
 
       // localStorage.clear();
@@ -122,7 +125,7 @@ const Login = () => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email*</FormLabel>
+                        <FormLabel>Email <span className='text-red-500'>*</span></FormLabel>
                         <FormControl>
                           <Input
                             disabled={loading}
@@ -141,14 +144,23 @@ const Login = () => {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password*</FormLabel>
-                        <FormControl>
-                          <Input
-                            disabled={loading}
-                            type='password'
-                            placeholder="Password"
-                            {...field}
-                          />
+                        <FormLabel>Password <span className='text-red-500'>*</span></FormLabel> 
+                        <FormControl className="relative">
+                          <div className="relative">
+                            <Button size={"icon"} variant={"ghost"} className='absolute right-0' onClick={(e) => {
+                              e.preventDefault();
+                              setEye(!eye);
+                            }}>
+                              {eye ? <EyeClosedIcon className="top-2.5 h-4 w-4 text-muted-foreground" /> : <Eye className="top-2.5 h-4 w-4 text-muted-foreground" />}
+                            </Button> 
+                            <Input
+                              disabled={loading}
+                              type={eye ? 'text' : 'password'}
+                              placeholder="Password"
+                              className="pr-8"
+                              {...field}
+                            />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
