@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
+import { useFieldArray, useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
@@ -26,90 +26,196 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { Eye } from "lucide-react"
+import { PaySchedule } from "@/types/payroll"
+import { useAuth } from "@/context/auth-provider"
+import { useState } from "react"
+import toast from "react-hot-toast"
+import apiClient from "@/lib/api/api-client"
+import { useRouter } from "next/navigation"
 
 const payScheduleFormSchema = z.object({
-    addressLine1: z.string().min(1),
-    addressLine2: z.string().min(1),
-    city: z.string().min(1),
-    state: z.string().min(1),
-    pincode: z.string().min(1)
+    organisation: z.any(),
+    payDay: z.string(),
+    payDayValue: z.any(),
+    payCheck: z.string(),
+    payCheckValue: z.any(),
+}).refine(input => {
+
+    // allows bar to be optional only when foo is 'foo'
+    if (input.payDay === "SPECIFIC" && input.payDayValue === undefined) return false
+    if (input.payCheck === "SPECIFIC" && input.payCheckValue === undefined) return false
+
+    return true
 })
 
 type payScheduleFormValues = z.infer<typeof payScheduleFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<payScheduleFormValues> = {
-}
+interface PayScheduleProps {
+    initialData: PaySchedule | null;
+};
 
-export function PayScheduleForm() {
+export const PayScheduleForm: React.FC<PayScheduleProps> = ({
+    initialData
+}) => {
+
+    const router = useRouter();
+
+    const [loading, setLoading] = useState(false);
+
+    const toastMessage = 'Pay schedule updated';
+
+    const { user } = useAuth();
+
     const form = useForm<payScheduleFormValues>({
         resolver: zodResolver(payScheduleFormSchema),
-        defaultValues,
+        defaultValues: initialData || {
+            organisation: {
+                id: ''
+            }
+        },
         mode: "onChange",
     })
 
-    function onSubmit(data: payScheduleFormValues) {
+    async function onSubmit(data: payScheduleFormValues) {
 
         console.log(data);
 
-        // toast({
-        //   title: "You submitted the following values:",
-        //   description: (
-        //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-        //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        //     </pre>
-        //   ),
-        // })
+        try {
+
+            data.organisation.id = user?.orgId;
+
+            setLoading(true);
+
+            if (initialData) {
+                await apiClient
+                    .put(`/pay-schedule/${initialData.id}`, data)
+                    .then((res) => res.data)
+                    .then((data) => {
+                        toast.success(toastMessage);
+                        router.refresh();
+                    });
+            } else {
+                await apiClient
+                    .post("/pay-schedule", data)
+                    .then((res) => res.data)
+                    .then((data) => {
+                        toast.success(toastMessage);
+                        router.refresh();
+                    });
+            }
+
+        } catch (error: any) {
+            toast.error('Something went wrong.');
+        } finally {
+            setLoading(false);
+        }
     }
+
+    const isPayDay = useWatch({
+        control: form.control,
+        name: 'payDay', // Name of the field you want to watch
+    });
+
+    const isPayCheck = useWatch({
+        control: form.control,
+        name: 'payCheck', // Name of the field you want to watch
+    });
+
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <h3 className="mb-4 text-lg font-semibold">Select your work week <span className="text-red-600">*</span></h3>
+                <h3 className="mb-4 text-lg font-semibold">Process payslips on <span className="text-red-600">*</span></h3>
                 <FormField
                     control={form.control}
-                    name="addressLine1"
+                    name="payDay"
                     render={({ field }) => (
-                        <FormItem className="space-y-3">
-                            <FormLabel className=" text-muted-foreground">The days worked in a calendar week</FormLabel>
+                        <FormItem>
                             <FormControl>
-                                <ToggleGroup type="multiple" className="justify-start" variant="outline">
-                                    <ToggleGroupItem value="SUN">SUN</ToggleGroupItem>
-                                    <ToggleGroupItem value="MON">MON</ToggleGroupItem>
-                                    <ToggleGroupItem value="TUE">TUE</ToggleGroupItem>
-                                    <ToggleGroupItem value="WED">WED</ToggleGroupItem>
-                                    <ToggleGroupItem value="THU">THU</ToggleGroupItem>
-                                    <ToggleGroupItem value="FRI">FRI</ToggleGroupItem>
-                                    <ToggleGroupItem value="SAT">SAT</ToggleGroupItem>
-                                </ToggleGroup>
+                                <RadioGroup defaultValue="LAST_WORKING_DAY" className="space-y-2" value={field.value} onValueChange={field.onChange}>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="LAST_WORKING_DAY" id="r1" />
+                                        <Label htmlFor="r1">Last working day of every month</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="SPECIFIC" id="r2" />
+                                        <Label htmlFor="r2">Every month on </Label>
+                                        <FormField
+                                            control={form.control}
+                                            name="payDayValue"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <Select disabled={isPayDay === "SPECIFIC" ? false : true} required={isPayDay === "SPECIFIC" ? true : false} defaultValue={field.value} value={field.value} onValueChange={field.onChange}>
+                                                        <FormControl>
+                                                            <SelectTrigger className="w-[150px]">
+                                                                <SelectValue defaultValue={field.value} placeholder="Select a date" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent defaultValue={field.value}> 
+                                                            {Array.from({ length: 28 }).map((_, index) => (
+                                                                <SelectItem key={index} value={String(index + 1)} >{String(index + 1)}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </RadioGroup>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
-                /> 
+                />
+
                 <h3 className="mb-4 text-lg font-semibold pt-4">Pay your employees on <span className="text-red-600">*</span></h3>
-                <RadioGroup defaultValue="comfortable" className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="default" id="r3" />
-                        <Label htmlFor="r3">Last working day of every month</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="comfortable" id="r4" />
-                        <Label htmlFor="r4">Every month on </Label>
-                        <Select>
-                            <SelectTrigger className="w-[80px]">
-                                <SelectValue placeholder="Select a date" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    {Array.from({ length: 28 }).map((_, index) => (
-                                        <SelectItem key={index} value={String(index + 1)} >{String(index + 1)}</SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </RadioGroup>
+                <FormField
+                    control={form.control}
+                    name="payCheck"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormControl>
+                                <RadioGroup defaultValue="LAST_WORKING_DAY" className="space-y-2" value={field.value} onValueChange={field.onChange}>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="LAST_WORKING_DAY" id="r3" />
+                                        <Label htmlFor="r3">Last working day of every month</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="SPECIFIC" id="r4" />
+                                        <Label htmlFor="r4">Every month on </Label>
+
+                                        <FormField
+                                            control={form.control}
+                                            name="payCheckValue"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <Select disabled={isPayCheck === "SPECIFIC" ? false : true} defaultValue={field.value} value={field.value} onValueChange={field.onChange}>
+                                                        <FormControl>
+                                                            <SelectTrigger className="w-[150px]">
+                                                                <SelectValue defaultValue={field.value} placeholder="Select a date" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {Array.from({ length: 28 }).map((_, index) => (
+                                                                <SelectItem key={index} value={String(index + 1)} >{String(index + 1)}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <p className="text-muted-foreground text-sm">Note: When payday falls on a non-working day or a holiday, employees will get paid on the previous working day.</p>
                 <Button type="submit">Update</Button>
             </form>
         </Form>

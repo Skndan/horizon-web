@@ -4,12 +4,10 @@ import { useRouter } from "next/navigation";
   
 import { DataTable } from "@/components/ui/data-table"; 
 import { columns } from "./columns";
-import { EmptyStateTable } from "@/components/common/empty-state-table"; 
-import { AllowanceDetail } from "../../../data";
-
+import { EmptyStateTable } from "@/components/common/empty-state-table";
 
 interface EarningClientProps {
-  data: AllowanceDetail[];
+  data: any;
 }
 
 export const EarningClient: React.FC<EarningClientProps> = ({
@@ -20,10 +18,10 @@ export const EarningClient: React.FC<EarningClientProps> = ({
   return (
     <>
       {data.length == 0 ? <EmptyStateTable
-        title={"No employees added"}
-        description={"You have not added any employees. Add one below."}
-        action={"Add Empoyee"}
-        onClick={() => router.push(`/organisation/employee/new`)}
+        title={"No earnings added"}
+        description={"You have not added any earnings. Add one below."}
+        action={"Add Earnings"}
+        onClick={() => router.push(`/payroll/settings/salary-components/earnings/new`)}
       /> : <DataTable searchKey="name" columns={columns} data={data} />}
     </>
   );

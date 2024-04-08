@@ -15,11 +15,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { AlertModal } from "@/components/modals/alert-modal";
-import { AllowanceDetail } from "../../../data";
+import { AlertModal } from "@/components/modals/alert-modal"; 
+import { Deduction } from "@/types/payroll";
 
 interface CellActionProps {
-  data: AllowanceDetail;
+  data: Deduction;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
@@ -60,7 +60,7 @@ export const CellAction: React.FC<CellActionProps> = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
-            onClick={() => router.push(`#`)}
+                onClick={() => router.push(`/payroll/settings/salary-components/deductions/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Edit
           </DropdownMenuItem>

@@ -7,28 +7,32 @@ import { toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { Earning } from "@/types/payroll";
+import { ComponentType } from "@/types/payroll";
+import { ComponentTypeForm } from "./component-type-form";
+import { useUpdateStore } from "@/store/use-update-store";
 
 interface CellActionProps {
-  data: Earning;
+  data: ComponentType;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
   data,
 }) => {
   const router = useRouter();
-  const params = useParams();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [openForm, setOpenForm] = useState(false);
+  const { set } = useUpdateStore();
 
   const onConfirm = async () => {
     try {
@@ -43,19 +47,25 @@ export const CellAction: React.FC<CellActionProps> = ({
     }
   };
 
-  const onCopy = (id: string) => {
-    navigator.clipboard.writeText(id);
-    // toast.success('Billboard ID copied to clipboard.');
-  }
 
   return (
     <>
-      <AlertModal 
-        isOpen={open} 
+      <AlertModal
+        isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onConfirm}
         loading={loading}
       />
+
+      <ComponentTypeForm
+        isOpen={openForm}
+        onClose={() => {
+          setOpenForm(false);
+          set(data?.id ?? '');
+        }}
+        initialData={data}
+      />
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -63,13 +73,13 @@ export const CellAction: React.FC<CellActionProps> = ({
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end"> 
+        <DropdownMenuContent align="end">
           <DropdownMenuItem
-            onClick={() => router.push(`/payroll/settings/salary-components/earnings/${data.id}`)}
+            onClick={() => setOpenForm(true)}
           >
             <Edit className="mr-2 h-4 w-4" /> Edit
           </DropdownMenuItem>
-          <DropdownMenuSeparator/>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => setOpen(true)}
           >

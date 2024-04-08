@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
   
 import { DataTable } from "@/components/ui/data-table"; 
 import { columns } from "./columns";
-import { EmptyStateTable } from "@/components/common/empty-state-table"; 
-import { AllowanceDetail } from "../../../data";
+import { EmptyStateTable } from "@/components/common/empty-state-table";  
+import { SalaryTemplateItem } from "@/types/payroll";
 
 
 interface DeductionClientProps {
-  data: AllowanceDetail[];
+  data: SalaryTemplateItem[];
 }
 
 export const DeductionClient: React.FC<DeductionClientProps> = ({
@@ -20,10 +20,10 @@ export const DeductionClient: React.FC<DeductionClientProps> = ({
   return (
     <>
       {data.length == 0 ? <EmptyStateTable
-        title={"No employees added"}
-        description={"You have not added any employees. Add one below."}
-        action={"Add Empoyee"}
-        onClick={() => router.push(`/organisation/employee/new`)}
+        title={"No deductions added"}
+        description={"You have not added any deductions. Add one below."}
+        action={"Add Deduction"}
+        onClick={() => router.push(`/payroll/settings/salary-components/deductions/new`)}
       /> : <DataTable searchKey="name" columns={columns} data={data} />}
     </>
   );

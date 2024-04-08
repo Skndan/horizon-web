@@ -34,3 +34,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+
+{/* <div className="relative">
+                    <div className='absolute right-0 h-10 flex justify-center items-center rounded-r-lg border'>
+                        <Label className="text-foreground px-4 text-sm">% of CTC</Label>
+                    </div>
+                    <Input
+                        type={'text'}
+                        placeholder="Password"
+                        className="pr-10"
+                    />
+                </div> */}
