@@ -16,10 +16,10 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal"; 
-import { Deduction } from "@/types/payroll";
+import { SalaryComponent } from "@/types/payroll";
 
 interface CellActionProps {
-  data: Deduction;
+  data: SalaryComponent;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({

@@ -129,9 +129,11 @@ const OverviewPage = () => {
                             </TabsTrigger>
                             <TabsTrigger value="approvals">
                                 Approvals
+                                <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">Coming Soon🔥</span>
                             </TabsTrigger>
                             <TabsTrigger value="timesheets">
                                 Timesheets
+                                <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">Coming Soon🔥</span>
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="overview" className="space-y-4">
@@ -234,7 +236,10 @@ const OverviewPage = () => {
                                 </Card>
                                 <Card className="col-span-3">
                                     <CardHeader>
-                                        <CardTitle>Recent Activities</CardTitle>
+                                        <CardTitle>
+                                            Recent Activities
+                                            <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">Coming Soon🔥</span>
+                                        </CardTitle>
                                         <CardDescription>
                                             You have 5 pending requests for approvals.
                                         </CardDescription>
