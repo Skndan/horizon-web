@@ -75,5 +75,6 @@ export interface SalaryTemplate {
   name: string
   description: string
   ctc: number
+  fixed: number
   earnings: SalaryTemplateItem[] 
 }

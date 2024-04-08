@@ -15,8 +15,16 @@ export const columns: ColumnDef<SalaryTemplate>[] = [
     header: "Description",
     accessorKey: "description",
   }, 
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => <CellAction data={row.original} />
-  // },
+  {
+    header: "CTC",
+    accessorKey: "ctc", 
+    cell: ({ row }) => {  
+      const ctc = Number(row.getValue("ctc"));
+      return <p>₹{ctc.toLocaleString("en-in", { minimumFractionDigits: 0 })}</p>
+    }
+  }, 
+  {
+    id: "actions",
+    cell: ({ row }) => <CellAction data={row.original} />
+  },
 ];

@@ -40,11 +40,7 @@ const TemplateFormPage = ({
                 const employees = await apiClient.get(`/salary-template/${params.templateId}`);
                 setData(employees.data)
             } else {
-                const employees = await apiClient.post(`/salary-template`, {
-                    organisation: {
-                        id: `${user?.orgId}`
-                    }
-                });
+                const employees = await apiClient.get(`/salary-template/get-draft/${user?.orgId}`);
                 setData(employees.data)
             }
 

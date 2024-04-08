@@ -18,7 +18,7 @@ const TemplatePage = () => {
     useEffect(() => {
         apiClient.get(`/salary-template/get-by-org/${user?.orgId}`).then((res) => res.data)
             .then((data) => {
-                setData(data.content)
+                setData(data)
                 setLoading(false)
             });
     }, [])
@@ -33,7 +33,7 @@ const TemplatePage = () => {
                             <Loader className="animate-spin h-5 w-5 mr-3" />
                         </div>
                     )
-                    : (<SalaryTemplateClient data={[]} />)}
+                    : (<SalaryTemplateClient data={data} />)}
             </div>
         </div>
         </>)

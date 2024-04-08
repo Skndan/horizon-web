@@ -55,12 +55,14 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { calculationType, inWords, numberToEnglish } from "@/lib/utils/string-utils"
 import apiClient from "@/lib/api/api-client"
 import { Separator } from "@/components/ui/separator"
+import { useRouter } from "next/navigation"
 
 const salaryTemplateFormSchema = z.object({
     name: z.string(),
     description: z.string(),
     ctc: z.any(),
-    earnings: z.any(),
+    fixed: z.any(),
+    earnings: z.any()
 })
 
 type ProfileFormValues = z.infer<typeof salaryTemplateFormSchema>
@@ -88,21 +90,92 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         mode: "onChange",
     })
 
-    const [ctc, setCtc] = useState({ monthly: 0, yearly: 0 });
-    const [fixed, setFixed] = useState({ monthly: 0, yearly: 0 });
+    const router = useRouter();
 
-    const [earnings, setEarnings] = useState<SalaryComponentItem[]>([]);
+    const [ctc, setCtc] = useState(initialData?.ctc ? { monthly: initialData.ctc / 12, yearly: initialData.ctc } : { monthly: 0, yearly: 0 });
+    const [fixed, setFixed] = useState(initialData?.fixed ? { monthly: initialData.fixed / 12, yearly: initialData.fixed } : { monthly: 0, yearly: 0 });
+    const [loading, setLoading] = useState(false);
 
-    const title = (initialData?.createdAt === initialData?.updatedAt) ? 'Create Earning ✨' : 'Edit Earning ✨';
-    const description = (initialData?.createdAt === initialData?.updatedAt) ? 'Edit a earning.' : 'Add a new earning';
-    const toastMessage = (initialData?.createdAt === initialData?.updatedAt) ? 'Earning updated.' : 'Earning created.';
-    const action = (initialData?.createdAt === initialData?.updatedAt) ? 'Save changes' : 'Create';
+    const [earnings, setEarnings] = useState<SalaryComponentItem[]>(initialData ? initialData!.earnings.map((item) => {
 
-    const onSubmit = (data: ProfileFormValues) => {
+        let monthly = 0;
+        let yearly = 0;
+
+        switch (item.calculationType) {
+            case "FIXED_AMOUNT":
+                monthly = item.value / 12;
+                yearly = Number(item.value);
+                console.log("FIXED_AMOUNT", monthly, yearly)
+                break;
+            case "PERCENTAGE_OF_CTC":
+                monthly = ((item.value / 100) * ctc.monthly);
+                yearly = (item.value / 100) * ctc.yearly;
+                break;
+            // find basic
+            case "PERCENTAGE_OF_BASIC":
+
+                // find basic's monthly and yearly
+                var dd = initialData!.earnings.find(item => item.componentName === "Basic");
+
+                if (!dd) {
+                    toast.error("Add basic first");
+                }
+
+                monthly = (item.value / 100) * ctc.monthly;
+                yearly = (item.value / 100) * ctc.yearly;
+
+                break;
+        }
+
+        return {
+            id: item.id,
+            componentName: item.componentName,
+            value: item.value,
+            componentType: item.componentType,
+            calculationType: item.calculationType,
+            monthly: monthly,
+            yearly: yearly,
+        };
+    }) : []);
+
+    const title = (initialData?.createdAt === initialData?.updatedAt) ? 'Create Template ✨' : 'Edit Template ✨';
+    const description = (initialData?.createdAt === initialData?.updatedAt) ? 'Add a new template' : 'Edit a template.';
+    const toastMessage = (initialData?.createdAt === initialData?.updatedAt) ? 'Template created.' : 'Template updated.';
+    const action = 'Save changes';
+
+    const onSubmit = async (data: ProfileFormValues) => {
 
         data.earnings = earnings;
+        data.ctc = ctc.yearly;
+        data.fixed = fixed.yearly;
 
         console.log(data)
+
+        try {
+            setLoading(true);
+            if (initialData?.id) {
+                await apiClient
+                    .put(`/salary-template/${initialData.id}`, data)
+                    .then((res) => res.data)
+                    .then((data) => {
+                        toast.success(toastMessage);
+                        router.push(`../salary-templates`);
+                    });
+            } else {
+                await apiClient
+                    .post("/salary-template", data)
+                    .then((res) => res.data)
+                    .then((data) => {
+                        toast.success(toastMessage);
+                        router.push(`../salary-templates`);
+                    });
+            }
+        } catch (error: any) {
+            toast.error('Something went wrong.');
+        } finally {
+            setLoading(false);
+        }
+
     };
 
     const watchCtc = useWatch({
@@ -110,6 +183,8 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         name: "ctc",
         defaultValue: "0",
     })
+
+
 
     // Function to be triggered whenever there's a change in the form fields
     const handleFieldChange = (fieldName: string, value: any, index: number) => {
@@ -180,6 +255,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                     //     calculationType: value.calculationType,
                     // }] as never);
 
+                    // calculate
                     setEarnings(prevState => {
                         // Loop over your list
                         return prevState.map((item) => {
@@ -190,7 +266,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                     })
                 }
             });
-
+            // update each item
             earnings.forEach(element => {
                 if (element.componentType.type === "EARNING") {
                     fixedMonthly += element.monthly;
@@ -201,17 +277,10 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 }
             })
 
-            setFixed({ monthly: ctc.monthly - fixedMonthly, yearly: ctc.yearly - fixedYearly })
-
-            // calculate
-
-            // update each item
-
             // update fixed item  
+            setFixed({ monthly: ctc.monthly - fixedMonthly, yearly: ctc.yearly - fixedYearly })
         }
     };
-
-
 
     const addEarning = async (value: SalaryTemplateItem) => {
         // const earnings = getValues('earnings');
@@ -271,7 +340,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                     <Breadcrumb className="sm:block hidden">
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/payroll/settings/salary-components">Earnings</BreadcrumbLink>
+                                <BreadcrumbLink href="/payroll/settings/salary-components">Salary Template</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator>
                                 <SlashIcon />
@@ -373,7 +442,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                             <DropdownMenuSeparator />
                                             {deductionType.map((deduction) => (
                                                 <>
-                                                    <DropdownMenuItem key={deduction.id} onClick={(e) => {
+                                                    <DropdownMenuItem disabled={earnings.find(x => x.id === deduction.id) !== undefined} key={deduction.id} onClick={(e) => {
                                                         addEarning(deduction);
                                                     }}>
                                                         {deduction.componentName}
@@ -450,14 +519,26 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                                     />
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Label>
-                                                        ₹{item.monthly?.toFixed()}
-                                                    </Label>
+                                                    {
+                                                        item.componentType.type === "EARNING" ?
+                                                            <Label className="text-green-600">
+                                                                +₹{item.monthly?.toFixed()}
+                                                            </Label> :
+                                                            <Label className="text-red-600">
+                                                                -₹{item.monthly?.toFixed()}
+                                                            </Label>
+                                                    }
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Label>
-                                                        ₹{item.yearly?.toFixed()}
-                                                    </Label>
+                                                    {
+                                                        item.componentType.type === "EARNING" ?
+                                                            <Label className="text-green-600">
+                                                                +₹{item.yearly?.toFixed()}
+                                                            </Label> :
+                                                            <Label className="text-red-600">
+                                                                -₹{item.yearly?.toFixed()}
+                                                            </Label>
+                                                    }
                                                 </TableCell>
                                                 <TableCell>
                                                     <Button size={"icon"} variant={"outline"} className="text-red-500" onClick={(e) => {
@@ -501,7 +582,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                 </Table>
                             </div>
                         </div>
-                        <Button type="submit">Update profile</Button>
+                        <Button type="submit">{action}</Button>
                     </form>
                 </Form>
             </div>
