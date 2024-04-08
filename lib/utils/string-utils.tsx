@@ -17,7 +17,7 @@ export function calculationType(str: string) {
             return "% of Basic";
     }
 }
- 
+
 // English version
 export function numberToEnglish(n: string) {
 
@@ -124,3 +124,12 @@ export function inWords(num: string) {
     str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'only ' : '';
     return toTitleCase(str);
 }
+
+
+export function convertTime(timeString: string) {
+    const date = new Date(`1970-01-01T${timeString}`);
+    console.log(timeString);
+    const updatedDate = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    console.log(updatedDate)
+    return updatedDate;
+};

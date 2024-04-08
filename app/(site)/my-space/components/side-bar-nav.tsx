@@ -3,13 +3,14 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-import { cn } from "@/lib/utils" 
+import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: {
     href: string
     title: string
+    badge: boolean
   }[]
 }
 
@@ -37,6 +38,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
           )}
         >
           {item.title}
+          {item.badge ? <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">Coming Soon🔥</span> : <></>} 
         </Link>
       ))}
     </nav>
