@@ -6,15 +6,14 @@ import { Loader } from "lucide-react";
 import { TimesheetForm } from "./timesheet-form";
 import { LeaveType } from "@/types/leave";
 import { useAuth } from "@/context/auth-provider";
+import { Timesheet } from "@/types/attendance";
 
 
-const TimeSheetFormPage = ({ params }: { params: { timeSheetId: string } }) => {
+const TimeSheetFormPage = ({ params }: { params: { timesheetId: string } }) => {
 
     const [data, setData] = useState(null);
 
-    const [isLoading, setLoading] = useState(false)
-
-    const [leaveType, setLeaveType] = useState<LeaveType[]>([])
+    const [isLoading, setLoading] = useState(true) 
 
     const {user} = useAuth();
 
@@ -22,21 +21,18 @@ const TimeSheetFormPage = ({ params }: { params: { timeSheetId: string } }) => {
         (async () => {
             setLoading(true); 
 
-            // if (params.timeSheetId != 'new') {
-            //     const employees = await apiClient.get(`/leave-request/${params.timeSheetId}`);
-            //     setData(employees.data)
-            // }
-
-            // const departments = await apiClient.get(`/leave/type/get-by-org/${user?.orgId}`);
-            // setLeaveType(departments.data)
+            if (params.timesheetId != 'new') {
+                const employees = await apiClient.get(`/time-sheet/${params.timesheetId}`);
+                setData(employees.data)
+            }
 
             setLoading(false);
         })()
-    }, [params.timeSheetId])
+    }, [params.timesheetId])
 
     return (
         <div className="flex-col">
-            <div className="flex-1 space-y-4 p-8 pt-6">
+            <div className="flex-1 space-y-4">
 
                 {isLoading ? (
                     <div className="grid h-screen place-items-center">
@@ -44,8 +40,7 @@ const TimeSheetFormPage = ({ params }: { params: { timeSheetId: string } }) => {
                     </div>
                 ) : (
                     <TimesheetForm
-                        initialData={data}
-                        leaveType={leaveType}
+                        initialData={data} 
                     />)}
             </div>
         </div>)

@@ -121,22 +121,7 @@ export const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
         // } finally {
         //     setLoading(false);
         // }
-    };
-
-    const onDelete = async () => {
-        try {
-            setLoading(true);
-            await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
-            router.refresh();
-            router.push(`/${params.storeId}/products`);
-            toast.success('Product deleted.');
-        } catch (error: any) {
-            toast.error('Something went wrong.');
-        } finally {
-            setLoading(false);
-            setOpen(false);
-        }
-    }
+    }; 
 
     return (
         <>
