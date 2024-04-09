@@ -16,7 +16,7 @@ export const BasicCard: React.FC<BasicCardProps> = ({
 
     return (
         <>
-            <div className="grid grid-cols-3 rounded-md border">
+            <div className="grid md:grid-cols-3 rounded-md border">
                 <div className="flex flex-col p-4 hover:bg-muted">
                     <Label className="text-muted-foreground">Employee ID</Label>
                     <Label className="text-md pt-1">{profile?.employeeId}</Label>

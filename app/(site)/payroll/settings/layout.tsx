@@ -8,14 +8,17 @@ const sidebarNavItems = [
         href: "/payroll/settings",
     },
     {
+        title: "Component Types",
+        href: "/payroll/settings/component-types",
+    },
+    {
         title: "Salary Components",
         href: "/payroll/settings/salary-components",
     },
     {
         title: "Salary Templates",
         href: "/payroll/settings/salary-templates",
-    },
-     
+    }
 ]
 
 interface PayrollSettingsLayoutProps {

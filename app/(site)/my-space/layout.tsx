@@ -10,26 +10,32 @@ const sidebarNavItems = [
     {
         title: "Activity",
         href: "/my-space",
+        badge: true,
     },
     {
         title: "Tasks",
         href: "/my-space/tasks",
+        badge: false,
     },
     {
         title: "Profile",
         href: "/my-space/profile",
+        badge: false,
     },
     {
         title: "Attendance",
         href: "/my-space/attendance",
+        badge: false,
     },
     {
         title: "Timesheet",
         href: "/my-space/timesheet",
+        badge: true,
     },
     {
         title: "Leave Request",
         href: "/my-space/leave-request",
+        badge: false,
     },
 ]
 

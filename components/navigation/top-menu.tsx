@@ -163,8 +163,9 @@ export function MainNav({
                     : "text-muted-foreground"
                 )} 
               > {route.label}</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+              <NavigationMenuContent key={route.href+'content'}>
+                {/* <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]"> */}
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                   {route.children.map((component) => (
                     <ListItem
                       key={component.label}
@@ -206,7 +207,7 @@ const ListItem = React.forwardRef<
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, ...props }, ref) => {
   return (
-    <li>
+    <li> 
       <NavigationMenuLink asChild>
         <a
           ref={ref}

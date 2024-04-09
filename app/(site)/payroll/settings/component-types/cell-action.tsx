@@ -15,19 +15,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { AlertModal } from "@/components/modals/alert-modal"; 
-import { SalaryComponent } from "@/types/payroll";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { ComponentType } from "@/types/payroll";
+import { ComponentTypeForm } from "./component-type-form";
+import { useUpdateStore } from "@/store/use-update-store";
 
 interface CellActionProps {
-  data: SalaryComponent;
+  data: ComponentType;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
   data,
 }) => {
-  const router = useRouter(); 
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [openForm, setOpenForm] = useState(false);
+  const { set } = useUpdateStore();
 
   const onConfirm = async () => {
     try {
@@ -41,7 +46,7 @@ export const CellAction: React.FC<CellActionProps> = ({
       setLoading(false);
     }
   };
- 
+
 
   return (
     <>
@@ -51,6 +56,16 @@ export const CellAction: React.FC<CellActionProps> = ({
         onConfirm={onConfirm}
         loading={loading}
       />
+
+      <ComponentTypeForm
+        isOpen={openForm}
+        onClose={() => {
+          setOpenForm(false);
+          set(data?.id ?? '');
+        }}
+        initialData={data}
+      />
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -60,7 +75,7 @@ export const CellAction: React.FC<CellActionProps> = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
-                onClick={() => router.push(`/payroll/settings/salary-components/deductions/${data.id}`)}
+            onClick={() => setOpenForm(true)}
           >
             <Edit className="mr-2 h-4 w-4" /> Edit
           </DropdownMenuItem>
