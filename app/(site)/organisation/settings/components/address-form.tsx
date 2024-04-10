@@ -65,21 +65,6 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             id: user?.orgId
         }
 
-        console.log(data);
-
-        // {
-        //   "label": "sf",
-        //   "addressLine1": "sdfsdfs",
-        //   "addressLine2": "dfsdfs",
-        //   "city": "fdsfs",
-        //   "state": "fds",
-        //   "pincode": "dfsdfs",
-        //   "isPrimary": true,
-        //   "organisation": {
-        //     "id": "3305b43f-9b7b-4a1a-80f4-60cc5487789d"
-        //   }
-        // }
-
         if (initialData) {
             await apiClient
                 .put(`/address/${initialData.id}`, data)

@@ -67,8 +67,7 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
             setLoading(true);
 
             data.organisation.id = user?.orgId;
-
-            console.log(data);
+            
             if (initialData) {
                 await apiClient
                     .put(`/holiday/${initialData.id}`, data)

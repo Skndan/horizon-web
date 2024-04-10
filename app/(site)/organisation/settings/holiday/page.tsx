@@ -30,7 +30,6 @@ const HolidayPage = () => {
             setLoading(true)
             apiClient.get(`/holiday/${user?.orgId}/${format(new Date(), "yyyy")}`).then((res) => res.data)
                 .then((data) => {
-                    console.log(`setting value`)
                     setData(data)
                     setLoading(false)
                 });

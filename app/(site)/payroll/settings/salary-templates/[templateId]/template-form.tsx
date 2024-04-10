@@ -104,8 +104,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         switch (item.calculationType) {
             case "FIXED_AMOUNT":
                 monthly = item.value / 12;
-                yearly = Number(item.value);
-                console.log("FIXED_AMOUNT", monthly, yearly)
+                yearly = Number(item.value); 
                 break;
             case "PERCENTAGE_OF_CTC":
                 monthly = ((item.value / 100) * ctc.monthly);
@@ -149,8 +148,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         data.ctc = ctc.yearly;
         data.fixed = fixed.yearly;
 
-        console.log(data)
-
         try {
             setLoading(true);
             if (initialData?.id) {
@@ -189,8 +186,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     // Function to be triggered whenever there's a change in the form fields
     const handleFieldChange = (fieldName: string, value: any, index: number) => {
         // Perform your desired actions here, such as sending data to an API or updating state
-        console.log('Field Name:', fieldName);
-        console.log('Changed Value:', value);
 
         if ((earnings.length === 0) && (fieldName === "ctc")) {
             const monthly = (Number(value) / 12).toFixed();
@@ -207,33 +202,24 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 let yearly = 0;
 
                 if (element.id === earnings[index].id) {
-                    console.log('match: ', element.id, value);
                     // find type 
                     switch (element.calculationType) {
                         case "FIXED_AMOUNT":
                             monthly = value / 12;
                             yearly = Number(value);
-
-                            console.log("FIXED_AMOUNT", monthly, yearly)
                             break;
                         case "PERCENTAGE_OF_CTC":
                             monthly = ((value / 100) * ctc.monthly);
                             yearly = (value / 100) * ctc.yearly;
-
-                            console.log('match: ', element.id, value, monthly, yearly);
                             break;
                         // find basic
                         case "PERCENTAGE_OF_BASIC":
 
                             // find basic's monthly and yearly
                             var dd = earnings.find(item => item.componentName === "Basic");
-
-                            console.log(dd)
                             if (!dd) {
                                 toast.error("Add basic first");
                             }
-
-                            console.log(value.value);
 
                             monthly = (value / 100) * dd!.monthly;
                             yearly = (value / 100) * dd!.yearly;
@@ -259,8 +245,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                     setEarnings(prevState => {
                         // Loop over your list
                         return prevState.map((item) => {
-                            // Check for the item with the specified id and update it
-                            console.log("matching", item.id, earnings[index].id)
+                            // Check for the item with the specified id and update it 
                             return item.id === earnings[index].id ? { ...item, monthly: monthly, yearly: yearly, value: value } : item
                         })
                     })

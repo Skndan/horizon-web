@@ -12,7 +12,7 @@ const daysInMonth = Array.from({ length: 30 }, (_, i) => i + 1); // For simplici
 const ShiftCalendar = () => {
     const updateShift = (employeeId: any, day: any, newShift: any) => {
         // Logic to update the shift in your data source
-        console.log(`Update ${employeeId}'s shift on day ${day} to ${newShift}`);
+        // console.log(`Update ${employeeId}'s shift on day ${day} to ${newShift}`);
         // Update state or external data source accordingly
     };
 

@@ -12,7 +12,6 @@ function SaveFormBtn({ id }: { id: number }) {
     try {
       const jsonElements = JSON.stringify(elements);
       // TODO
-      console.log(jsonElements);
       // await UpdateFormContent(id, jsonElements);
       toast.success("Your form has been saved!");  
     } catch (error) { 

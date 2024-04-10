@@ -115,8 +115,6 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                     label: profile.name, value: profile.id
                 };
             });
-
-            console.log(holidayDates);
             setProfile(holidayDates);
             setLoading(false);
         })()
@@ -134,8 +132,6 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
             });
 
             data.attendies = profile;
-
-            console.log(data);
 
             setLoading(true);
             await apiClient

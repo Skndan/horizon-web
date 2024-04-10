@@ -64,7 +64,6 @@ export const LeaveTypeForm: React.FC<LeaveTypeFormProps> = ({
 
             data.organisation.id = user?.orgId;
 
-            console.log(data);
             if (initialData) {
                 await apiClient
                     .put(`/leave/type/${initialData.id}`, data)

@@ -88,9 +88,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email,
         password,
       });
-
-      console.log(response.data);
-
+  
       const { token, refreshToken, expiry } = response.data;
 
       saveTokensOnCookies(token, refreshToken, expiry);
@@ -121,8 +119,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           signOut();
         });
       router.push("/dashboard");
-    } catch (err) {
-      console.log(err);
+    } catch (err) { 
     } finally {
       setIsLoading(false); // Set loading to false after the request completes 
     }

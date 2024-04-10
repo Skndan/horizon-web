@@ -109,7 +109,6 @@ const MonthlyAttendancePage = () => {
                                                         const isFutureDate = isAfter(startOfDay(currentDate), startOfDay(new Date())); // Check if the date is in the future 
 
                                                         const isHoliday = holiday.includes(dateKey);
-                                                        console.log(`${dateKey} ${isHoliday} ${dayLog.log.includes(dateKey)}`)
 
                                                         const icon = isFutureDate ? '⚪'
                                                             : dayLog.log.includes(dateKey) ? '🟢'

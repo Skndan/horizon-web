@@ -126,10 +126,6 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
         data.toDate = data.date.to;
         data.profile.id = user?.profileId;
 
-
-        console.log(data)  
-
-        // console.log(data);
         // if (initialData) {
         //     await apiClient
         //         .put(`/leave-request/${initialData.id}`, data)
@@ -163,9 +159,6 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
                 await apiClient
                     .get(`/time-sheet/fetch/${user?.profileId}/${formatDate(e.from.toISOString(), "yyyy-MM-dd")}/${formatDate(e.to.toISOString(), "yyyy-MM-dd")}`)
                     .then((res) => {
-                        console.log(res.status);
-                        console.log(res.data);
-
                         if (res.status === 200) {
                             setDaylog(res.data);
                             let w = 0;
