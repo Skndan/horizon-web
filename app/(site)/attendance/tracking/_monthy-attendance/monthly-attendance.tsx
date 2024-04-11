@@ -1,22 +1,19 @@
 "use client";
 
 import apiClient from "@/lib/api/api-client";
-import { Daylog, MonthlyDaylog } from "@/types/attendance";
+import { MonthlyDaylog } from "@/types/attendance";
 import { addDays, format, formatDate, getDaysInMonth } from "date-fns";
 import { useState, useEffect } from "react";
 import { Loader } from "lucide-react";
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
 import { isAfter, startOfDay } from 'date-fns'; // Add isAfter and startOfDay to the import
-import { Label } from '@/components/ui/label';
 import AvatarCell from '@/components/common/avatar-cell';
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { Holiday } from "@/types/holiday";

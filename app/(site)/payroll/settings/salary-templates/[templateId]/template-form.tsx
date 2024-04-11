@@ -104,7 +104,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         switch (item.calculationType) {
             case "FIXED_AMOUNT":
                 monthly = item.value / 12;
-                yearly = Number(item.value); 
+                yearly = Number(item.value);
                 break;
             case "PERCENTAGE_OF_CTC":
                 monthly = ((item.value / 100) * ctc.monthly);
@@ -556,14 +556,15 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                             <TableCell>₹{fixed.yearly?.toFixed()}</TableCell>
                                             <TableCell></TableCell>
                                         </TableRow>
+                                        <TableRow className={"bg-muted"}>
+                                            <TableCell>Cost to Company</TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell>₹{ctc.monthly?.toFixed()}</TableCell>
+                                            <TableCell>₹{ctc.yearly?.toFixed()}</TableCell>
+                                            <TableCell></TableCell>
+                                        </TableRow>
                                     </TableBody>
-                                    <TableFooter>
-                                        <TableCell>Cost to Company</TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell>₹{ctc.monthly?.toFixed()}</TableCell>
-                                        <TableCell>₹{ctc.yearly?.toFixed()}</TableCell>
-                                        <TableCell></TableCell>
-                                    </TableFooter>
+
                                 </Table>
                             </div>
                         </div>

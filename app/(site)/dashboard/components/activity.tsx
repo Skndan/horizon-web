@@ -1,39 +1,27 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import {
-    Plus,
-    Search
-} from "lucide-react"
-import { MailList } from "./mail-list";
 
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+    Search
+} from "lucide-react"
+
+import { MailList } from "./mail-list";
+
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { ComingSoonPage } from "@/components/common/coming-soon";
-import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { Activity } from "@/types/activity";
 import apiClient from "@/lib/api/api-client";
 import { MailDisplay } from "./mail-display";
 import { useMail } from "@/store/use-mail-store";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useAuth } from "@/context/auth-provider";
 
 const ActivityPage = () => {
@@ -76,14 +64,8 @@ const ActivityPage = () => {
                             <TabsTrigger value="all">All</TabsTrigger>
                             <TabsTrigger value="activities">Activities</TabsTrigger>
                             <TabsTrigger value="events">Events</TabsTrigger>
-                        </TabsList>
-                        <Link href={`/dashboard/post/new`}>
-                            <Button>
-                                Post 🎉
-                            </Button>
-                        </Link>
-                    </div>
-                    <Separator />
+                        </TabsList> 
+                    </div> 
                     <div className="bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                         <form>
                             <div className="relative">

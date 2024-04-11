@@ -47,10 +47,19 @@ export interface Timesheet {
     active: boolean
     dayLogs: Daylog[]
     profile: Profile
-    status: string
-    fromDate: string
-    toDate: string
-    date: any
+    remarks: string,
+    status: string,
+    fromDate: string,
+    toDate: string,
+    totalDays: number,
+    loggedDays: number,
+    holidays: number,
+    approvedLeave: number,
+    lop: number,
+    workHours: number,
+    otHours: number,
+    totalWork: number,
+    totalBreak: number
 }
 
 // {

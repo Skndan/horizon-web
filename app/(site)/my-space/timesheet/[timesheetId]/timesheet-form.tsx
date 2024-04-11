@@ -97,6 +97,10 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
     const [loading, setLoading] = useState(false);
 
     const [dayLog, setDaylog] = useState<Daylog[]>([]);
+    const [date, setDate] = useState({
+        from: '',
+        to: '',
+    });
     const [cons, setCons] = useState({ totalBreak: 0, totalWork: 0 });
 
     const title = initialData ? 'Edit Timesheet' : 'Create Timesheet';
@@ -111,7 +115,7 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
         defaultValues: initialData || {
             profile: {
                 id: ''
-            }, 
+            },
             date: {
                 from: undefined,
                 to: undefined,
@@ -120,42 +124,29 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
     });
 
     const onSubmit = async (data: TimesheetFormValues) => {
-        // try {
-
-        data.fromDate = data.date.from;
-        data.toDate = data.date.to;
+        data.fromDate = date.from;
+        data.toDate = date.to;
         data.profile.id = user?.profileId;
+        data.dayLogs = dayLog;
+        console.log(data)
 
-        // if (initialData) {
-        //     await apiClient
-        //         .put(`/leave-request/${initialData.id}`, data)
-        //         .then((res) => res.data)
-        //         .then((data) => {
-        //             toast.success(toastMessage);
-        //             router.refresh();
-        //             router.push(`../leave-request`);
-        //         });
-        // } else {
-        //     await apiClient
-        //         .post("/leave-request", data)
-        //         .then((res) => res.data)
-        //         .then((data) => {
-        //             toast.success(toastMessage);
-        //             router.refresh();
-        //             router.push(`../leave-request`);
-        //         });
-        // }
+        await apiClient
+            .post("/time-sheet", data)
+            .then((res) => res.data)
+            .then((data) => {
+                toast.success(toastMessage);
+                router.refresh();
+                router.push(`../timesheet`);
+            });
 
-        // } catch (error: any) {
-        //     toast.error('Something went wrong.');
-        // } finally {
-        //     setLoading(false);
-        // }
     };
 
     const onChange = async (e: any) => {
         if (e) {
             if (e.from && e.to) {
+
+                setDate({ from: formatDate(e.from.toISOString(), "yyyy-MM-dd"), to: formatDate(e.to.toISOString(), "yyyy-MM-dd") });
+
                 await apiClient
                     .get(`/time-sheet/fetch/${user?.profileId}/${formatDate(e.from.toISOString(), "yyyy-MM-dd")}/${formatDate(e.to.toISOString(), "yyyy-MM-dd")}`)
                     .then((res) => {
@@ -282,14 +273,12 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
                                             <TableCell>{log.totalWork}</TableCell>
                                         </TableRow>
                                     ))}
-                                </TableBody>
-                                <TableFooter>
-                                    <TableRow>
+                                    <TableRow className="bg-muted">
                                         <TableCell className="text-right" colSpan={3}>Total</TableCell>
-                                        <TableCell>{cons.totalBreak}</TableCell>
-                                        <TableCell>{cons.totalWork}</TableCell>
+                                        <TableCell>{cons.totalBreak} hrs</TableCell>
+                                        <TableCell>{cons.totalWork} hrs</TableCell>
                                     </TableRow>
-                                </TableFooter>
+                                </TableBody>
                             </Table>
                         </div>
 

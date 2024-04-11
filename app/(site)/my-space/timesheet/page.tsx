@@ -19,7 +19,7 @@ import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
 import Link from "next/link";
 import { columns } from "./columns";
-import { Daylog } from "@/types/attendance";
+import { Daylog, Timesheet } from "@/types/attendance";
 import { useAuth } from "@/context/auth-provider";
 import { useRouter } from "next/navigation";
 
@@ -27,7 +27,7 @@ const OrgSettingsPage = () => {
 
 
   const router = useRouter();
-  const [data, setData] = useState<Daylog[]>([])
+  const [data, setData] = useState<Timesheet[]>([])
   const [isLoading, setLoading] = useState(false)
   const [isOpen, setOpen] = useState(false);
   const { user } = useAuth();

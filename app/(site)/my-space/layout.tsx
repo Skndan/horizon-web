@@ -30,7 +30,7 @@ const sidebarNavItems = [
     {
         title: "Timesheet",
         href: "/my-space/timesheet",
-        badge: true,
+        badge: false,
     },
     {
         title: "Leave Request",

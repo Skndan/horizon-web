@@ -11,29 +11,42 @@ import { CellAction } from "./cell-action";
 import { Clock, MoveHorizontal } from "lucide-react";
 import { convertTime } from "@/lib/utils/string-utils";
 import { Label } from "recharts";
+import AvatarCell from "@/components/common/avatar-cell";
 
 
 export const columns: ColumnDef<Timesheet>[] = [
-
     {
-        header: "Time Range", 
+        header: "Name",
+        accessorKey: "profile",
+        cell: ({ row }) => {
+            // Access nested data directly from the row's original data
+            const timesheet = row.original;
+            return <AvatarCell
+                avatarUrl={""}
+                employeeName={timesheet.profile.name}
+                employeeId={timesheet.profile.employeeId} // Assuming you have a strategy for the ID
+            />
+        }
+    },
+    {
+        header: "Time Range",
         cell: ({ row }) => {
             const fromDate = row.original.fromDate;
             const toDate = row.original.toDate;
             return <>
                 <div className="flex flex-row items-center gap-2">
-                    <DateTimeCell dateStr={fromDate} isTime={0} /> 
-                    <MoveHorizontal className="h-4 w-4"/>
-                    <DateTimeCell dateStr={toDate} isTime={0} /> 
+                    <DateTimeCell dateStr={fromDate} isTime={0} />
+                    <MoveHorizontal className="h-4 w-4" />
+                    <DateTimeCell dateStr={toDate} isTime={0} />
                 </div>
             </>
         }
-    }, 
+    },
     {
-        header: "Total Work Hours", 
-        cell: ({ row }) => { 
+        header: "Total Work Hours",
+        cell: ({ row }) => {
             const totalWork = row.original.totalWork;
-            const workHours = row.original.workHours; 
+            const workHours = row.original.workHours;
             return <div className="flex flex-row items-center gap-1">
                 <Clock className="h-4 w-4" />
                 <p>{totalWork} hrs</p>
@@ -47,21 +60,21 @@ export const columns: ColumnDef<Timesheet>[] = [
         cell: ({ row }) => {
             return <div className="flex flex-row items-center gap-1">
                 <Clock className="h-4 w-4" />
-                <p>{row.getValue("totalBreak")} hrs</p> 
+                <p>{row.getValue("totalBreak")} hrs</p>
             </div>
         }
     },
     {
-        header: "Total Days", 
-        cell: ({ row }) => { 
+        header: "Total Days",
+        cell: ({ row }) => {
             const totalDays = row.original.totalDays;
-            const loggedDays = row.original.loggedDays; 
-            return <div className="flex flex-row items-center gap-1"> 
+            const loggedDays = row.original.loggedDays;
+            return <div className="flex flex-row items-center gap-1">
                 <p>{loggedDays}</p>
                 <p>out of {totalDays}</p>
             </div>
         }
-    }, 
+    },
     // {
     //     header: "LOP",  
     //     accessorKey: "lop",
@@ -76,6 +89,10 @@ export const columns: ColumnDef<Timesheet>[] = [
         cell: ({ row }) => <StatusCell status={row.getValue("status")} />
     },
     {
+        header: "Remarks",
+        accessorKey: "remarks"
+    },
+    {
         header: "Created At",
         accessorKey: "createdAt",
         cell: ({ row }) => {
@@ -86,8 +103,14 @@ export const columns: ColumnDef<Timesheet>[] = [
             </>
         }
     },
-    // {
-    //     id: "actions",
-    //     cell: ({ row }) => <CellAction data={row.original} />
-    // },
+    {
+        id: "actions",
+        cell: ({ row }) => {
+
+            const rr = row.original;
+
+            return (rr.status === "INITIATED") ?
+                <CellAction data={row.original} /> : <></>;
+        }
+    },
 ];

@@ -120,6 +120,12 @@ export function MainNav({
       role: ["admin", "hr"],
       children: [
         {
+          href: `/attendance/timesheet`,
+          label: "Timesheet",
+          description:
+            "Employee Timesheets",
+        },
+        {
           href: `/attendance/tracking`,
           label: "Tracking",
           description:
