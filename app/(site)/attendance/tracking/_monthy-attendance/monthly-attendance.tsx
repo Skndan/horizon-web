@@ -99,7 +99,7 @@ const MonthlyAttendancePage = () => {
                                         {
                                             data.map(dayLog => (
                                                 <TableRow key={dayLog.profile.id}>
-                                                    <TableCell className='sticky min-w-56 left-0 bg-background'><AvatarCell avatarUrl={''} employeeName={dayLog.profile.name} employeeId={dayLog.profile.employeeId} /></TableCell>
+                                                    <TableCell className='sticky min-w-56 left-0 bg-background'><AvatarCell avatarUrl={''} employeeName={dayLog.profile.name} employeeCode={dayLog.profile.employeeId} employeeId={dayLog.profile.id} /></TableCell>
                                                     {[...Array(daysInMonth)].map((_, index) => {
                                                         const dateKey = format(addDays(new Date(monthYear), index), 'yyyy-MM-dd');
                                                         const currentDate = addDays(new Date(monthYear), index);

@@ -7,11 +7,11 @@ import { useUserStore } from "@/store/use-user-store"
 import { useAuth } from "@/context/auth-provider";
 
 const sidebarNavItems = [
-    {
-        title: "Activity",
-        href: "/my-space",
-        badge: true,
-    },
+    // {
+    //     title: "Activity",
+    //     href: "/my-space",
+    //     badge: true,
+    // },
     {
         title: "Tasks",
         href: "/my-space/tasks",

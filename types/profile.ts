@@ -99,3 +99,34 @@ export interface Address {
   country: string
   pincode: string
 }
+
+export interface Account {
+  id: string
+  createdAt?: string
+  updatedAt?: string
+  createdBy?: string
+  updatedBy?: string
+  active?: boolean
+  profile?: Profile
+  accountHolderName?: string
+  bankName?: string
+  accountNumber?: string
+  ifscCode?: string
+  panNumber?: string
+  uanNumber?: string
+}
+
+
+export interface FileInfo {
+  id: string
+  createdAt?: string
+  updatedAt?: string
+  createdBy?: string
+  updatedBy?: string
+  active?: boolean
+  profile?: Profile
+  organisation?: Organisation
+  fileName?: string
+  hash?: string
+  fileUrl?: string
+}

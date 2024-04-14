@@ -2,19 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
-import { toTitleCase } from "@/lib/utils/string-utils";
-import { formatDate } from "@/lib/utils/time-utils";
-import { Profile } from "@/types/profile"
-import { Copy } from "lucide-react";
+import { Account } from "@/types/profile"
+import { Copy, Eye } from "lucide-react";
 import toast from "react-hot-toast";
 
-interface BasicCardProps {
-    profile: Profile | null;
+interface AccountCardProps {
+    account: Account | null;
 };
 
 
-export const BasicCard: React.FC<BasicCardProps> = ({
-    profile,
+export const AccountCard: React.FC<AccountCardProps> = ({
+    account,
 }) => {
 
     const onCopy = (id: string, name: string) => {
@@ -22,16 +20,17 @@ export const BasicCard: React.FC<BasicCardProps> = ({
         toast.success(`${name} copied to clipboard.`);
     }
 
+
     return (
         <>
             <div className="grid md:grid-cols-3 rounded-md border">
                 <div className="flex flex-col p-4 hover:bg-muted border">
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-col">
-                            <Label className="text-muted-foreground">Employee ID</Label>
-                            <Label className="text-md pt-1">{profile?.employeeId}</Label>
+                            <Label className="text-muted-foreground">Account Holder Name</Label>
+                            <Label className="text-md pt-1">{account?.accountHolderName}</Label>
                         </div>
-                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.employeeId}`, "Employee ID")}>
+                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.accountHolderName}`, "Account Holder Name")}>
                             <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
                         </Button>
                     </div>
@@ -39,10 +38,10 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                 <div className="flex flex-col p-4 hover:bg-muted border">
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-col">
-                            <Label className="text-muted-foreground">Name</Label>
-                            <Label className="text-md pt-1">{profile?.name}</Label>
+                            <Label className="text-muted-foreground">Bank Name</Label>
+                            <Label className="text-md pt-1">{account?.bankName}</Label>
                         </div>
-                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.name}`, "Name")}>
+                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.bankName}`, "Bank Name")}>
                             <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
                         </Button>
                     </div>
@@ -50,10 +49,10 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                 <div className="flex flex-col p-4 hover:bg-muted border">
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-col">
-                            <Label className="text-muted-foreground">Mobile</Label>
-                            <Label className="text-md pt-1">{profile?.mobile}</Label>
+                            <Label className="text-muted-foreground">Account Number</Label>
+                            <Label className="text-md pt-1">{account?.accountNumber}</Label>
                         </div>
-                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.mobile}`, "Mobile")}>
+                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.accountNumber}`, "Account Number")}>
                             <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
                         </Button>
                     </div>
@@ -61,10 +60,10 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                 <div className="flex flex-col p-4 hover:bg-muted border">
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-col">
-                            <Label className="text-muted-foreground">Office Email</Label>
-                            <Label className="text-md pt-1">{profile?.email}</Label>
+                            <Label className="text-muted-foreground">IFSC Code</Label>
+                            <Label className="text-md pt-1">{account?.ifscCode}</Label>
                         </div>
-                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.email}`, "Office Email")}>
+                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.ifscCode}`, "IFSC Code")}>
                             <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
                         </Button>
                     </div>
@@ -72,26 +71,28 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                 <div className="flex flex-col p-4 hover:bg-muted border">
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-col">
-                            <Label className="text-muted-foreground">Gender</Label>
-                            <Label className="text-md pt-1">{toTitleCase(profile?.gender ?? '')}</Label>
+                            <Label className="text-muted-foreground">PAN Number</Label>
+                            <Label className="text-md pt-1">{account?.panNumber}</Label>
                         </div>
-                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.gender}`, "Gender")}>
+                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.panNumber}`, "PAN Number")}>
                             <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
                         </Button>
                     </div>
                 </div>
-                <div className="flex flex-col p-4 hover:bg-muted border"> 
+                <div className="flex flex-col p-4 hover:bg-muted border">
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-col">
-                            <Label className="text-muted-foreground">Date of Birth</Label>
-                            <Label className="text-md pt-1">{profile?.dateOfBirth && formatDate(profile?.dateOfBirth, 'dd MMM yyyy')}</Label>
+                            <Label className="text-muted-foreground">UAN Number</Label>
+                            <Label className="text-md pt-1">{account?.uanNumber}</Label>
                         </div>
-                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.dateOfBirth && formatDate(profile?.dateOfBirth, 'dd MMM yyyy')}`, "Date of Birth")}>
+                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.uanNumber}`, "UAN Number")}>
                             <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
                         </Button>
-                    </div> 
+                    </div>
+
                 </div>
-            </div> 
+            </div>
+
         </>
     )
 }

@@ -16,8 +16,9 @@ export const columns: ColumnDef<Daylog>[] = [
       const profile = row.original.profile;
       return <AvatarCell
         avatarUrl={""}
+        employeeId={profile.id}
         employeeName={profile.name}
-        employeeId={profile.employeeId} // Assuming you have a strategy for the ID
+        employeeCode={profile.employeeId} // Assuming you have a strategy for the ID
       />
     }
   },

@@ -18,8 +18,9 @@ export const columns: ColumnDef<LeaveRequest>[] = [
       const profile = row.original.profile;
       return <AvatarCell
         avatarUrl={""}
+        employeeId={profile.id}
         employeeName={profile.name}
-        employeeId={profile.employeeId} // Assuming you have a strategy for the ID
+        employeeCode={profile.employeeId} // Assuming you have a strategy for the ID
       />
     }
   },
@@ -35,8 +36,9 @@ export const columns: ColumnDef<LeaveRequest>[] = [
       const reportingManager = row.original.profile.reportingManager;
       return reportingManager ? <AvatarCell
         avatarUrl={""}
+        employeeId={reportingManager?.id ?? ''}
         employeeName={reportingManager?.name ?? ''}
-        employeeId={reportingManager?.employeeId ?? ''} // Assuming you have a strategy for the ID
+        employeeCode={reportingManager?.employeeId ?? ''} // Assuming you have a strategy for the ID
       /> : <></>
     }
   },

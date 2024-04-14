@@ -23,8 +23,9 @@ export const columns: ColumnDef<Timesheet>[] = [
             const timesheet = row.original;
             return <AvatarCell
                 avatarUrl={""}
+                employeeId={timesheet.profile.id}
                 employeeName={timesheet.profile.name}
-                employeeId={timesheet.profile.employeeId} // Assuming you have a strategy for the ID
+                employeeCode={timesheet.profile.employeeId} // Assuming you have a strategy for the ID
             />
         }
     },
