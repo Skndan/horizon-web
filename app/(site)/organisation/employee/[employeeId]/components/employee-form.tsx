@@ -47,6 +47,7 @@ import { Shift } from "@/types/attendance"
 import Link from "next/link"
 import { ComingSoonPage } from "@/components/common/coming-soon"
 import { EmptyStateTable } from "@/components/common/empty-state-table"
+import { FileCard } from "../../view/[employeeId]/component/file-view"
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -170,11 +171,13 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
   const form = useForm<EmployeeFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || {},
+    defaultValues: initialData || {
+      organisation: {
+        id: ''
+      }
+    },
     mode: "onChange"
   });
-
-
 
   const form2 = useForm<AccountFormValues>({
     resolver: zodResolver(accountSchema),
@@ -293,20 +296,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
 
-              <FormField
-                control={form.control}
-                name="organisation.id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input type="hidden" value={orgId} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
- 
               {/* Basic Information */}
+              <Separator />
               <SubHeading title={"Basic Information"} />
 
               <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
@@ -640,26 +631,11 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
               throw new Error("Function not implemented.")
             }} /> :
             <Form {...form}>
-              <form onSubmit={form2.handleSubmit(onSubmit2)} className="space-y-8 w-full">
-                {/* 
-                <FormField
-                  control={form2.control}
-                  name="profile.id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input type="hidden" value={orgId} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              */}
+              <form onSubmit={form2.handleSubmit(onSubmit2)} className="space-y-8 w-full"> 
 
-
-                {/* Basic Information */}
+                {/* Account Information */}
+                <Separator />
                 <SubHeading title={"Account Information"} />
-
                 <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
 
                   <FormField
@@ -754,7 +730,14 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
             </Form>
           }
         </TabsContent>
-        <TabsContent value="file" className="space-y-4"><ComingSoonPage /></TabsContent>
+        <TabsContent value="file" className="space-y-4">
+          {initialData ?
+            <EmptyStateTable title={"Employee information not found"} description={"Submit the form in the Information Tab before adding Files"} action={null} onClick={function (): void {
+              throw new Error("Function not implemented.")
+            }} /> :
+            <FileCard profile={initialData} />
+          }
+        </TabsContent>
       </Tabs>
     </>
   );

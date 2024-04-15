@@ -74,7 +74,7 @@ const EmployeeDetailPage = ({ params }: { params: { employeeId: string } }) => {
 
                 <Tabs defaultValue="info" className="space-y-4">
                     <div className="items-center justify-between py-2 md:flex block:flex-col">
-                        <Heading title={`${data?.name}`} description={`${data?.email}`} />
+                        <Heading title={`${data?.name ?? '-'}`} description={`${data?.email ?? '-'}`} />
                         <TabsList>
                             <TabsTrigger value="info">Information</TabsTrigger>
                             <TabsTrigger value="account">Account</TabsTrigger>

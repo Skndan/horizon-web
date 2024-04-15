@@ -3,7 +3,7 @@
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { DataTable } from "@/components/ui/data-table";
 import { FileInfo, Profile } from "@/types/profile"
-import { Loader } from "lucide-react";
+import { Loader, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { useUpdateStore } from "@/store/use-update-store";
@@ -54,7 +54,7 @@ export const FileCard: React.FC<AccountCardProps> = ({
     const { user } = useAuth();
 
     async function fetchData() {
-        await apiClient.get(`/file/get-by-profile/${user?.profileId}`).then((res) => res.data)
+        await apiClient.get(`/file/get-by-profile/${profile ? profile.id : user?.profileId}`).then((res) => res.data)
             .then((data) => {
                 setData(data)
                 setLoading(false)
@@ -103,10 +103,12 @@ export const FileCard: React.FC<AccountCardProps> = ({
                 .then((res) => res.data)
                 .then((data) => {
                     toast.success("Uploaded");
+                    setOpen(false)
                 });
 
         } catch (error: any) {
             toast.error('Something went wrong.');
+            setOpen(false)
         } finally {
             setLoading(false);
         }
@@ -155,7 +157,12 @@ export const FileCard: React.FC<AccountCardProps> = ({
             </Modal>
             <div className="flex-col">
                 <div className="flex-1">
-                    <Button onClick={()=>setOpen(true)}>Upload</Button>
+
+
+                    <div className="flex justify-end pb-4">
+                        <Button onClick={() => setOpen(true)}> <Upload className="mr-2 h-4 w-4" /> Upload</Button>
+                    </div>
+
                     {loading ?
                         (
                             <div className="grid h-screen place-items-center">
@@ -168,7 +175,7 @@ export const FileCard: React.FC<AccountCardProps> = ({
                                 description={"You have not added any files. Add one below."}
                                 action={"Add File"}
                                 onClick={() => setOpen(true)}
-                            /> : <DataTable searchKey="name" columns={columns} data={data} />
+                            /> : <DataTable searchKey="fileName" columns={columns} data={data} />
                         )}
                 </div>
             </div>

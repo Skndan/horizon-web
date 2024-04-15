@@ -70,17 +70,10 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                     </div>
                 </div>
                 <div className="flex flex-col p-4 hover:bg-muted border">
-                    <div className="flex flex-row justify-between">
-                        <div className="flex flex-col">
-                            <Label className="text-muted-foreground">Gender</Label>
-                            <Label className="text-md pt-1">{toTitleCase(profile?.gender ?? '')}</Label>
-                        </div>
-                        <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.gender}`, "Gender")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
-                        </Button>
-                    </div>
+                    <Label className="text-muted-foreground">Gender</Label>
+                    <Label className="text-md pt-1">{toTitleCase(profile?.gender ?? '')}</Label>
                 </div>
-                <div className="flex flex-col p-4 hover:bg-muted border"> 
+                <div className="flex flex-col p-4 hover:bg-muted border">
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-col">
                             <Label className="text-muted-foreground">Date of Birth</Label>
@@ -89,9 +82,9 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.dateOfBirth && formatDate(profile?.dateOfBirth, 'dd MMM yyyy')}`, "Date of Birth")}>
                             <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
                         </Button>
-                    </div> 
+                    </div>
                 </div>
-            </div> 
+            </div>
         </>
     )
 }

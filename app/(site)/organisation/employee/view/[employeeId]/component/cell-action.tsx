@@ -1,18 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button"; 
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Department } from "@/types/profile";
 import apiClient from "@/lib/api/api-client";
@@ -27,19 +20,18 @@ export const CellAction: React.FC<CellActionProps> = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [openForm, setOpenForm] = useState(false);
+  const [loading, setLoading] = useState(false); 
   const { set } = useUpdateStore();
 
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await apiClient.delete(`/department/${data.id}`);
+      await apiClient.delete(`/file/${data.id}`);
       set(data?.id ?? '');
-      toast.success('Department deleted.');
+      toast.success('File deleted.');
       router.refresh();
     } catch (error) {
-      toast.error('Make sure you re-assign all employees using this department first.');
+      toast.error('Please try again later');
     } finally {
       setOpen(false);
       setLoading(false);
@@ -53,10 +45,10 @@ export const CellAction: React.FC<CellActionProps> = ({
         onClose={() => setOpen(false)}
         onConfirm={onConfirm}
         loading={loading}
-      /> 
-      <Button className="text-red-500" variant={"outline"} size={"icon"}>
+      />
+      <Button className="text-red-500" variant={"outline"} size={"icon"} onClick={() => setOpen(true)}>
         <Trash className="h-4 w-4" />
-      </Button> 
+      </Button>
     </>
   );
 };
