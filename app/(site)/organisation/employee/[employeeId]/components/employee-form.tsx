@@ -208,7 +208,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
             toast.success(toastMessage);
             router.refresh();
             initialData = data;
-            // router.push(`../employee`);
           });
       } else {
         await apiClient
@@ -218,7 +217,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
             toast.success(toastMessage);
             router.refresh();
             initialData = data;
-            // router.push(`../employee`);
           });
       }
 
@@ -257,16 +255,12 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
             initialDataAccount = data;
           });
       }
-
-
     } catch (error: any) {
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
     }
-
   };
-
 
   return (
     <>
@@ -274,7 +268,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
         <div className="md:flex block:flex-col items-center justify-between py-2">
           <Heading title={title} description={description} />
           <TabsList className="mt-2">
-            <TabsTrigger value="info">Information</TabsTrigger>
+            <TabsTrigger value="info">Info</TabsTrigger>
             <TabsTrigger value="account">Account</TabsTrigger>
             <TabsTrigger value="file">Files</TabsTrigger>
           </TabsList>
@@ -731,7 +725,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           }
         </TabsContent>
         <TabsContent value="file" className="space-y-4">
-          {initialData ?
+          {!initialData ?
             <EmptyStateTable title={"Employee information not found"} description={"Submit the form in the Information Tab before adding Files"} action={null} onClick={function (): void {
               throw new Error("Function not implemented.")
             }} /> :

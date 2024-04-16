@@ -1,6 +1,5 @@
 import {
   ArrowDownIcon,
-  ArrowRightIcon,
   ArrowUpIcon,
   CheckCircledIcon,
   CircleIcon,
@@ -8,6 +7,7 @@ import {
   QuestionMarkCircledIcon,
   StopwatchIcon,
 } from "@radix-ui/react-icons"
+import { Equal } from "lucide-react"
  
 
 // TODO, INPROGRESS, REVIEW, DONE, CANCELLED, REOPENED, ARCHIVED
@@ -15,27 +15,32 @@ export const statuses = [
   {
     value: "TODO",
     label: "Todo",
+    color: "text-grey-500",
     icon: CircleIcon,
   },
   {
     value: "INPROGRESS",
     label: "In Progress",
+    color: "text-blue-500",
     icon: StopwatchIcon,
   },
   {
     value: "REVIEW",
     label: "Review",
+    color: "text-amber-500",
     icon: QuestionMarkCircledIcon,
   },
   {
     value: "DONE",
     label: "Done",
+    color: "text-green-500",
     icon: CheckCircledIcon,
   },
 
   {
     value: "CANCELLED",
     label: "Cancelled",
+    color: "text-red-500",
     icon: CrossCircledIcon,
   }
 ]
@@ -49,7 +54,7 @@ export const priorities = [
   {
     label: "Medium",
     value: "MEDIUM",
-    icon: ArrowRightIcon,
+    icon: Equal,
   },
   {
     label: "High",

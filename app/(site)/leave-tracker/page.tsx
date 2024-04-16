@@ -11,6 +11,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { DataTable } from "@/components/ui/data-table";
 import { LeaveRequest } from "@/types/leave";
@@ -21,18 +22,27 @@ import Link from "next/link";
 import { columns } from "./columns";
 import { Heading } from "@/components/ui/heading";
 import { useAuth } from "@/context/auth-provider";
+import { ComingSoonPage } from "@/components/common/coming-soon";
+import CustomTable from "./custom-table";
 
 const LeaveTrackerPage = () => {
 
     const [data, setData] = useState<LeaveRequest[]>([])
+    const [balance, setBalance] = useState(null)
     const [isLoading, setLoading] = useState(false)
-    const {user} = useAuth();
-    
+    const { user } = useAuth();
+
     async function fetchData() {
-        setLoading(true) 
+        setLoading(true)
         await apiClient.get(`/leave-request/get-by-organisation/${user?.orgId}`).then((res) => res.data)
-            .then((data) => {
+            .then(async (data) => {
                 setData(data)
+                await apiClient.get(`/leave/balance/org/${user?.orgId}`).then((res) => res.data)
+                    .then((data) => {
+                        setBalance(data)
+                        setLoading(false)
+                    });
+
                 setLoading(false)
             });
     }
@@ -54,20 +64,42 @@ const LeaveTrackerPage = () => {
                         </Button>
                     </Link> */}
                 </div>
-                <Separator />
-                {isLoading ? (
-                    <div className="grid h-screen place-items-center">
-                        <Loader className="animate-spin h-5 w-5 mr-3" />
-                    </div>
-                ) :
-                    data.length == 0 ?
-                        <EmptyStateTable
-                            title={"No request found"}
-                            description={"There are no leave request"}
-                            action={""}
-                            onClick={() => { }} />
-                        : <DataTable searchKey="profile.name" columns={columns} data={data} />
-                }
+                <Separator /> 
+                <Tabs defaultValue="request" className="space-y-4">
+                    <TabsList>
+                        <TabsTrigger value="request">Requests</TabsTrigger>
+                        <TabsTrigger value="balance">Balance</TabsTrigger>
+                        {/* <TabsTrigger value="shift_calendar">Shifts Calendar</TabsTrigger>  */}
+                    </TabsList>
+                    <TabsContent value="request" className="space-y-4">
+                        {isLoading ? (
+                            <div className="grid h-screen place-items-center">
+                                <Loader className="animate-spin h-5 w-5 mr-3" />
+                            </div>
+                        ) :
+                            data.length == 0 ?
+                                <EmptyStateTable
+                                    title={"No request found"}
+                                    description={"There are no leave request"}
+                                    action={""}
+                                    onClick={() => { }} />
+                                : <DataTable searchKey="profile.name" columns={columns} data={data} />
+                        }
+                    </TabsContent>
+                    <TabsContent value="balance" className="space-y-4">{isLoading ? (
+                        <div className="grid h-screen place-items-center">
+                            <Loader className="animate-spin h-5 w-5 mr-3" />
+                        </div>
+                    ) :
+                        balance ?
+                            <CustomTable data={balance} /> :
+                            <EmptyStateTable
+                                title={"No request found"}
+                                description={"There are no leave request"}
+                                action={""}
+                                onClick={() => { }} />
+                    }</TabsContent>
+                </Tabs>
             </div>
         </>)
 }

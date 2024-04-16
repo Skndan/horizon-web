@@ -99,7 +99,7 @@ export function MainNav({
       role: ["admin", "hr"],
       children: [
         {
-          href: `/payroll/runs`,
+          href: `/payroll`,
           label: "Payroll Runs",
           description:
             "Manage payroll runs",

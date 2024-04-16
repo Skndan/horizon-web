@@ -21,14 +21,6 @@ import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 import { SlashIcon } from "@radix-ui/react-icons"
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,

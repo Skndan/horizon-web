@@ -61,7 +61,7 @@ export const FileCard: React.FC<AccountCardProps> = ({
             });
     }
 
-    const { flag } = useUpdateStore();
+    const { flag, set } = useUpdateStore();
 
     useEffect(() => {
         fetchData();
@@ -103,6 +103,7 @@ export const FileCard: React.FC<AccountCardProps> = ({
                 .then((res) => res.data)
                 .then((data) => {
                     toast.success("Uploaded");
+                    set(`${Math.random()}`);
                     setOpen(false)
                 });
 
@@ -114,13 +115,6 @@ export const FileCard: React.FC<AccountCardProps> = ({
         }
     };
 
-    const [logo, setImage] = useState<Blob | null>(null);
-
-    const handleImageUpload = (evt: React.ChangeEvent<HTMLInputElement>) => {
-        if (evt.target.files != null) {
-            setImage(evt.target.files[0]); //error
-        }
-    };
 
     return (
         <>
@@ -138,7 +132,6 @@ export const FileCard: React.FC<AccountCardProps> = ({
                                             <Input type="file"
                                                 multiple
                                                 {...fileRef}
-                                                onChange={handleImageUpload}
                                             />
                                         </FormControl>
                                         <FormMessage />
