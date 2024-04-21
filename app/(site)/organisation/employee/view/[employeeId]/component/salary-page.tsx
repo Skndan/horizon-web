@@ -5,13 +5,9 @@ import { useAuth } from "@/context/auth-provider";
 import { useEffect, useState } from "react";
 import { SalaryTemplateItem } from "@/types/payroll";
 import apiClient from "@/lib/api/api-client";
-import { TemplateForm } from "./template-form";
+import { TemplateForm } from "./template-form2";
 
-const TemplateFormPage = ({
-    params
-}: {
-    params: { templateId: string }
-}) => {
+const TemplateFormPage = ({}: {}) => {
 
     const [data, setData] = useState(null);
 
@@ -25,13 +21,13 @@ const TemplateFormPage = ({
     useEffect(() => {
         (async () => {
 
-            if (params.templateId != 'new') {
-                const employees = await apiClient.get(`/salary-template/${params.templateId}`);
-                setData(employees.data)
-            } else {
-                const employees = await apiClient.get(`/salary-template/get-draft/${user?.orgId}`);
-                setData(employees.data)
-            }
+            // if (params.templateId != 'new') {
+            //     const employees = await apiClient.get(`/salary-template/${params.templateId}`);
+            //     setData(employees.data)
+            // } else {
+            //     const employees = await apiClient.get(`/salary-template/get-draft/${user?.orgId}`);
+            //     setData(employees.data)
+            // }
 
             // const earning = await apiClient.get(`/component-type/get-by-type/EARNING`);
             // const deduction = await apiClient.get(`/component-type/get-by-type/DEDUCTION`);
@@ -54,7 +50,7 @@ const TemplateFormPage = ({
 
             setLoading(false);
         })()
-    }, [params.templateId])
+    }, [])
 
 
     return (
@@ -73,9 +69,7 @@ const TemplateFormPage = ({
                             deductionType={deductionType} />
                     )}
                 </div>
-            </div>
-
-
+            </div> 
         </>)
 }
 

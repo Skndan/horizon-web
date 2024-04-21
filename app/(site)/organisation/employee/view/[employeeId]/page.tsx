@@ -25,6 +25,7 @@ import { AccountCard } from "./component/account-view";
 import { Heading } from "@/components/ui/heading";
 import { Profile } from "@/types/profile";
 import { FileCard } from "./component/file-view";
+import { SalaryCard } from "./component/salary-view";
 
 const EmployeeDetailPage = ({ params }: { params: { employeeId: string } }) => {
 
@@ -77,6 +78,7 @@ const EmployeeDetailPage = ({ params }: { params: { employeeId: string } }) => {
                         <TabsList>
                             <TabsTrigger value="info">Info</TabsTrigger>
                             <TabsTrigger value="account">Account</TabsTrigger>
+                            <TabsTrigger value="salary">Salary</TabsTrigger>
                             <TabsTrigger value="file">Files</TabsTrigger>
                         </TabsList>
                         <Breadcrumb>
@@ -122,6 +124,7 @@ const EmployeeDetailPage = ({ params }: { params: { employeeId: string } }) => {
                         </>
                     </TabsContent>
                     <TabsContent value="file" className="space-y-4"><FileCard profile={data} /></TabsContent>
+                    <TabsContent value="salary" className="space-y-4"><SalaryCard profile={data} /></TabsContent>
                 </Tabs>
             </div>
         </>)

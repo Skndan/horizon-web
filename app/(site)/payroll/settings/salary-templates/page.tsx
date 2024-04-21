@@ -33,7 +33,7 @@ const TemplatePage = () => {
                             <Loader className="animate-spin h-5 w-5 mr-3" />
                         </div>
                     )
-                    : (<SalaryTemplateClient data={data} />)}
+                    : (<SalaryTemplateClient data={data.filter((item) => item.status !== "DRAFT")} />)}
             </div>
         </div>
         </>)

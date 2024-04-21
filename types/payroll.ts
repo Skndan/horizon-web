@@ -28,15 +28,15 @@ export interface SalaryComponent {
   calculationType: string
 }
 
-export interface SalaryComponentItem {
-  id: string 
-  componentName: string 
-  value: number
-  componentType: ComponentType
-  calculationType: string
-  monthly: number
-  yearly: number
-}
+// export interface SalaryComponentItem {
+//   id: string 
+//   componentName: string 
+//   value: number
+//   componentType: ComponentType
+//   calculationType: string
+//   monthly: number
+//   yearly: number
+// }
 
 export interface ComponentType {
   id: string
@@ -76,5 +76,6 @@ export interface SalaryTemplate {
   description: string
   ctc: number
   fixed: number
+  status: string
   earnings: SalaryTemplateItem[] 
 }

@@ -1,28 +1,18 @@
 "use client"
 
-import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useWatch } from "react-hook-form"
-import { z } from "zod"
-
-import { cn } from "@/lib/utils"
+import { z } from "zod" 
 import { Button } from "@/components/ui/button"
 import {
     Form,
-    FormControl,
+    FormControl, 
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { Input } from "@/components/ui/input" 
 import toast from "react-hot-toast"
 import {
     Table,
@@ -89,67 +79,62 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
     const router = useRouter();
 
-    const [template, setTemplate] = useState<SalaryTemplate | null>(initialData);
-
-    const [earnings, setEarnings] = useState<SalaryTemplateItem[]>(initialData?.earnings ?? []);
-
-    const [ctc, setCtc] = useState(template?.ctc ? { monthly: template.ctc / 12, yearly: template.ctc } : { monthly: 0, yearly: 0 });
-
-    const [fixed, setFixed] = useState(template?.fixed ? { monthly: template.fixed / 12, yearly: template.fixed } : { monthly: 0, yearly: 0 });
+    const [ctc, setCtc] = useState(initialData?.ctc ? { monthly: initialData.ctc / 12, yearly: initialData.ctc } : { monthly: 0, yearly: 0 });
+    const [fixed, setFixed] = useState(initialData?.fixed ? { monthly: initialData.fixed / 12, yearly: initialData.fixed } : { monthly: 0, yearly: 0 });
 
     const [loading, setLoading] = useState(false);
 
+    const [earnings, setEarnings] = useState<any[]>(initialData ? initialData!.earnings.map((item) => {
 
-    // const [earnings, setEarnings] = useState<SalaryComponentItem[]>(initialData ? initialData!.earnings.map((item) => {
+        let monthly = 0;
+        let yearly = 0;
 
-    //     let monthly = 0;
-    //     let yearly = 0;
+        switch (item.calculationType) {
+            case "FIXED_AMOUNT":
+                monthly = item.value / 12;
+                yearly = Number(item.value);
+                break;
+            case "PERCENTAGE_OF_CTC":
+                monthly = ((item.value / 100) * ctc.monthly);
+                yearly = (item.value / 100) * ctc.yearly;
+                break;
+            // find basic
+            case "PERCENTAGE_OF_BASIC":
 
-    //     switch (item.calculationType) {
-    //         case "FIXED_AMOUNT":
-    //             monthly = item.value / 12;
-    //             yearly = Number(item.value);
-    //             break;
-    //         case "PERCENTAGE_OF_CTC":
-    //             monthly = ((item.value / 100) * ctc.monthly);
-    //             yearly = (item.value / 100) * ctc.yearly;
-    //             break;
-    //         // find basic
-    //         case "PERCENTAGE_OF_BASIC":
+                // find basic's monthly and yearly
+                var dd = initialData!.earnings.find(item => item.componentName === "Basic");
 
-    //             // find basic's monthly and yearly
-    //             var dd = initialData!.earnings.find(item => item.componentName === "Basic");
+                if (!dd) {
+                    toast.error("Add basic first");
+                }
 
-    //             if (!dd) {
-    //                 toast.error("Add basic first");
-    //             }
+                monthly = (item.value / 100) * ctc.monthly;
+                yearly = (item.value / 100) * ctc.yearly;
 
-    //             monthly = (item.value / 100) * ctc.monthly;
-    //             yearly = (item.value / 100) * ctc.yearly;
+                break;
+        }
 
-    //             break;
-    //     }
+        return {
+            id: item.id,
+            componentName: item.componentName,
+            value: item.value,
+            componentType: item.componentType,
+            calculationType: item.calculationType,
+            monthly: monthly,
+            yearly: yearly,
+        };
+    }) : []);
 
-    //     return {
-    //         id: item.id,
-    //         componentName: item.componentName,
-    //         value: item.value,
-    //         componentType: item.componentType,
-    //         calculationType: item.calculationType,
-    //         monthly: monthly,
-    //         yearly: yearly,
-    //     };
-    // }) : []);
-
-    const title = (initialData?.createdAt === initialData?.updatedAt) ? 'Create Template' : 'Edit Template';
+    const title = (initialData?.createdAt === initialData?.updatedAt) ? 'Create Template ✨' : 'Edit Template ✨';
     const description = (initialData?.createdAt === initialData?.updatedAt) ? 'Add a new template' : 'Edit a template.';
     const toastMessage = (initialData?.createdAt === initialData?.updatedAt) ? 'Template created.' : 'Template updated.';
     const action = 'Save changes';
 
     const onSubmit = async (data: ProfileFormValues) => {
 
-
-        console.log(data);
+        data.earnings = earnings;
+        data.ctc = ctc.yearly;
+        data.fixed = fixed.yearly;
 
         try {
             setLoading(true);
@@ -178,114 +163,145 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
     };
 
-    // const watchCtc = useWatch({
-    //     control: form.control,
-    //     name: "ctc",
-    //     defaultValue: "0",
-    // })
+    const watchCtc = useWatch({
+        control: form.control,
+        name: "ctc",
+        defaultValue: "0",
+    })
+
+
 
     // Function to be triggered whenever there's a change in the form fields
-    const handleFieldChange = async (fieldName: string, value: any, index: number) => {
-        // Perform your desired actions here, such as sending data to an API or updating state 
+    const handleFieldChange = (fieldName: string, value: any, index: number) => {
+        // Perform your desired actions here, such as sending data to an API or updating state
 
-        var obj = {
-            [fieldName]: value,
-            earnings: earnings
-        }
-
-        if (fieldName === "ctc") {
-            await apiClient
-                .put(`/salary-template/${initialData?.id}`, obj)
-                .then((res) => res.data)
-                .then((data) => {
-                    setTemplate(data);
-                    setEarnings(data.earnings);
-                    setCtc(data?.ctc ? { monthly: data.ctc / 12, yearly: data.ctc } : { monthly: 0, yearly: 0 });
-                });
+        if ((earnings.length === 0) && (fieldName === "ctc")) {
+            const monthly = (Number(value) / 12).toFixed();
+            setCtc({ monthly: Number(monthly), yearly: Number(value) })
+            setFixed({ monthly: Number(monthly), yearly: Number(value) })
         } else {
-            console.log(`fieldName:${fieldName} value:${value} index:${index}`)
 
-            let item = earnings[index];
-            item.value = value;
+            let fixedMonthly = 0;
+            let fixedYearly = 0;
 
-            console.log(item);
+            earnings.forEach(element => {
 
-            await apiClient
-                .put(`/salary-template/line/${initialData?.id}`, item)
-                .then((res) => res.data)
-                .then((data) => {
-                    setTemplate(data);
-                    setEarnings(data.earnings);
-                });
+                let monthly = 0;
+                let yearly = 0;
+
+                if (element.id === earnings[index].id) {
+                    // find type 
+                    switch (element.calculationType) {
+                        case "FIXED_AMOUNT":
+                            monthly = value / 12;
+                            yearly = Number(value);
+                            break;
+                        case "PERCENTAGE_OF_CTC":
+                            monthly = ((value / 100) * ctc.monthly);
+                            yearly = (value / 100) * ctc.yearly;
+                            break;
+                        // find basic
+                        case "PERCENTAGE_OF_BASIC":
+
+                            // find basic's monthly and yearly
+                            var dd = earnings.find(item => item.componentName === "Basic");
+                            if (!dd) {
+                                toast.error("Add basic first");
+                            }
+
+                            monthly = (value / 100) * dd!.monthly;
+                            yearly = (value / 100) * dd!.yearly;
+
+                            break;
+                    }
+
+                    element.monthly = monthly;
+                    element.yearly = yearly;
+
+                    // const earnings_ = getValues('earnings');
+                    // setValue('earnings', [...earnings_, {
+                    //     id: value.id,
+                    //     componentName: value.componentName,
+                    //     value: value,
+                    //     monthly: monthly,
+                    //     yearly: yearly,
+                    //     componentType: value.componentType,
+                    //     calculationType: value.calculationType,
+                    // }] as never);
+
+                    // calculate
+                    setEarnings(prevState => {
+                        // Loop over your list
+                        return prevState.map((item) => {
+                            // Check for the item with the specified id and update it 
+                            return item.id === earnings[index].id ? { ...item, monthly: monthly, yearly: yearly, value: value } : item
+                        })
+                    })
+                }
+            });
+            // update each item
+            earnings.forEach(element => {
+                if (element.componentType.type === "EARNING") {
+                    fixedMonthly += element.monthly;
+                    fixedYearly += element.yearly
+                } else {
+                    fixedMonthly -= element.monthly;
+                    fixedYearly -= element.yearly
+                }
+            })
+
+            // update fixed item  
+            setFixed({ monthly: ctc.monthly - fixedMonthly, yearly: ctc.yearly - fixedYearly })
         }
     };
 
     const addEarning = async (value: SalaryTemplateItem) => {
         // const earnings = getValues('earnings');
 
-        console.log(value);
+        let monthly = 0;
+        let yearly = 0;
 
-        if ((earnings.find(x => x.componentName === "Basic") === undefined) && (value.componentName !== "Basic")) {
-            toast.error("Please add Basic first")
-            return;
+        switch (value.calculationType) {
+            case "FIXED_AMOUNT":
+                monthly = value.value / 12;
+                yearly = value.value;
+                break;
+            case "PERCENTAGE_OF_CTC":
+                monthly = ((value.value / 100) * ctc.monthly);
+                yearly = (value.value / 100) * ctc.yearly;
+                break;
+            case "PERCENTAGE_OF_BASIC":
+                // find basic's monthly and yearly
+                var dd = earnings.find(item => item.componentName === "Basic");
+
+                if (!dd) {
+                    toast.error("Add basic first");
+                }
+
+                monthly = ((value.value / 100) * dd!.monthly);
+                yearly = (value.value / 100) * dd!.yearly;
+                break;
         }
-        // add 
 
-        await apiClient
-            .put(`/salary-template/line/${initialData?.id}`, value)
-            .then((res) => res.data)
-            .then((data) => {
-                setEarnings(data.earnings);
-            });
+        setEarnings([...earnings, {
+            id: value.id,
+            componentName: value.componentName,
+            value: value.value,
+            monthly: monthly,
+            yearly: yearly,
+            componentType: value.componentType,
+            calculationType: value.calculationType,
+        }]);
 
-
-
-        // let monthly = 0;
-        // let yearly = 0;
-
-        // switch (value.calculationType) {
-        //     case "FIXED_AMOUNT":
-        //         monthly = value.value / 12;
-        //         yearly = value.value;
-        //         break;
-        //     case "PERCENTAGE_OF_CTC":
-        //         monthly = ((value.value / 100) * ctc.monthly);
-        //         yearly = (value.value / 100) * ctc.yearly;
-        //         break;
-        //     case "PERCENTAGE_OF_BASIC":
-        //         // find basic's monthly and yearly
-        //         // var dd = earnings.find(item => item.componentName === "Basic");
-
-        //         // if (!dd) {
-        //         //     toast.error("Add basic first");
-        //         // }
-
-        //         // monthly = ((value.value / 100) * dd!.monthly);
-        //         // yearly = (value.value / 100) * dd!.yearly;
-        //         break;
-        // }
-
-        // setEarnings([...earnings, {
-        //     id: value.id,
-        //     componentName: value.componentName,
-        //     value: value.value,
-        //     monthly: monthly,
-        //     yearly: yearly,
-        //     componentType: value.componentType,
-        //     calculationType: value.calculationType,
-        // }]);
-
-        // setFixed({ monthly: fixed.monthly - monthly, yearly: fixed.yearly - yearly })
+        setFixed({ monthly: fixed.monthly - monthly, yearly: fixed.yearly - yearly })
     };
 
-    const removeEarning = async (index: number) => {
-        await apiClient
-            .delete(`/salary-template/line/${earnings[index].id}/${template?.id}`)
-            .then((res) => res.data)
-            .then((data) => {
-                setTemplate(data);
-                setEarnings([...earnings.slice(0, index), ...earnings.slice(index + 1)]);
-            });
+    const removeEarning = (index: number) => {
+        const monthly = earnings[index].monthly;
+        const yearly = earnings[index].yearly;
+
+        setFixed({ monthly: fixed.monthly + monthly, yearly: fixed.yearly + yearly })
+        setEarnings([...earnings.slice(0, index), ...earnings.slice(index + 1)]);
     };
 
     return (
@@ -293,16 +309,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
-
-                    {/* <Button onClick={() => { 
-                        let item = earnings[0]; 
-                        console.log(JSON.stringify(item))
-                        item.value = 10;
-                        console.log(JSON.stringify(item)) 
-                    }}>
-                        Test
-                    </Button> */}
-
                     <SubHeading title={title} description={description} />
                     <Breadcrumb className="sm:block hidden">
                         <BreadcrumbList>
@@ -357,6 +363,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                     <FormField
                                         control={form.control}
                                         name="ctc"
+                                        disabled={earnings.length != 0}
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormControl>
@@ -385,8 +392,8 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        {/* disabled={watchCtc === "" || watchCtc === "0"} */}
-                                        <Button size="sm" >
+                                        <Button disabled={watchCtc === "" || watchCtc === "0"}
+                                            size="sm" >
                                             Add Components
                                         </Button>
                                     </DropdownMenuTrigger>
@@ -396,7 +403,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                             <DropdownMenuSeparator />
                                             {earningType.map((earning) => (
                                                 <>
-                                                    <DropdownMenuItem disabled={earnings.find(x => x.componentName === earning.componentName) !== undefined} key={earning.id} onClick={(e) => {
+                                                    <DropdownMenuItem disabled={earnings.find(x => x.id === earning.id) !== undefined} key={earning.id} onClick={(e) => {
                                                         addEarning(earning);
                                                     }}>
                                                         {earning.componentName}
@@ -408,7 +415,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                             <DropdownMenuSeparator />
                                             {deductionType.map((deduction) => (
                                                 <>
-                                                    <DropdownMenuItem disabled={earnings.find(x => x.componentName === deduction.componentName) !== undefined} key={deduction.id} onClick={(e) => {
+                                                    <DropdownMenuItem disabled={earnings.find(x => x.id === deduction.id) !== undefined} key={deduction.id} onClick={(e) => {
                                                         addEarning(deduction);
                                                     }}>
                                                         {deduction.componentName}
@@ -533,15 +540,15 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
                                             </TableCell>
                                             <TableCell>Fixed amount</TableCell>
-                                            <TableCell>₹{(template!.fixed / 12).toFixed()}</TableCell>
-                                            <TableCell>₹{template!.fixed.toFixed()}</TableCell>
+                                            <TableCell>₹{fixed.monthly?.toFixed()}</TableCell>
+                                            <TableCell>₹{fixed.yearly?.toFixed()}</TableCell>
                                             <TableCell></TableCell>
                                         </TableRow>
                                         <TableRow className={"bg-muted"}>
                                             <TableCell>Cost to Company</TableCell>
                                             <TableCell></TableCell>
-                                            <TableCell>₹{(template!.ctc / 12).toFixed()}</TableCell>
-                                            <TableCell>₹{template!.ctc.toFixed()}</TableCell>
+                                            <TableCell>₹{ctc.monthly?.toFixed()}</TableCell>
+                                            <TableCell>₹{ctc.yearly?.toFixed()}</TableCell>
                                             <TableCell></TableCell>
                                         </TableRow>
                                     </TableBody>
