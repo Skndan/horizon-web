@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -41,6 +42,7 @@ import { SubHeading } from "@/components/ui/sub-heading";
 import { Label } from "@/components/ui/label";
 import { SalaryTemplate } from "@/types/payroll";
 import { Input } from "@/components/ui/input";
+import { inWords } from "@/lib/utils/string-utils";
 
 interface SalaryCardProps {
     profile: Profile;
@@ -61,8 +63,10 @@ export const SalaryCard: React.FC<SalaryCardProps> = ({
     const [salaryData, setSalaryData] = useState(null)
     const [isOpen, setOpen] = useState(false);
     const { user } = useAuth();
-    const [earnings, setEarnings] = useState<any[]>([]);
     const [templates, setTemplates] = useState<SalaryTemplate[]>([]);
+    const [template, setTemplate] = useState<SalaryTemplate | null>(null);
+    const [earnings, setEarnings] = useState<any[]>([]);
+    const [ctc, setCtc] = useState("0");
 
 
     async function fetchData() {
@@ -115,7 +119,10 @@ export const SalaryCard: React.FC<SalaryCardProps> = ({
     };
 
     const onTemplateChange = async (data: string) => {
-        console.log(data)
+        console.log(data) 
+        // find template by ID
+        const employees = await apiClient.get(`/salary-template/${data}`);
+        setTemplate(employees.data)
     };
 
 
@@ -134,7 +141,6 @@ export const SalaryCard: React.FC<SalaryCardProps> = ({
                                 salaryData === null ?
                                     <div className="space-y-6">
                                         <div className="flex items-center justify-between">
-
                                             <Form {...form}>
                                                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
 
@@ -171,8 +177,11 @@ export const SalaryCard: React.FC<SalaryCardProps> = ({
                                                                 <FormItem>
                                                                     <FormLabel>CTC <span className="text-red-600">*</span></FormLabel>
                                                                     <FormControl>
-                                                                        <Input disabled={loading} placeholder="CTC" {...field} />
+                                                                        <Input disabled={loading} placeholder="CTC" {...field}
+                                                                            onChange={(e) => { setCtc(e.target.value); }}
+                                                                        />
                                                                     </FormControl>
+                                                                    <FormDescription>{inWords(ctc ?? '0')}</FormDescription>
                                                                     <FormMessage />
                                                                 </FormItem>
                                                             )}
@@ -229,7 +238,7 @@ export const SalaryCard: React.FC<SalaryCardProps> = ({
                                             </Breadcrumb> */}
                                         </div>
 
-                                        <div className="rounded-b-md border">
+                                        <div className="rounded-lg border">
                                             <Table>
                                                 <TableHeader>
                                                     <TableRow>

@@ -2,8 +2,8 @@ import { Organisation } from "./profile"
 
 export interface SalaryTemplateItem {
   id: string
-  createdAt: string
-  updatedAt: string
+  createdAt: Date | string
+  updatedAt: Date | string
   createdBy: string
   updatedBy: string
   active: boolean

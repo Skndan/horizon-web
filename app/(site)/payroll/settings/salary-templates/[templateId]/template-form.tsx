@@ -95,7 +95,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
     const [ctc, setCtc] = useState(template?.ctc ? { monthly: template.ctc / 12, yearly: template.ctc } : { monthly: 0, yearly: 0 });
 
-    const [fixed, setFixed] = useState(template?.fixed ? { monthly: template.fixed / 12, yearly: template.fixed } : { monthly: 0, yearly: 0 });
+    // const [fixed, setFixed] = useState(template?.fixed ? { monthly: template.fixed / 12, yearly: template.fixed } : { monthly: 0, yearly: 0 });
 
     const [loading, setLoading] = useState(false);
 
@@ -170,6 +170,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                         router.push(`../salary-templates`);
                     });
             }
+            setLoading(false);
         } catch (error: any) {
             toast.error('Something went wrong.');
         } finally {
@@ -186,8 +187,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
     // Function to be triggered whenever there's a change in the form fields
     const handleFieldChange = async (fieldName: string, value: any, index: number) => {
-        // Perform your desired actions here, such as sending data to an API or updating state 
-
+        // Perform your desired actions here, such as sending data to an API or updating state  
         var obj = {
             [fieldName]: value,
             earnings: earnings
@@ -199,7 +199,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 .then((res) => res.data)
                 .then((data) => {
                     setTemplate(data);
-                    setEarnings(data.earnings);
+                    setEarnings(convertStringDatesToDateObjects(data.earnings).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()));
                     setCtc(data?.ctc ? { monthly: data.ctc / 12, yearly: data.ctc } : { monthly: 0, yearly: 0 });
                 });
         } else {
@@ -215,10 +215,21 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 .then((res) => res.data)
                 .then((data) => {
                     setTemplate(data);
-                    setEarnings(data.earnings);
+                    setEarnings(convertStringDatesToDateObjects(data.earnings).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()));
                 });
         }
     };
+
+    const convertStringDatesToDateObjects = (items: SalaryTemplateItem[]) => {
+        return items.map(item => {
+            return {
+                ...item,
+                createdAt: typeof item.createdAt === 'string' ? new Date(item.createdAt) : item.createdAt,
+                updatedAt: typeof item.updatedAt === 'string' ? new Date(item.updatedAt) : item.updatedAt,
+            };
+        });
+    };
+
 
     const addEarning = async (value: SalaryTemplateItem) => {
         // const earnings = getValues('earnings');
@@ -230,12 +241,13 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
             return;
         }
         // add 
-
+        setEarnings([]);
         await apiClient
             .put(`/salary-template/line/${initialData?.id}`, value)
             .then((res) => res.data)
             .then((data) => {
-                setEarnings(data.earnings);
+                setTemplate(data);
+                setEarnings(convertStringDatesToDateObjects(data.earnings).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()));
             });
 
 
@@ -486,24 +498,16 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                                 </TableCell>
                                                 <TableCell>
                                                     {
-                                                        item.componentType.type === "EARNING" ?
-                                                            <Label className="text-green-600">
-                                                                +₹{item.monthly?.toFixed()}
-                                                            </Label> :
-                                                            <Label className="text-red-600">
-                                                                -₹{item.monthly?.toFixed()}
-                                                            </Label>
+                                                        <Label className={item.componentType.type === "EARNING" ? "text-green-600" : "text-red-600"}>
+                                                            +₹{item.monthly?.toFixed()}
+                                                        </Label>
                                                     }
                                                 </TableCell>
                                                 <TableCell>
                                                     {
-                                                        item.componentType.type === "EARNING" ?
-                                                            <Label className="text-green-600">
-                                                                +₹{item.yearly?.toFixed()}
-                                                            </Label> :
-                                                            <Label className="text-red-600">
-                                                                -₹{item.yearly?.toFixed()}
-                                                            </Label>
+                                                        <Label className={item.componentType.type === "EARNING" ? "text-green-600" : "text-red-600"}>
+                                                            +₹{item.yearly?.toFixed()}
+                                                        </Label>
                                                     }
                                                 </TableCell>
                                                 <TableCell>
@@ -549,7 +553,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                 </Table>
                             </div>
                         </div>
-                        <Button type="submit">{action}</Button>
+                        <Button disabled={loading || !form.formState.isValid} type="submit">{action}</Button>
                     </form>
                 </Form>
             </div>
