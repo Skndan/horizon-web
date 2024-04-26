@@ -2,7 +2,7 @@
 
 import * as z from "zod"
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -48,7 +48,8 @@ import Link from "next/link"
 import { ComingSoonPage } from "@/components/common/coming-soon"
 import { EmptyStateTable } from "@/components/common/empty-state-table"
 import { FileCard } from "../../view/[employeeId]/component/file-view"
-import { SalaryCard } from "../../view/[employeeId]/component/salary-view"
+import { SalaryFormCard } from "../../view/[employeeId]/component/salary-form"
+import { SalaryTemplate, SalaryTemplateItem } from "@/types/payroll"
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -93,6 +94,8 @@ interface EmployeeFormProps {
   profile: Profile[];
   orgId: any;
   tab: string | null;
+  earningType: SalaryTemplateItem[],
+  deductionType: SalaryTemplateItem[],
 };
 
 const gender = [
@@ -157,7 +160,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   shifts,
   profile,
   orgId,
-  tab
+  tab,
+  earningType,
+  deductionType
 }) => {
   const params = useParams();
   const router = useRouter();
@@ -261,7 +266,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }; 
 
   return (
     <>
@@ -627,7 +632,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
               throw new Error("Function not implemented.")
             }} /> :
             <Form {...form}>
-              <form onSubmit={form2.handleSubmit(onSubmit2)} className="space-y-8 w-full"> 
+              <form onSubmit={form2.handleSubmit(onSubmit2)} className="space-y-8 w-full">
 
                 {/* Account Information */}
                 <Separator />
@@ -739,7 +744,11 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
             <EmptyStateTable title={"Employee information not found"} description={"Submit the form in the Information Tab before adding Files"} action={null} onClick={function (): void {
               throw new Error("Function not implemented.")
             }} /> :
-            <SalaryCard profile={initialData} />
+            <SalaryFormCard
+              profile={initialData}
+              earningType={earningType}
+              deductionType={deductionType}
+            />
           }
         </TabsContent>
       </Tabs>

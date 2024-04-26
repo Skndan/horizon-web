@@ -15,14 +15,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { Input } from "@/components/ui/input" 
 import toast from "react-hot-toast"
 import {
     Table,
@@ -95,51 +88,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
     const [ctc, setCtc] = useState(template?.ctc ? { monthly: template.ctc / 12, yearly: template.ctc } : { monthly: 0, yearly: 0 });
 
-    // const [fixed, setFixed] = useState(template?.fixed ? { monthly: template.fixed / 12, yearly: template.fixed } : { monthly: 0, yearly: 0 });
-
     const [loading, setLoading] = useState(false);
-
-
-    // const [earnings, setEarnings] = useState<SalaryComponentItem[]>(initialData ? initialData!.earnings.map((item) => {
-
-    //     let monthly = 0;
-    //     let yearly = 0;
-
-    //     switch (item.calculationType) {
-    //         case "FIXED_AMOUNT":
-    //             monthly = item.value / 12;
-    //             yearly = Number(item.value);
-    //             break;
-    //         case "PERCENTAGE_OF_CTC":
-    //             monthly = ((item.value / 100) * ctc.monthly);
-    //             yearly = (item.value / 100) * ctc.yearly;
-    //             break;
-    //         // find basic
-    //         case "PERCENTAGE_OF_BASIC":
-
-    //             // find basic's monthly and yearly
-    //             var dd = initialData!.earnings.find(item => item.componentName === "Basic");
-
-    //             if (!dd) {
-    //                 toast.error("Add basic first");
-    //             }
-
-    //             monthly = (item.value / 100) * ctc.monthly;
-    //             yearly = (item.value / 100) * ctc.yearly;
-
-    //             break;
-    //     }
-
-    //     return {
-    //         id: item.id,
-    //         componentName: item.componentName,
-    //         value: item.value,
-    //         componentType: item.componentType,
-    //         calculationType: item.calculationType,
-    //         monthly: monthly,
-    //         yearly: yearly,
-    //     };
-    // }) : []);
 
     const title = (initialData?.createdAt === initialData?.updatedAt) ? 'Create Template' : 'Edit Template';
     const description = (initialData?.createdAt === initialData?.updatedAt) ? 'Add a new template' : 'Edit a template.';
@@ -147,9 +96,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     const action = 'Save changes';
 
     const onSubmit = async (data: ProfileFormValues) => {
-
-
-        console.log(data);
 
         try {
             setLoading(true);
@@ -179,11 +125,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
     };
 
-    // const watchCtc = useWatch({
-    //     control: form.control,
-    //     name: "ctc",
-    //     defaultValue: "0",
-    // })
 
     // Function to be triggered whenever there's a change in the form fields
     const handleFieldChange = async (fieldName: string, value: any, index: number) => {
@@ -249,45 +190,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 setTemplate(data);
                 setEarnings(convertStringDatesToDateObjects(data.earnings).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()));
             });
-
-
-
-        // let monthly = 0;
-        // let yearly = 0;
-
-        // switch (value.calculationType) {
-        //     case "FIXED_AMOUNT":
-        //         monthly = value.value / 12;
-        //         yearly = value.value;
-        //         break;
-        //     case "PERCENTAGE_OF_CTC":
-        //         monthly = ((value.value / 100) * ctc.monthly);
-        //         yearly = (value.value / 100) * ctc.yearly;
-        //         break;
-        //     case "PERCENTAGE_OF_BASIC":
-        //         // find basic's monthly and yearly
-        //         // var dd = earnings.find(item => item.componentName === "Basic");
-
-        //         // if (!dd) {
-        //         //     toast.error("Add basic first");
-        //         // }
-
-        //         // monthly = ((value.value / 100) * dd!.monthly);
-        //         // yearly = (value.value / 100) * dd!.yearly;
-        //         break;
-        // }
-
-        // setEarnings([...earnings, {
-        //     id: value.id,
-        //     componentName: value.componentName,
-        //     value: value.value,
-        //     monthly: monthly,
-        //     yearly: yearly,
-        //     componentType: value.componentType,
-        //     calculationType: value.calculationType,
-        // }]);
-
-        // setFixed({ monthly: fixed.monthly - monthly, yearly: fixed.yearly - yearly })
     };
 
     const removeEarning = async (index: number) => {
@@ -305,16 +207,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
-
-                    {/* <Button onClick={() => { 
-                        let item = earnings[0]; 
-                        console.log(JSON.stringify(item))
-                        item.value = 10;
-                        console.log(JSON.stringify(item)) 
-                    }}>
-                        Test
-                    </Button> */}
-
                     <SubHeading title={title} description={description} />
                     <Breadcrumb className="sm:block hidden">
                         <BreadcrumbList>
@@ -362,7 +254,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                             />
                         </div>
                         <div>
-
                             <div className="flex flex-row  rounded-t-md border-t border-l border-r items-center justify-between p-4">
                                 <div className="first:flex  md:flex-row gap-4 items-center">
                                     <Label>Annual CTC</Label>

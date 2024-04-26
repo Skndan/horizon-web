@@ -9,6 +9,7 @@ import { Shift } from "@/types/attendance";
 import { useAuth } from "@/context/auth-provider";
 import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
+import { SalaryTemplateItem } from "@/types/payroll";
 
 
 const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
@@ -22,13 +23,30 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
     const [profile, setProfile] = useState<Profile[]>([])
     const [shifts, setShifts] = useState<Shift[]>([])
     const [accounts, setAccounts] = useState(null)
-    const searchParams = useSearchParams()
 
+    const searchParams = useSearchParams()
+    const [earningType, setEarningType] = useState<SalaryTemplateItem[]>([])
+    const [deductionType, setDeductionType] = useState<SalaryTemplateItem[]>([])
     const { user } = useAuth();
 
     useEffect(() => {
         (async () => {
             setLoading(true);
+
+            const earning = await apiClient.get(`/salary-component`);
+
+            const temp: SalaryTemplateItem[] = earning.data.content;
+
+            const earningTemp = temp.filter(function (item) {
+                return item.componentType.type === "EARNING"
+            })
+
+            const deductionTemp = temp.filter(function (item) {
+                return item.componentType.type === "DEDUCTION"
+            })
+
+            setEarningType(earningTemp)
+            setDeductionType(deductionTemp)
 
             if (params.employeeId != 'new') {
                 const employees = await apiClient.get(`/profile/${params.employeeId}`);
@@ -78,7 +96,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
 
     return (
         <div className="flex-col">
-            <div className="flex-1 space-y-4 p-8 pt-6"> 
+            <div className="flex-1 space-y-4 p-8 pt-6">
                 {isLoading ? (
                     <div className="grid h-screen place-items-center">
                         <Loader className="animate-spin h-5 w-5 mr-3" />
@@ -91,6 +109,8 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
                         shifts={shifts}
                         initialData={data}
                         orgId={user?.orgId}
+                        earningType={earningType}
+                        deductionType={deductionType}
                         tab={`${searchParams.get('tab')}`}
                         initialDataAccount={accounts} />)}
             </div>

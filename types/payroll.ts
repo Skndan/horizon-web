@@ -1,4 +1,4 @@
-import { Organisation } from "./profile"
+import { Organisation, Profile } from "./profile"
 
 export interface SalaryTemplateItem {
   id: string
@@ -74,6 +74,7 @@ export interface SalaryTemplate {
   active: boolean
   name: string
   description: string
+  profile: Profile
   ctc: number
   fixed: number
   status: string
