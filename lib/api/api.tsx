@@ -15,7 +15,7 @@ export function setupAPIClient(ctx?: GetServerSidePropsContext) {
   let cookies = parseCookies(ctx);
 
   const api = axios.create({
-    baseURL: "http://localhost:8080/api"
+    baseURL: "https://horizon-api-545b14d326aa.herokuapp.com/api"
   });
 
   api.interceptors.response.use(
