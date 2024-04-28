@@ -44,19 +44,18 @@ const PayrollPage = () => {
             <div className="flex-1 space-y-4 p-8 pt-6">
                 <div className="flex items-center justify-between">
                     <Heading title={`Payroll Runs`} description="Manage your office locations" />
-                    <Link href={`/organisation/location/new`}>
+                    {/* <Link href={`/organisation/location/new`}>
                         <Button>
                             <Plus className="mr-2 h-4 w-4" /> Create Pay Run
                         </Button>
-                    </Link>
+                    </Link> */}
                 </div>
-                <Separator />
+                {/* <Separator /> */}
                 {isLoading ? (
                     <div className="grid h-screen place-items-center">
                         <Loader className="animate-spin h-5 w-5 mr-3" />
                     </div>
                 ) : (
-
                     <Tabs defaultValue="run" className="space-y-4">
                         <TabsList>
                             <TabsTrigger value="run">Run Payroll</TabsTrigger>

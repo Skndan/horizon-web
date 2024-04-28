@@ -246,8 +246,6 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
                             )}
                         />
 
-
-
                     </div>
 
                     {dayLog.length === 0 ? <></> :
