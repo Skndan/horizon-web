@@ -70,8 +70,14 @@ const RunPage = () => {
     data.payPeriodStartDate = date.from;
     data.payPeriodEndDate = date.to;
 
-    await apiClient.post(``, {});
-    
+    await apiClient.post(`/payroll-run`, data).then((res) => res.data)
+      .then((data) => {
+        console.log(data);
+      }).catch((err) => {
+        setLoading(false)
+
+      });
+    setLoading(false)
   };
 
   const onChange = async (e: any) => {

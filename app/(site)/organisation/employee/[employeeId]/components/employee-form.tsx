@@ -36,7 +36,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-import { Department, Address, Profile, Account } from "@/types/profile"
+import { Department, Address, Profile, Account, Role } from "@/types/profile"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { Calendar } from "@/components/ui/calendar"
@@ -50,6 +50,7 @@ import { EmptyStateTable } from "@/components/common/empty-state-table"
 import { FileCard } from "../../view/[employeeId]/component/file-view"
 import { SalaryFormCard } from "../../view/[employeeId]/component/salary-form"
 import { SalaryTemplate, SalaryTemplateItem } from "@/types/payroll"
+import { toTitleCase } from "@/lib/utils/string-utils"
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -92,6 +93,7 @@ interface EmployeeFormProps {
   department: Department[];
   address: Address[];
   profile: Profile[];
+  roles: Role[];
   orgId: any;
   tab: string | null;
   earningType: SalaryTemplateItem[],
@@ -106,21 +108,6 @@ const gender = [
   {
     value: "FEMALE",
     label: "Female",
-  }
-]
-
-const roles = [
-  {
-    value: "user",
-    label: "User",
-  },
-  {
-    value: "admin",
-    label: "Admin",
-  },
-  {
-    value: "hr",
-    label: "HR",
   }
 ]
 
@@ -161,6 +148,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   profile,
   orgId,
   tab,
+  roles,
   earningType,
   deductionType
 }) => {
@@ -266,7 +254,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     } finally {
       setLoading(false);
     }
-  }; 
+  };
 
   return (
     <>
@@ -595,7 +583,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
                 <FormField
                   control={form.control}
-                  name="user.roles[0].roleName"
+                  name="user.roles[0].id"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Role</FormLabel>
@@ -607,7 +595,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
                         </FormControl>
                         <SelectContent>
                           {roles.map((category) => (
-                            <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+                            <SelectItem key={category.id} value={category.id}>{toTitleCase(category.roleName)}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>

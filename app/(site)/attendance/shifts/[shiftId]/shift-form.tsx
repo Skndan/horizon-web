@@ -260,13 +260,13 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
                                     <FormLabel>Work Days</FormLabel>
                                     <FormControl>
                                         <ToggleGroup type="multiple" className="justify-start" variant="outline" {...field} value={field.value} onValueChange={field.onChange}>
-                                            <ToggleGroupItem value="SUN">SUN</ToggleGroupItem>
-                                            <ToggleGroupItem value="MON">MON</ToggleGroupItem>
-                                            <ToggleGroupItem value="TUE">TUE</ToggleGroupItem>
-                                            <ToggleGroupItem value="WED">WED</ToggleGroupItem>
-                                            <ToggleGroupItem value="THU">THU</ToggleGroupItem>
-                                            <ToggleGroupItem value="FRI">FRI</ToggleGroupItem>
-                                            <ToggleGroupItem value="SAT">SAT</ToggleGroupItem>
+                                            <ToggleGroupItem value="SUNDAY">SUN</ToggleGroupItem>
+                                            <ToggleGroupItem value="MONDAY">MON</ToggleGroupItem>
+                                            <ToggleGroupItem value="TUESDAY">TUE</ToggleGroupItem>
+                                            <ToggleGroupItem value="WEDNESDAY">WED</ToggleGroupItem>
+                                            <ToggleGroupItem value="THURSDAY">THU</ToggleGroupItem>
+                                            <ToggleGroupItem value="FRIDAY">FRI</ToggleGroupItem>
+                                            <ToggleGroupItem value="SATURDAY">SAT</ToggleGroupItem>
                                         </ToggleGroup>
                                     </FormControl>
                                     <FormMessage />
