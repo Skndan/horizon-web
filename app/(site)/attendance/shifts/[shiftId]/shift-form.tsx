@@ -21,14 +21,6 @@ import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 import { SlashIcon } from "@radix-ui/react-icons"
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
@@ -109,7 +101,7 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
             data.endTime = timeObjectToString(data.endTime);
 
 
-            console.log(data);
+            // console.log(data);
             setLoading(true);
 
             if (initialData) {
@@ -133,7 +125,7 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
             }
 
         } catch (error: any) {
-            console.log(error);
+            // console.log(error);
             toast.error('Something went wrong.');
         } finally {
             setLoading(false);
@@ -167,7 +159,7 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
         });
 
         // Convert formData to JSON format
-        console.log(JSON.stringify(formData));
+        // console.log(JSON.stringify(formData));
     };
 
 
@@ -268,13 +260,13 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
                                     <FormLabel>Work Days</FormLabel>
                                     <FormControl>
                                         <ToggleGroup type="multiple" className="justify-start" variant="outline" {...field} value={field.value} onValueChange={field.onChange}>
-                                            <ToggleGroupItem value="SUN">SUN</ToggleGroupItem>
-                                            <ToggleGroupItem value="MON">MON</ToggleGroupItem>
-                                            <ToggleGroupItem value="TUE">TUE</ToggleGroupItem>
-                                            <ToggleGroupItem value="WED">WED</ToggleGroupItem>
-                                            <ToggleGroupItem value="THU">THU</ToggleGroupItem>
-                                            <ToggleGroupItem value="FRI">FRI</ToggleGroupItem>
-                                            <ToggleGroupItem value="SAT">SAT</ToggleGroupItem>
+                                            <ToggleGroupItem value="SUNDAY">SUN</ToggleGroupItem>
+                                            <ToggleGroupItem value="MONDAY">MON</ToggleGroupItem>
+                                            <ToggleGroupItem value="TUESDAY">TUE</ToggleGroupItem>
+                                            <ToggleGroupItem value="WEDNESDAY">WED</ToggleGroupItem>
+                                            <ToggleGroupItem value="THURSDAY">THU</ToggleGroupItem>
+                                            <ToggleGroupItem value="FRIDAY">FRI</ToggleGroupItem>
+                                            <ToggleGroupItem value="SATURDAY">SAT</ToggleGroupItem>
                                         </ToggleGroup>
                                     </FormControl>
                                     <FormMessage />

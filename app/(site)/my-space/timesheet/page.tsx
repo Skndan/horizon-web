@@ -19,20 +19,22 @@ import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
 import Link from "next/link";
 import { columns } from "./columns";
-import { Daylog } from "@/types/attendance";
+import { Daylog, Timesheet } from "@/types/attendance";
 import { useAuth } from "@/context/auth-provider";
+import { useRouter } from "next/navigation";
 
 const OrgSettingsPage = () => {
 
 
-  const [data, setData] = useState<Daylog[]>([])
+  const router = useRouter();
+  const [data, setData] = useState<Timesheet[]>([])
   const [isLoading, setLoading] = useState(false)
   const [isOpen, setOpen] = useState(false);
   const { user } = useAuth();
 
   async function fetchData() {
     setLoading(true)
-    await apiClient.get(`/time-sheet/day-log-by-profile/day-wise/${user?.profileId}`).then((res) => res.data)
+    await apiClient.get(`/time-sheet/get-by-profile/${user?.profileId}`).then((res) => res.data)
       .then((data) => {
         setData(data)
         setLoading(false)
@@ -62,16 +64,16 @@ const OrgSettingsPage = () => {
           </div>
         ) :
           (<>
-            <div className='flex flex-row gap-4'>
+            <div className='flex flex-row gap-4 pt-4'>
               <div className="flex-1">
                 {
                   data.length == 0 ?
                     <EmptyStateTable
-                      title={"No request found"}
-                      description={"You have not request for leave. Add one below."}
-                      action={"Request Leave"}
+                      title={"No timesheet has submitted"}
+                      description={"You have not submitted timesheet. Add one below."}
+                      action={"Submit Timesheet"}
                       onClick={() => {
-                        setOpen(true);
+                        router.push(`/my-space/timesheet/new`);
                       }} />
                     : <DataTable searchKey="createdAt" columns={columns} data={data} />
                 }
@@ -79,7 +81,6 @@ const OrgSettingsPage = () => {
             </div>
           </>)
         }
-
       </div>
     </>)
 }

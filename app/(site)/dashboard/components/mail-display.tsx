@@ -48,6 +48,7 @@ import { Badge } from "@/components/ui/badge"
 import { toTitleCase } from "@/lib/utils/string-utils"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
+import Link from "next/link"
 
 interface MailDisplayProps {
   mail: Activity | null
@@ -63,7 +64,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
         </div>
         {/* <Separator orientation="vertical" className="mx-2 h-6" /> */}
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" disabled={!mail}>
               <MoreVertical className="h-4 w-4" />
@@ -71,14 +72,18 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {/* <DropdownMenuItem>Mark as unread</DropdownMenuItem>
+            <DropdownMenuItem>Mark as unread</DropdownMenuItem>
             <DropdownMenuItem>Star thread</DropdownMenuItem>
             <DropdownMenuItem>Add label</DropdownMenuItem>
-            <DropdownMenuItem>Mute thread</DropdownMenuItem> */}
+            <DropdownMenuItem>Mute thread</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
+        <Link href={`/dashboard/post/new`}>
+          <Button>
+            Post 🎉
+          </Button>
+        </Link>
       </div>
-      <Separator />
       {mail ? (
         <div className="flex flex-1 flex-col">
           <div className="flex items-start p-4">
@@ -109,13 +114,17 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             )}
           </div>
           <Separator />
-          <div className="flex-1 whitespace-pre-wrap p-4 text-sm"> 
+          <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
             <p dangerouslySetInnerHTML={{ __html: mail.description }}></p>
           </div>
           <Separator className="mt-auto" />
 
 
           <div className="grid">
+            <div className="flex flex-col p-4 hover:bg-muted">
+              <Label className="text-muted-foreground">Attendies</Label>
+              <div className="flex flex-row pt-2">{mail.attendies.map((item) => <Badge key={item.id}>{item.name}</Badge>)}</div>
+            </div>
             <div className="flex flex-col p-4 hover:bg-muted">
               <Label className="text-muted-foreground">Location</Label>
               <Label className="text-md pt-1">{mail.location}</Label>
@@ -137,13 +146,13 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 <Label className="text-muted-foreground">Employee</Label>
                 <Label className="text-md pt-1">employeeId</Label>
               </div> */}
-            </div> 
+            </div>
           </div>
 
 
         </div>
       ) : (
-        <div className="p-8 text-center text-muted-foreground">
+        <div className="p-8 text-center text-muted-foreground align-middle">
           No activity selected
         </div>
       )}

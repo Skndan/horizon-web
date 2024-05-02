@@ -1,9 +1,9 @@
-import { Organisation } from "./profile"
+import { Organisation, Profile } from "./profile"
 
 export interface SalaryTemplateItem {
   id: string
-  createdAt: string
-  updatedAt: string
+  createdAt: Date | string
+  updatedAt: Date | string
   createdBy: string
   updatedBy: string
   active: boolean
@@ -28,15 +28,15 @@ export interface SalaryComponent {
   calculationType: string
 }
 
-export interface SalaryComponentItem {
-  id: string 
-  componentName: string 
-  value: number
-  componentType: ComponentType
-  calculationType: string
-  monthly: number
-  yearly: number
-}
+// export interface SalaryComponentItem {
+//   id: string 
+//   componentName: string 
+//   value: number
+//   componentType: ComponentType
+//   calculationType: string
+//   monthly: number
+//   yearly: number
+// }
 
 export interface ComponentType {
   id: string
@@ -74,7 +74,9 @@ export interface SalaryTemplate {
   active: boolean
   name: string
   description: string
+  profile: Profile
   ctc: number
   fixed: number
+  status: string
   earnings: SalaryTemplateItem[] 
 }

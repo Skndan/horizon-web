@@ -25,7 +25,6 @@ const LocationPage = () => {
         setLoading(true)
         await apiClient.get('/address').then((res) => res.data)
             .then((data) => {
-                console.log(`setting value`)
                 setData(data.content)
                 setLoading(false)
             });

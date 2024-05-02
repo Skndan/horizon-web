@@ -47,8 +47,6 @@ export const OrganisationForm: React.FC<OrganisationFormProps> = ({
     const [loading, setLoading] = useState(false);
 
     async function onSubmit(data: ProfileFormValues) {
-        console.log(data);
-        console.log(initialData);
         try {
             setLoading(true);
             await apiClient

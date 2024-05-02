@@ -94,7 +94,6 @@ export const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
         setLoading(true); 
         data.profile.id = user?.profileId;
 
-        console.log(data);
         if (initialData) {
             await apiClient
                 .put(`/leave-request/${initialData.id}`, data)

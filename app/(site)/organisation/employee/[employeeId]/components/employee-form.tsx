@@ -2,12 +2,13 @@
 
 import * as z from "zod"
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { Loader, Trash } from "lucide-react"
+import { Loader, Pencil, Trash } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -35,7 +36,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-import { Department, Address, Profile } from "@/types/profile"
+import { Department, Address, Profile, Account, Role } from "@/types/profile"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { Calendar } from "@/components/ui/calendar"
@@ -43,6 +44,13 @@ import { format } from "date-fns"
 import { SubHeading } from "@/components/ui/sub-heading"
 import apiClient from "@/lib/api/api-client"
 import { Shift } from "@/types/attendance"
+import Link from "next/link"
+import { ComingSoonPage } from "@/components/common/coming-soon"
+import { EmptyStateTable } from "@/components/common/empty-state-table"
+import { FileCard } from "../../view/[employeeId]/component/file-view"
+import { SalaryFormCard } from "../../view/[employeeId]/component/salary-form"
+import { SalaryTemplate, SalaryTemplateItem } from "@/types/payroll"
+import { toTitleCase } from "@/lib/utils/string-utils"
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -62,16 +70,34 @@ const formSchema = z.object({
   user: z.any()
 });
 
+
+const accountSchema = z.object({
+  accountHolderName: z.string().min(1),
+  bankName: z.string().min(1),
+  accountNumber: z.string().min(1),
+  ifscCode: z.string().min(1),
+  panNumber: z.any().optional(),
+  uanNumber: z.string().min(1).optional(),
+  profile: z.any()
+});
+
+
 type EmployeeFormValues = z.infer<typeof formSchema>
+type AccountFormValues = z.infer<typeof accountSchema>
 
 interface EmployeeFormProps {
   initialData: Profile | null;
+  initialDataAccount: Account | null;
   // designation: Designation[];
   shifts: Shift[];
   department: Department[];
   address: Address[];
   profile: Profile[];
+  roles: Role[];
   orgId: any;
+  tab: string | null;
+  earningType: SalaryTemplateItem[],
+  deductionType: SalaryTemplateItem[],
 };
 
 const gender = [
@@ -82,21 +108,6 @@ const gender = [
   {
     value: "FEMALE",
     label: "Female",
-  }
-]
-
-const roles = [
-  {
-    value: "user",
-    label: "User",
-  },
-  {
-    value: "admin",
-    label: "Admin",
-  },
-  {
-    value: "hr",
-    label: "HR",
   }
 ]
 
@@ -130,11 +141,16 @@ const employeeStatus = [
 
 export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   initialData,
+  initialDataAccount,
   department,
   address,
   shifts,
   profile,
-  orgId
+  orgId,
+  tab,
+  roles,
+  earningType,
+  deductionType
 }) => {
   const params = useParams();
   const router = useRouter();
@@ -149,7 +165,21 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
   const form = useForm<EmployeeFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || {}
+    defaultValues: initialData || {
+      organisation: {
+        id: ''
+      }
+    },
+    mode: "onChange"
+  });
+
+  const form2 = useForm<AccountFormValues>({
+    resolver: zodResolver(accountSchema),
+    defaultValues: initialDataAccount || {
+      profile: {
+        id: ''
+      }
+    }
   });
 
   const onSubmit = async (data: EmployeeFormValues) => {
@@ -171,7 +201,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           .then((data) => {
             toast.success(toastMessage);
             router.refresh();
-            router.push(`../employee`);
+            initialData = data;
           });
       } else {
         await apiClient
@@ -180,7 +210,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           .then((data) => {
             toast.success(toastMessage);
             router.refresh();
-            router.push(`../employee`);
+            initialData = data;
           });
       }
 
@@ -191,399 +221,525 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     }
   };
 
-  const onDelete = async () => {
+  const onSubmit2 = async (data: AccountFormValues) => {
     try {
+
+      data.profile.id = initialData?.id;
+
+      console.log(data);
+
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
-      router.refresh();
-      router.push(`/${params.storeId}/products`);
-      toast.success('Product deleted.');
+
+      if (initialDataAccount) {
+        await apiClient
+          .put(`/account/${initialDataAccount.id}`, data)
+          .then((res) => res.data)
+          .then((data) => {
+            toast.success(toastMessage);
+            router.refresh();
+            initialDataAccount = data;
+          });
+      } else {
+        await apiClient
+          .post("/account", data)
+          .then((res) => res.data)
+          .then((data) => {
+            toast.success(toastMessage);
+            router.refresh();
+            initialDataAccount = data;
+          });
+      }
     } catch (error: any) {
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
-      setOpen(false);
     }
-  }
+  };
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-        loading={loading}
-      />
-      <div className="flex items-center justify-between">
-        <Heading title={title} description={description} />
-        <Breadcrumb className="sm:block hidden">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/organisation/employee">Employee</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <SlashIcon />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage>Form</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        {/* {initialData && (
-          <Button
-            disabled={loading}
-            variant="destructive"
-            size="sm"
-            onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        )} */}
-      </div>
-      <Separator />
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+      <Tabs defaultValue={tab ?? "info"}>
+        <div className="md:flex block:flex-col items-center justify-between py-2">
+          <Heading title={title} description={description} />
+          <TabsList className="mt-2">
+            <TabsTrigger value="info">Info</TabsTrigger>
+            <TabsTrigger value="account">Account</TabsTrigger>
+            <TabsTrigger value="salary">Salary</TabsTrigger>
+            <TabsTrigger value="file">Files</TabsTrigger>
+          </TabsList>
+          <Breadcrumb className="sm:block hidden">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/organisation/employee">Employee</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator>
+                <SlashIcon />
+              </BreadcrumbSeparator>
+              <BreadcrumbItem>
+                <BreadcrumbPage>Form</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+        <TabsContent value="info" className="space-y-4">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
 
-          <FormField
-            control={form.control}
-            name="organisation.id"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input type="hidden" value={orgId} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              {/* Basic Information */}
+              <Separator />
+              <SubHeading title={"Basic Information"} />
 
+              <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
 
-          {/* Basic Information */}
-          <SubHeading title={"Basic Information"} />
+                <FormField
+                  control={form.control}
+                  name="employeeId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Employee ID <span className="text-red-600">*</span></FormLabel>
+                      <FormControl>
+                        <Input disabled={loading} placeholder="Employee ID" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name <span className="text-red-600">*</span></FormLabel>
+                      <FormControl>
+                        <Input disabled={loading} placeholder="Employee name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="employeeId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Employee ID <span className="text-red-600">*</span></FormLabel>
-                  <FormControl>
-                    <Input disabled={loading} placeholder="Employee ID" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="mobile"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Mobile <span className="text-red-600">*</span></FormLabel>
+                      <FormControl>
+                        <Input disabled={loading} placeholder="Employee Mobile" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name <span className="text-red-600">*</span></FormLabel>
-                  <FormControl>
-                    <Input disabled={loading} placeholder="Employee name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Office Email <span className="text-red-600">*</span></FormLabel>
+                      <FormControl>
+                        <Input disabled={loading} placeholder="Employee Office Email" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="mobile"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Mobile <span className="text-red-600">*</span></FormLabel>
-                  <FormControl>
-                    <Input disabled={loading} placeholder="Employee Mobile" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Office Email <span className="text-red-600">*</span></FormLabel>
-                  <FormControl>
-                    <Input disabled={loading} placeholder="Employee Office Email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="gender"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gender</FormLabel>
-                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select a gender" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {gender.map((category) => (
-                        <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="dateOfBirth"
-              render={({ field }) => (
-                <FormItem className="flex flex-col pt-2">
-                  <FormLabel>Date of birth</FormLabel>
-                  <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
+                <FormField
+                  control={form.control}
+                  name="gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Gender</FormLabel>
+                      <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                         <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
+                          <SelectTrigger>
+                            <SelectValue defaultValue={field.value} placeholder="Select a gender" />
+                          </SelectTrigger>
                         </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent align="start" className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          captionLayout="dropdown-buttons"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          fromYear={1970}
-                          toYear={new Date().getFullYear()}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormDescription>
-                    Date of birth is used to calculate employee`s age.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                        <SelectContent>
+                          {gender.map((category) => (
+                            <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <Separator />
+                <FormField
+                  control={form.control}
+                  name="dateOfBirth"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col pt-2">
+                      <FormLabel>Date of birth</FormLabel>
+                      <FormControl>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "pl-3 text-left font-normal",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent align="start" className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              captionLayout="dropdown-buttons"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              fromYear={1970}
+                              toYear={new Date().getFullYear()}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormDescription>
+                        Date of birth is used to calculate employee`s age.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-          {/* Work Information */}
-          <SubHeading title={"Work Information"} />
+              <Separator />
 
-          <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
-            <FormField
-              control={form.control}
-              name="shift.id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Shift</FormLabel>
-                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select the shift" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {shifts.map((size) => (
-                        <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              {/* Work Information */}
+              <SubHeading title={"Work Information"} />
 
-            <FormField
-              control={form.control}
-              name="department.id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Department</FormLabel>
-                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select a department" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {department.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="address.id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Office</FormLabel>
-                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select the working location" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {address.map((size) => (
-                        <SelectItem key={size.id} value={size.id}>{size.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="reportingManager.id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Reporting Manager</FormLabel>
-                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select the Reporting Manager" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {profile.map((size) => (
-                        <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="dateOfJoining"
-              render={({ field }) => (
-                <FormItem className="flex flex-col pt-2">
-                  <FormLabel>Date of joining</FormLabel>
-                  <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
+              <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
+                <FormField
+                  control={form.control}
+                  name="shift.id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Shift</FormLabel>
+                      <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                         <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
+                          <SelectTrigger>
+                            <SelectValue defaultValue={field.value} placeholder="Select the shift" />
+                          </SelectTrigger>
                         </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent align="start" className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          captionLayout="dropdown-buttons"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          fromYear={1970}
-                          toYear={new Date().getFullYear()}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                        <SelectContent>
+                          {shifts.map((size) => (
+                            <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="employeeStatus"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Employee Status</FormLabel>
-                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select a Employee Status" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {employeeStatus.map((category) => (
-                        <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="department.id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Department</FormLabel>
+                      <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue defaultValue={field.value} placeholder="Select a department" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {department.map((category) => (
+                            <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="user.roles[0].roleName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select a Role" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {roles.map((category) => (
-                        <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="address.id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Office</FormLabel>
+                      <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue defaultValue={field.value} placeholder="Select the working location" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {address.map((size) => (
+                            <SelectItem key={size.id} value={size.id}>{size.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          </div>
-          <Button disabled={loading} className="ml-auto" type="submit">
-            {loading &&
-              <Loader className="animate-spin h-5 w-5 mr-3" />}
-            {action}
-          </Button>
-        </form>
-      </Form>
+                <FormField
+                  control={form.control}
+                  name="reportingManager.id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Reporting Manager</FormLabel>
+                      <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue defaultValue={field.value} placeholder="Select the Reporting Manager" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {profile.map((size) => (
+                            <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="dateOfJoining"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col pt-2">
+                      <FormLabel>Date of joining</FormLabel>
+                      <FormControl>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "pl-3 text-left font-normal",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent align="start" className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              captionLayout="dropdown-buttons"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              fromYear={1970}
+                              toYear={new Date().getFullYear()}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="employeeStatus"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Employee Status</FormLabel>
+                      <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue defaultValue={field.value} placeholder="Select a Employee Status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {employeeStatus.map((category) => (
+                            <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="user.roles[0].id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Role</FormLabel>
+                      <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue defaultValue={field.value} placeholder="Select a Role" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {roles.map((category) => (
+                            <SelectItem key={category.id} value={category.id}>{toTitleCase(category.roleName)}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+              </div>
+              <Button disabled={loading} className="ml-auto" type="submit">
+                {loading &&
+                  <Loader className="animate-spin h-5 w-5 mr-3" />}
+                {action}
+              </Button>
+            </form>
+          </Form>
+
+        </TabsContent>
+        <TabsContent value="account" className="space-y-4">
+          {!initialData ?
+            <EmptyStateTable title={"Employee information not found"} description={"Submit the form in the Information Tab before adding Account details"} action={null} onClick={function (): void {
+              throw new Error("Function not implemented.")
+            }} /> :
+            <Form {...form}>
+              <form onSubmit={form2.handleSubmit(onSubmit2)} className="space-y-8 w-full">
+
+                {/* Account Information */}
+                <Separator />
+                <SubHeading title={"Account Information"} />
+                <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
+
+                  <FormField
+                    control={form2.control}
+                    name="accountHolderName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Account Holder Name <span className="text-red-600">*</span></FormLabel>
+                        <FormControl>
+                          <Input disabled={loading} placeholder="Account Holder Name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form2.control}
+                    name="bankName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Bank Name <span className="text-red-600">*</span></FormLabel>
+                        <FormControl>
+                          <Input disabled={loading} placeholder="Bank Name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form2.control}
+                    name="accountNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Account Number <span className="text-red-600">*</span></FormLabel>
+                        <FormControl>
+                          <Input disabled={loading} placeholder="Account Number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form2.control}
+                    name="ifscCode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>IFSC Code <span className="text-red-600">*</span></FormLabel>
+                        <FormControl>
+                          <Input disabled={loading} placeholder="IFSC Code" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form2.control}
+                    name="panNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>PAN Number <span className="text-red-600">*</span></FormLabel>
+                        <FormControl>
+                          <Input disabled={loading} placeholder="PAN Number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form2.control}
+                    name="uanNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>UAN Number <span className="text-red-600">*</span></FormLabel>
+                        <FormControl>
+                          <Input disabled={loading} placeholder="UAN Number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <Button disabled={loading || !form2.formState.isValid} className="ml-auto" type="submit">
+                  {loading &&
+                    <Loader className="animate-spin h-5 w-5 mr-3" />}
+                  {action}
+                </Button>
+              </form>
+            </Form>
+          }
+        </TabsContent>
+        <TabsContent value="file" className="space-y-4">
+          {!initialData ?
+            <EmptyStateTable title={"Employee information not found"} description={"Submit the form in the Information Tab before adding Files"} action={null} onClick={function (): void {
+              throw new Error("Function not implemented.")
+            }} /> :
+            <FileCard profile={initialData} />
+          }
+        </TabsContent>
+        <TabsContent value="salary" className="space-y-4">
+          {!initialData ?
+            <EmptyStateTable title={"Employee information not found"} description={"Submit the form in the Information Tab before adding Files"} action={null} onClick={function (): void {
+              throw new Error("Function not implemented.")
+            }} /> :
+            <SalaryFormCard
+              profile={initialData}
+              earningType={earningType}
+              deductionType={deductionType}
+            />
+          }
+        </TabsContent>
+      </Tabs>
     </>
   );
 };

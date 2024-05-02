@@ -16,10 +16,10 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { SalaryComponent } from "@/types/payroll";
+import { SalaryTemplateItem } from "@/types/payroll";
 
 interface CellActionProps {
-  data: SalaryComponent;
+  data: SalaryTemplateItem;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({

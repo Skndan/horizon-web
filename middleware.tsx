@@ -20,7 +20,7 @@ export function middleware(req: NextRequest) {
     // console.log(pathname);
 
     // Exclude specific paths from the redirect logic to prevent loops
-    if (pathname === '/' || pathname.startsWith('/_next') || pathname.match('.svg')) {
+    if (pathname === '/' || pathname.startsWith('/_next') || pathname.match('.svg') || pathname.match('.ico')) {
         return NextResponse.next();
     }
 

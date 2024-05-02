@@ -1,17 +1,6 @@
-"use client";
+"use client"; 
 
-import { ComingSoonPage } from "@/components/common/coming-soon";
-import { Separator } from "@/components/ui/separator";
-import { SubHeading } from "@/components/ui/sub-heading";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Loader, SlashIcon } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useAuth } from "@/context/auth-provider";
 import { useEffect, useState } from "react";
 import { SalaryTemplateItem } from "@/types/payroll";

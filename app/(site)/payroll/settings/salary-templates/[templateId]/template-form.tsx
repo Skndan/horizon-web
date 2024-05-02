@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm, useWatch } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
 
 import { cn } from "@/lib/utils"
@@ -10,36 +10,26 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { Input } from "@/components/ui/input" 
 import toast from "react-hot-toast"
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Edit, Info, SlashIcon, Trash } from "lucide-react"
+import { Info, SlashIcon, Trash } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useState } from "react"
-import { ComponentType, SalaryComponentItem, SalaryTemplate, SalaryTemplateItem } from "@/types/payroll"
+import { SalaryTemplate, SalaryTemplateItem } from "@/types/payroll"
 
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb"
 import { SubHeading } from "@/components/ui/sub-heading"
@@ -92,64 +82,20 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
     const router = useRouter();
 
-    const [ctc, setCtc] = useState(initialData?.ctc ? { monthly: initialData.ctc / 12, yearly: initialData.ctc } : { monthly: 0, yearly: 0 });
-    const [fixed, setFixed] = useState(initialData?.fixed ? { monthly: initialData.fixed / 12, yearly: initialData.fixed } : { monthly: 0, yearly: 0 });
+    const [template, setTemplate] = useState<SalaryTemplate | null>(initialData);
+
+    const [earnings, setEarnings] = useState<SalaryTemplateItem[]>(initialData?.earnings ?? []);
+
+    const [ctc, setCtc] = useState(template?.ctc ? { monthly: template.ctc / 12, yearly: template.ctc } : { monthly: 0, yearly: 0 });
+
     const [loading, setLoading] = useState(false);
 
-    const [earnings, setEarnings] = useState<SalaryComponentItem[]>(initialData ? initialData!.earnings.map((item) => {
-
-        let monthly = 0;
-        let yearly = 0;
-
-        switch (item.calculationType) {
-            case "FIXED_AMOUNT":
-                monthly = item.value / 12;
-                yearly = Number(item.value);
-                console.log("FIXED_AMOUNT", monthly, yearly)
-                break;
-            case "PERCENTAGE_OF_CTC":
-                monthly = ((item.value / 100) * ctc.monthly);
-                yearly = (item.value / 100) * ctc.yearly;
-                break;
-            // find basic
-            case "PERCENTAGE_OF_BASIC":
-
-                // find basic's monthly and yearly
-                var dd = initialData!.earnings.find(item => item.componentName === "Basic");
-
-                if (!dd) {
-                    toast.error("Add basic first");
-                }
-
-                monthly = (item.value / 100) * ctc.monthly;
-                yearly = (item.value / 100) * ctc.yearly;
-
-                break;
-        }
-
-        return {
-            id: item.id,
-            componentName: item.componentName,
-            value: item.value,
-            componentType: item.componentType,
-            calculationType: item.calculationType,
-            monthly: monthly,
-            yearly: yearly,
-        };
-    }) : []);
-
-    const title = (initialData?.createdAt === initialData?.updatedAt) ? 'Create Template ✨' : 'Edit Template ✨';
+    const title = (initialData?.createdAt === initialData?.updatedAt) ? 'Create Template' : 'Edit Template';
     const description = (initialData?.createdAt === initialData?.updatedAt) ? 'Add a new template' : 'Edit a template.';
     const toastMessage = (initialData?.createdAt === initialData?.updatedAt) ? 'Template created.' : 'Template updated.';
     const action = 'Save changes';
 
     const onSubmit = async (data: ProfileFormValues) => {
-
-        data.earnings = earnings;
-        data.ctc = ctc.yearly;
-        data.fixed = fixed.yearly;
-
-        console.log(data)
 
         try {
             setLoading(true);
@@ -170,6 +116,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                         router.push(`../salary-templates`);
                     });
             }
+            setLoading(false);
         } catch (error: any) {
             toast.error('Something went wrong.');
         } finally {
@@ -178,157 +125,81 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
     };
 
-    const watchCtc = useWatch({
-        control: form.control,
-        name: "ctc",
-        defaultValue: "0",
-    })
-
-
 
     // Function to be triggered whenever there's a change in the form fields
-    const handleFieldChange = (fieldName: string, value: any, index: number) => {
-        // Perform your desired actions here, such as sending data to an API or updating state
-        console.log('Field Name:', fieldName);
-        console.log('Changed Value:', value);
+    const handleFieldChange = async (fieldName: string, value: any, index: number) => {
+        // Perform your desired actions here, such as sending data to an API or updating state  
+        var obj = {
+            [fieldName]: value,
+            earnings: earnings
+        }
 
-        if ((earnings.length === 0) && (fieldName === "ctc")) {
-            const monthly = (Number(value) / 12).toFixed();
-            setCtc({ monthly: Number(monthly), yearly: Number(value) })
-            setFixed({ monthly: Number(monthly), yearly: Number(value) })
+        if (fieldName === "ctc") {
+            await apiClient
+                .put(`/salary-template/${initialData?.id}`, obj)
+                .then((res) => res.data)
+                .then((data) => {
+                    setTemplate(data);
+                    setEarnings(convertStringDatesToDateObjects(data.earnings).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()));
+                    setCtc(data?.ctc ? { monthly: data.ctc / 12, yearly: data.ctc } : { monthly: 0, yearly: 0 });
+                });
         } else {
+            console.log(`fieldName:${fieldName} value:${value} index:${index}`)
 
-            let fixedMonthly = 0;
-            let fixedYearly = 0;
+            let item = earnings[index];
+            item.value = value;
 
-            earnings.forEach(element => {
+            console.log(item);
 
-                let monthly = 0;
-                let yearly = 0;
-
-                if (element.id === earnings[index].id) {
-                    console.log('match: ', element.id, value);
-                    // find type 
-                    switch (element.calculationType) {
-                        case "FIXED_AMOUNT":
-                            monthly = value / 12;
-                            yearly = Number(value);
-
-                            console.log("FIXED_AMOUNT", monthly, yearly)
-                            break;
-                        case "PERCENTAGE_OF_CTC":
-                            monthly = ((value / 100) * ctc.monthly);
-                            yearly = (value / 100) * ctc.yearly;
-
-                            console.log('match: ', element.id, value, monthly, yearly);
-                            break;
-                        // find basic
-                        case "PERCENTAGE_OF_BASIC":
-
-                            // find basic's monthly and yearly
-                            var dd = earnings.find(item => item.componentName === "Basic");
-
-                            console.log(dd)
-                            if (!dd) {
-                                toast.error("Add basic first");
-                            }
-
-                            console.log(value.value);
-
-                            monthly = (value / 100) * dd!.monthly;
-                            yearly = (value / 100) * dd!.yearly;
-
-                            break;
-                    }
-
-                    element.monthly = monthly;
-                    element.yearly = yearly;
-
-                    // const earnings_ = getValues('earnings');
-                    // setValue('earnings', [...earnings_, {
-                    //     id: value.id,
-                    //     componentName: value.componentName,
-                    //     value: value,
-                    //     monthly: monthly,
-                    //     yearly: yearly,
-                    //     componentType: value.componentType,
-                    //     calculationType: value.calculationType,
-                    // }] as never);
-
-                    // calculate
-                    setEarnings(prevState => {
-                        // Loop over your list
-                        return prevState.map((item) => {
-                            // Check for the item with the specified id and update it
-                            console.log("matching", item.id, earnings[index].id)
-                            return item.id === earnings[index].id ? { ...item, monthly: monthly, yearly: yearly, value: value } : item
-                        })
-                    })
-                }
-            });
-            // update each item
-            earnings.forEach(element => {
-                if (element.componentType.type === "EARNING") {
-                    fixedMonthly += element.monthly;
-                    fixedYearly += element.yearly
-                } else {
-                    fixedMonthly -= element.monthly;
-                    fixedYearly -= element.yearly
-                }
-            })
-
-            // update fixed item  
-            setFixed({ monthly: ctc.monthly - fixedMonthly, yearly: ctc.yearly - fixedYearly })
+            await apiClient
+                .put(`/salary-template/line/${initialData?.id}`, item)
+                .then((res) => res.data)
+                .then((data) => {
+                    setTemplate(data);
+                    setEarnings(convertStringDatesToDateObjects(data.earnings).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()));
+                });
         }
     };
+
+    const convertStringDatesToDateObjects = (items: SalaryTemplateItem[]) => {
+        return items.map(item => {
+            return {
+                ...item,
+                createdAt: typeof item.createdAt === 'string' ? new Date(item.createdAt) : item.createdAt,
+                updatedAt: typeof item.updatedAt === 'string' ? new Date(item.updatedAt) : item.updatedAt,
+            };
+        });
+    };
+
 
     const addEarning = async (value: SalaryTemplateItem) => {
         // const earnings = getValues('earnings');
 
-        let monthly = 0;
-        let yearly = 0;
+        console.log(value);
 
-        switch (value.calculationType) {
-            case "FIXED_AMOUNT":
-                monthly = value.value / 12;
-                yearly = value.value;
-                break;
-            case "PERCENTAGE_OF_CTC":
-                monthly = ((value.value / 100) * ctc.monthly);
-                yearly = (value.value / 100) * ctc.yearly;
-                break;
-            case "PERCENTAGE_OF_BASIC":
-                // find basic's monthly and yearly
-                var dd = earnings.find(item => item.componentName === "Basic");
-
-                if (!dd) {
-                    toast.error("Add basic first");
-                }
-
-                monthly = ((value.value / 100) * dd!.monthly);
-                yearly = (value.value / 100) * dd!.yearly;
-                break;
+        if ((earnings.find(x => x.componentName === "Basic") === undefined) && (value.componentName !== "Basic")) {
+            toast.error("Please add Basic first")
+            return;
         }
-
-        setEarnings([...earnings, {
-            id: value.id,
-            componentName: value.componentName,
-            value: value.value,
-            monthly: monthly,
-            yearly: yearly,
-            componentType: value.componentType,
-            calculationType: value.calculationType,
-        }]);
-
-        setFixed({ monthly: fixed.monthly - monthly, yearly: fixed.yearly - yearly })
+        // add 
+        setEarnings([]);
+        await apiClient
+            .put(`/salary-template/line/${initialData?.id}`, value)
+            .then((res) => res.data)
+            .then((data) => {
+                setTemplate(data);
+                setEarnings(convertStringDatesToDateObjects(data.earnings).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()));
+            });
     };
 
-    const removeEarning = (index: number) => {
-        const monthly = earnings[index].monthly;
-        const yearly = earnings[index].yearly;
-
-        setFixed({ monthly: fixed.monthly + monthly, yearly: fixed.yearly + yearly })
-        setEarnings([...earnings.slice(0, index), ...earnings.slice(index + 1)]);
+    const removeEarning = async (index: number) => {
+        await apiClient
+            .delete(`/salary-template/line/${earnings[index].id}/${template?.id}`)
+            .then((res) => res.data)
+            .then((data) => {
+                setTemplate(data);
+                setEarnings([...earnings.slice(0, index), ...earnings.slice(index + 1)]);
+            });
     };
 
     return (
@@ -383,14 +254,12 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                             />
                         </div>
                         <div>
-
                             <div className="flex flex-row  rounded-t-md border-t border-l border-r items-center justify-between p-4">
                                 <div className="first:flex  md:flex-row gap-4 items-center">
                                     <Label>Annual CTC</Label>
                                     <FormField
                                         control={form.control}
                                         name="ctc"
-                                        disabled={earnings.length != 0}
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormControl>
@@ -419,8 +288,8 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button disabled={watchCtc === "" || watchCtc === "0"}
-                                            size="sm" >
+                                        {/* disabled={watchCtc === "" || watchCtc === "0"} */}
+                                        <Button size="sm" >
                                             Add Components
                                         </Button>
                                     </DropdownMenuTrigger>
@@ -430,7 +299,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                             <DropdownMenuSeparator />
                                             {earningType.map((earning) => (
                                                 <>
-                                                    <DropdownMenuItem disabled={earnings.find(x => x.id === earning.id) !== undefined} key={earning.id} onClick={(e) => {
+                                                    <DropdownMenuItem disabled={earnings.find(x => x.componentName === earning.componentName) !== undefined} key={earning.id} onClick={(e) => {
                                                         addEarning(earning);
                                                     }}>
                                                         {earning.componentName}
@@ -442,7 +311,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                             <DropdownMenuSeparator />
                                             {deductionType.map((deduction) => (
                                                 <>
-                                                    <DropdownMenuItem disabled={earnings.find(x => x.id === deduction.id) !== undefined} key={deduction.id} onClick={(e) => {
+                                                    <DropdownMenuItem disabled={earnings.find(x => x.componentName === deduction.componentName) !== undefined} key={deduction.id} onClick={(e) => {
                                                         addEarning(deduction);
                                                     }}>
                                                         {deduction.componentName}
@@ -520,24 +389,16 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                                 </TableCell>
                                                 <TableCell>
                                                     {
-                                                        item.componentType.type === "EARNING" ?
-                                                            <Label className="text-green-600">
-                                                                +₹{item.monthly?.toFixed()}
-                                                            </Label> :
-                                                            <Label className="text-red-600">
-                                                                -₹{item.monthly?.toFixed()}
-                                                            </Label>
+                                                        <Label className={item.componentType.type === "EARNING" ? "text-green-600" : "text-red-600"}>
+                                                            +₹{item.monthly?.toFixed()}
+                                                        </Label>
                                                     }
                                                 </TableCell>
                                                 <TableCell>
                                                     {
-                                                        item.componentType.type === "EARNING" ?
-                                                            <Label className="text-green-600">
-                                                                +₹{item.yearly?.toFixed()}
-                                                            </Label> :
-                                                            <Label className="text-red-600">
-                                                                -₹{item.yearly?.toFixed()}
-                                                            </Label>
+                                                        <Label className={item.componentType.type === "EARNING" ? "text-green-600" : "text-red-600"}>
+                                                            +₹{item.yearly?.toFixed()}
+                                                        </Label>
                                                     }
                                                 </TableCell>
                                                 <TableCell>
@@ -567,22 +428,23 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
                                             </TableCell>
                                             <TableCell>Fixed amount</TableCell>
-                                            <TableCell>₹{fixed.monthly?.toFixed()}</TableCell>
-                                            <TableCell>₹{fixed.yearly?.toFixed()}</TableCell>
+                                            <TableCell>₹{(template!.fixed / 12).toFixed()}</TableCell>
+                                            <TableCell>₹{template!.fixed.toFixed()}</TableCell>
+                                            <TableCell></TableCell>
+                                        </TableRow>
+                                        <TableRow className={"bg-muted"}>
+                                            <TableCell>Cost to Company</TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell>₹{(template!.ctc / 12).toFixed()}</TableCell>
+                                            <TableCell>₹{template!.ctc.toFixed()}</TableCell>
                                             <TableCell></TableCell>
                                         </TableRow>
                                     </TableBody>
-                                    <TableFooter>
-                                        <TableCell>Cost to Company</TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell>₹{ctc.monthly?.toFixed()}</TableCell>
-                                        <TableCell>₹{ctc.yearly?.toFixed()}</TableCell>
-                                        <TableCell></TableCell>
-                                    </TableFooter>
+
                                 </Table>
                             </div>
                         </div>
-                        <Button type="submit">{action}</Button>
+                        <Button disabled={loading || !form.formState.isValid} type="submit">{action}</Button>
                     </form>
                 </Form>
             </div>

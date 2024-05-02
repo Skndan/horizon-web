@@ -20,6 +20,7 @@ import { formatDate } from "@/lib/utils/time-utils";
 import { useAuth } from "@/context/auth-provider";
 import Overview from "@/components/dashboard/overview";
 import { DashboardData } from "@/types/dashboard";
+import DashboardTimesheetPage from "./components/time-sheet-page";
 
 const OverviewPage = () => {
 
@@ -133,7 +134,6 @@ const OverviewPage = () => {
                             </TabsTrigger>
                             <TabsTrigger value="timesheets">
                                 Timesheets
-                                <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">Coming Soon🔥</span>
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="overview" className="space-y-4">
@@ -252,7 +252,7 @@ const OverviewPage = () => {
                         </TabsContent>
                         <TabsContent value="activity" className="space-y-4"><ActivityPage /></TabsContent>
                         <TabsContent value="approvals" className="space-y-4"><ComingSoonPage /></TabsContent>
-                        <TabsContent value="timesheets" className="space-y-4"><ComingSoonPage /></TabsContent>
+                        <TabsContent value="timesheets" className="space-y-4"><DashboardTimesheetPage /></TabsContent>
                     </Tabs>
                 </div>
             </div >

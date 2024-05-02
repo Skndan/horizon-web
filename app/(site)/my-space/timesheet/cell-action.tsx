@@ -18,7 +18,7 @@ import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
 import { LeaveRequest } from "@/types/leave";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
-import { Daylog } from "@/types/attendance";
+import { Daylog, Timesheet } from "@/types/attendance";
 import { useAuth } from "@/context/auth-provider";
 import { Modal } from "@/components/ui/modal";
 import {
@@ -37,7 +37,7 @@ import { TimePicker } from "@/components/ui/time-picker";
 import { Label } from "@/components/ui/label";
 
 interface CellActionProps {
-  data: Daylog;
+  data: Timesheet;
 }
 
 const formSchema = z.object({

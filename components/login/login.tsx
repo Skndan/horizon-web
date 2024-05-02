@@ -5,12 +5,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next-nprogress-bar';
 import { useState } from 'react';
@@ -19,7 +17,6 @@ import { useForm } from 'react-hook-form';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,11 +25,10 @@ import {
 
 import toast from 'react-hot-toast';
 import * as z from "zod";
-import { ChevronRightIcon, EyeClosedIcon } from '@radix-ui/react-icons';
-import apiClient, { parseJwt } from '@/lib/api/api-client';
+import { EyeClosedIcon } from '@radix-ui/react-icons';
 import { useUserStore } from '@/store/use-user-store';
 import { useAuth } from '@/context/auth-provider';
-import { Eye, Search } from 'lucide-react';
+import { Eye, Loader } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().min(1),
@@ -65,6 +61,7 @@ const Login = () => {
       setLoading(true);
       data.email.trim();
       data.password.trim();
+
       await signIn(data);
 
       // localStorage.clear();
@@ -99,8 +96,10 @@ const Login = () => {
       //         router.push("/dashboard");
       //       });
       //   });
+      setLoading(false);
     } catch (error: any) {
       toast.error("Something went wrong.");
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -144,7 +143,7 @@ const Login = () => {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password <span className='text-red-500'>*</span></FormLabel> 
+                        <FormLabel>Password <span className='text-red-500'>*</span></FormLabel>
                         <FormControl className="relative">
                           <div className="relative">
                             <Button size={"icon"} variant={"ghost"} className='absolute right-0' onClick={(e) => {
@@ -152,7 +151,7 @@ const Login = () => {
                               setEye(!eye);
                             }}>
                               {eye ? <EyeClosedIcon className="top-2.5 h-4 w-4 text-muted-foreground" /> : <Eye className="top-2.5 h-4 w-4 text-muted-foreground" />}
-                            </Button> 
+                            </Button>
                             <Input
                               disabled={loading}
                               type={eye ? 'text' : 'password'}
@@ -176,7 +175,11 @@ const Login = () => {
                 </Button> */}
                 </div>
               </div>
-              <Button type="submit" className="w-full">Sign In</Button>
+              <Button disabled={loading} type="submit" className="w-full">
+                {loading &&
+                  <Loader className="animate-spin h-5 w-5 mr-3" />}
+                Sign In
+              </Button>
             </form>
           </Form>
         )}

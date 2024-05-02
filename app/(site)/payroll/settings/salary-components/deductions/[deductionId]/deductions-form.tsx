@@ -73,7 +73,6 @@ export const DeductionForm: React.FC<DeductionFormProps> = ({
     const action = initialData ? 'Save changes' : 'Create';
 
     async function onSubmit(data: DeductionsFormValues) {
-        console.log(data);
         try {
             setLoading(true);
             if (initialData) {

@@ -38,6 +38,29 @@ export interface MonthlyDaylog {
     profile: Profile
 }
 
+export interface Timesheet {
+    id: string
+    createdAt: string
+    updatedAt: string
+    createdBy: any
+    updatedBy: any
+    active: boolean
+    dayLogs: Daylog[]
+    profile: Profile
+    remarks: string,
+    status: string,
+    fromDate: string,
+    toDate: string,
+    totalDays: number,
+    loggedDays: number,
+    holidays: number,
+    approvedLeave: number,
+    lop: number,
+    workHours: number,
+    otHours: number,
+    totalWork: number,
+    totalBreak: number
+}
 
 // {
 //     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",

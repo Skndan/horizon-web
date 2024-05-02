@@ -104,7 +104,6 @@ export const TaskForm: React.FC<TaskFormProps> = ({
 
             data.initiator.id = user?.profileId;
 
-            console.log(data);
             if (initialData) {
                 await apiClient
                     .put(`/tasks/${initialData.id}`, data)

@@ -82,9 +82,7 @@ const LeaveTrackerPage = () => {
                                         : <DataTable searchKey="name" columns={columns} data={data} />
                                 }
                             </div>
-                            <div className="flex flex-col gap-4">
-
-
+                            <div className="flex flex-col gap-4"> 
                                 {balance.map((balance) => (
                                     <Card key={balance.id}>
                                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

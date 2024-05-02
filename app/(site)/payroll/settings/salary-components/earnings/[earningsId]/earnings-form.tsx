@@ -73,7 +73,6 @@ export const EarningsForm: React.FC<EarningFormProps> = ({
     const action = initialData ? 'Save changes' : 'Create';
 
     async function onSubmit(data: EarningsFormValues) {
-        console.log(data);
         try {
             setLoading(true);
             if (initialData) {

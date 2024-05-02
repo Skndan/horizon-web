@@ -1,18 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
@@ -20,17 +18,13 @@ import { BarChartIcon, CalendarIcon, CardStackIcon, DashboardIcon, HomeIcon, Pap
 
 import React from "react";
 import { useAuth } from "@/context/auth-provider";
-import { Label } from "../ui/label";
 
 export function MainNav({
   className,
-  ...props
 }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
 
   const { user, roles } = useAuth();
-
-
 
   const routes = [
     {
@@ -54,7 +48,7 @@ export function MainNav({
       label: "Tasks",
       icon: CardStackIcon,
       active: pathname.match(`/tasks`),
-      role: ["admin", "hr"],
+      role: ["admin"],
       children: []
     },
     {
@@ -105,7 +99,7 @@ export function MainNav({
       role: ["admin", "hr"],
       children: [
         {
-          href: `/payroll/runs`,
+          href: `/payroll`,
           label: "Payroll Runs",
           description:
             "Manage payroll runs",
@@ -126,6 +120,12 @@ export function MainNav({
       role: ["admin", "hr"],
       children: [
         {
+          href: `/attendance/timesheet`,
+          label: "Timesheet",
+          description:
+            "Employee Timesheets",
+        },
+        {
           href: `/attendance/tracking`,
           label: "Tracking",
           description:
@@ -144,7 +144,7 @@ export function MainNav({
       label: "Reports",
       icon: BarChartIcon,
       active: pathname.match(`/reports`),
-      role: ["admin", "hr"],
+      role: ["admin"],
       children: []
     }
   ];
@@ -161,10 +161,9 @@ export function MainNav({
                   route.active
                     ? "text-black dark:text-white"
                     : "text-muted-foreground"
-                )} 
+                )}
               > {route.label}</NavigationMenuTrigger>
-              <NavigationMenuContent key={route.href+'content'}>
-                {/* <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]"> */}
+              <NavigationMenuContent key={route.href + 'content'}>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                   {route.children.map((component) => (
                     <ListItem
@@ -188,7 +187,7 @@ export function MainNav({
                       ? "text-black dark:text-white"
                       : "text-muted-foreground"
                   )}
-                > 
+                >
                   {route.label}
                   {/* <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">New</span> */}
                 </NavigationMenuLink>
@@ -207,7 +206,7 @@ const ListItem = React.forwardRef<
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, ...props }, ref) => {
   return (
-    <li> 
+    <li>
       <NavigationMenuLink asChild>
         <a
           ref={ref}

@@ -18,8 +18,9 @@ export const columns: ColumnDef<Profile>[] = [
       const profile = row.original;
       return <AvatarCell
         avatarUrl={""}
+        employeeId={profile.id}
         employeeName={profile.name}
-        employeeId={profile.employeeId} // Assuming you have a strategy for the ID
+        employeeCode={profile.employeeId} // Assuming you have a strategy for the ID
       />
     }
   },

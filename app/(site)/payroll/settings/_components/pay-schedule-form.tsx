@@ -80,8 +80,6 @@ export const PayScheduleForm: React.FC<PayScheduleProps> = ({
 
     async function onSubmit(data: payScheduleFormValues) {
 
-        console.log(data);
-
         try {
 
             data.organisation.id = user?.orgId;

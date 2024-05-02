@@ -1,23 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Edit, Eye, MoreHorizontal, Target, Trash } from "lucide-react";
+import { MousePointerClick } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import { AlertModal } from "@/components/modals/alert-modal";
+import { Button } from "@/components/ui/button"; 
 import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
 import { LeaveRequest } from "@/types/leave";
-import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Modal } from "@/components/ui/modal";
 
 
@@ -64,10 +55,9 @@ export const CellAction: React.FC<CellActionProps> = ({
           <Button disabled={loading} onClick={() => onConfirm("APPROVED")}>Approve</Button>
         </div>
       </Modal>
-      {(data.status == "INITIATED") ? <Button onClick={() => setOpen(true)} variant={"ghost"} >
-        <Eye className="h-4 w-4" />
+      {(data.status == "INITIATED") ? <Button onClick={() => setOpen(true)} size={"icon"} variant={"outline"} >
+        <MousePointerClick className="h-4 w-4" />
       </Button> : <></>}
-
     </>
   );
 };

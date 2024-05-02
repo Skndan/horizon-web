@@ -1,22 +1,19 @@
 "use client";
 
 import apiClient from "@/lib/api/api-client";
-import { Daylog, MonthlyDaylog } from "@/types/attendance";
+import { MonthlyDaylog } from "@/types/attendance";
 import { addDays, format, formatDate, getDaysInMonth } from "date-fns";
 import { useState, useEffect } from "react";
 import { Loader } from "lucide-react";
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
 import { isAfter, startOfDay } from 'date-fns'; // Add isAfter and startOfDay to the import
-import { Label } from '@/components/ui/label';
 import AvatarCell from '@/components/common/avatar-cell';
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { Holiday } from "@/types/holiday";
@@ -102,14 +99,13 @@ const MonthlyAttendancePage = () => {
                                         {
                                             data.map(dayLog => (
                                                 <TableRow key={dayLog.profile.id}>
-                                                    <TableCell className='sticky min-w-56 left-0 bg-background'><AvatarCell avatarUrl={''} employeeName={dayLog.profile.name} employeeId={dayLog.profile.employeeId} /></TableCell>
+                                                    <TableCell className='sticky min-w-56 left-0 bg-background'><AvatarCell avatarUrl={''} employeeName={dayLog.profile.name} employeeCode={dayLog.profile.employeeId} employeeId={dayLog.profile.id} /></TableCell>
                                                     {[...Array(daysInMonth)].map((_, index) => {
                                                         const dateKey = format(addDays(new Date(monthYear), index), 'yyyy-MM-dd');
                                                         const currentDate = addDays(new Date(monthYear), index);
                                                         const isFutureDate = isAfter(startOfDay(currentDate), startOfDay(new Date())); // Check if the date is in the future 
 
                                                         const isHoliday = holiday.includes(dateKey);
-                                                        console.log(`${dateKey} ${isHoliday} ${dayLog.log.includes(dateKey)}`)
 
                                                         const icon = isFutureDate ? '⚪'
                                                             : dayLog.log.includes(dateKey) ? '🟢'

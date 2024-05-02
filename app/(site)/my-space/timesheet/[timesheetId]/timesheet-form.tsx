@@ -1,14 +1,22 @@
 "use client"
 
 import * as z from "zod"
-import axios from "axios"
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Loader } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
-
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,9 +29,6 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Separator } from "@/components/ui/separator"
-import { Heading } from "@/components/ui/heading"
-import { AlertModal } from "@/components/modals/alert-modal"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { CalendarIcon, SlashIcon } from "@radix-ui/react-icons"
 
 import {
@@ -42,16 +47,32 @@ import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import { SubHeading } from "@/components/ui/sub-heading"
 import apiClient from "@/lib/api/api-client"
-import { LeaveRequest, LeaveType } from "@/types/leave"
-import { Textarea } from "@/components/ui/textarea"
 import { useAuth } from "@/context/auth-provider"
+import { Daylog, Timesheet } from "@/types/attendance"
+import { formatDate } from "date-fns/format"
+
+
+// dayLogs: z.array(
+//   z.object({
+//       id: z.any(),
+//       totalWork: z.any(),
+//       totalBreak: z.any(),
+//       status: z.any(),
+//       endTime: z.any(),
+//   })
+// ),
+// profile: z.any(),
+// fromDate: z.any(),
+// toDate: z.any(),
+// workHours: z.any(),
+// totalWork: z.any(),
+// totalBreak: z.any(),
 
 const formSchema = z.object({
     profile: z.any(),
-    leaveType: z.any(),
-    startDate: z.any(),
-    endDate: z.any(),
-    status: z.any(),
+    dayLogs: z.any().optional(),
+    fromDate: z.any().optional(),
+    toDate: z.any().optional(),
     date: z.object({
         from: z.date().optional(),
         to: z.date().optional(),
@@ -63,13 +84,11 @@ const formSchema = z.object({
 type TimesheetFormValues = z.infer<typeof formSchema>
 
 interface TimesheetFormProps {
-    initialData: LeaveRequest | null;
-    leaveType: LeaveType[];
+    initialData: Timesheet | null;
 };
 
 export const TimesheetForm: React.FC<TimesheetFormProps> = ({
-    initialData,
-    leaveType
+    initialData
 }) => {
     const params = useParams();
     const router = useRouter();
@@ -77,9 +96,16 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const title = initialData ? 'Edit Leave Request' : 'Create Leave Request';
-    const description = initialData ? 'Update your leave request.' : 'Request leave to your reporting manager';
-    const toastMessage = initialData ? 'Leave request updated.' : 'Leave request created.';
+    const [dayLog, setDaylog] = useState<Daylog[]>([]);
+    const [date, setDate] = useState({
+        from: '',
+        to: '',
+    });
+    const [cons, setCons] = useState({ totalBreak: 0, totalWork: 0 });
+
+    const title = initialData ? 'Edit Timesheet' : 'Create Timesheet';
+    const description = initialData ? 'Update your Timesheet.' : 'Submit your timesheet';
+    const toastMessage = initialData ? 'Timesheet updated.' : 'Timesheet created.';
     const action = initialData ? 'Save changes' : 'Create';
 
     const { user } = useAuth();
@@ -98,48 +124,47 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
     });
 
     const onSubmit = async (data: TimesheetFormValues) => {
-        // try {
-
-        setLoading(true);
-
+        data.fromDate = date.from;
+        data.toDate = date.to;
         data.profile.id = user?.profileId;
+        data.dayLogs = dayLog;
+        console.log(data)
 
-        console.log(data);
-        if (initialData) {
-            await apiClient
-                .put(`/leave-request/${initialData.id}`, data)
-                .then((res) => res.data)
-                .then((data) => {
-                    toast.success(toastMessage);
-                    router.refresh();
-                    router.push(`../leave-request`);
-                });
-        } else {
-            await apiClient
-                .post("/leave-request", data)
-                .then((res) => res.data)
-                .then((data) => {
-                    toast.success(toastMessage);
-                    router.refresh();
-                    router.push(`../leave-request`);
-                });
-        }
+        await apiClient
+            .post("/time-sheet", data)
+            .then((res) => res.data)
+            .then((data) => {
+                toast.success(toastMessage);
+                router.refresh();
+                router.push(`../timesheet`);
+            });
 
-        // } catch (error: any) {
-        //     toast.error('Something went wrong.');
-        // } finally {
-        //     setLoading(false);
-        // }
     };
 
     const onChange = async (e: any) => {
         if (e) {
             if (e.from && e.to) {
-                console.log(e.from)
-                console.log(e.to)
-                console.log("Call api");
 
-                
+                setDate({ from: formatDate(e.from.toISOString(), "yyyy-MM-dd"), to: formatDate(e.to.toISOString(), "yyyy-MM-dd") });
+
+                await apiClient
+                    .get(`/time-sheet/fetch/${user?.profileId}/${formatDate(e.from.toISOString(), "yyyy-MM-dd")}/${formatDate(e.to.toISOString(), "yyyy-MM-dd")}`)
+                    .then((res) => {
+                        if (res.status === 200) {
+                            setDaylog(res.data);
+                            let w = 0;
+                            let b = 0;
+                            for (const day of res.data) {
+                                w += day.totalWork;
+                                b += day.totalBreak;
+                            }
+                            setCons({ totalBreak: b, totalWork: w })
+                        }
+
+                        if (res.status === 204) {
+                            toast.error("You already have timesheet submitted for this time frame")
+                        }
+                    });
             }
         }
     }
@@ -151,7 +176,7 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
                 <Breadcrumb className="sm:block hidden">
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/my-space/leave-request">Leave Request</BreadcrumbLink>
+                            <BreadcrumbLink href="/my-space/timesheet">Timesheet</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator>
                             <SlashIcon />
@@ -204,6 +229,7 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
                                                 mode="range"
                                                 defaultMonth={field.value.from}
                                                 selected={{ from: field.value.from!, to: field.value.to }}
+                                                toDate={new Date()}
                                                 onSelect={(e) => {
                                                     field.onChange(e);
                                                     onChange(e);
@@ -219,9 +245,44 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
                                 </FormItem>
                             )}
                         />
+
                     </div>
 
-                    <Button disabled={loading} className="ml-auto" type="submit">
+                    {dayLog.length === 0 ? <></> :
+
+                        <div className="rounded-lg border">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>Clock In</TableHead>
+                                        <TableHead>Clock Out</TableHead>
+                                        <TableHead>Total Break Time</TableHead>
+                                        <TableHead>Total Work Time</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {dayLog.map((log) => (
+                                        <TableRow key={log.id}>
+                                            <TableCell>{format(log.createdAt, "PPP")}</TableCell>
+                                            <TableCell>{format(log.createdAt, "hh:mm a")}</TableCell>
+                                            <TableCell>{format(log.updatedAt, "hh:mm a")}</TableCell>
+                                            <TableCell>{log.totalBreak}</TableCell>
+                                            <TableCell>{log.totalWork}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                    <TableRow className="bg-muted">
+                                        <TableCell className="text-right" colSpan={3}>Total</TableCell>
+                                        <TableCell>{cons.totalBreak} hrs</TableCell>
+                                        <TableCell>{cons.totalWork} hrs</TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </div>
+
+                    }
+
+                    <Button disabled={loading || dayLog.length === 0} className="ml-auto" type="submit">
                         {loading &&
                             <Loader className="animate-spin h-5 w-5 mr-3" />}
                         {action}
