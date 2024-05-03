@@ -23,6 +23,7 @@ import { formatDate } from "date-fns/format";
 import { useAuth } from "@/context/auth-provider";
 import apiClient from "@/lib/api/api-client";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 
 const formSchema = z.object({
@@ -176,7 +177,7 @@ const RunPage = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl tracking-tight">Process Pay Run for <span className="font-bold">February 2024</span></h2>
         <Button onClick={() => setOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Create Pay Run
+          <Plus className="mr-2 h-4 w-4" /> Create Custom Pay Run
         </Button>
       </div>
       <div className="grid md:grid-cols-4 md:grid-flow-col gap-4 rounded-lg border p-4">
@@ -203,7 +204,10 @@ const RunPage = () => {
           </div>
         </div>
         <div className="row-span-2 justify-center flex flex-col">
-          <Button disabled={true}>Create Pay Run</Button>
+          {/* <Button disabled={true}>View Details</Button> */}
+          <Link href={`/payroll/`}>
+            <Button>View Details</Button>
+          </Link>
         </div>
       </div>
 

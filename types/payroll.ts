@@ -78,5 +78,55 @@ export interface SalaryTemplate {
   ctc: number
   fixed: number
   status: string
-  earnings: SalaryTemplateItem[] 
+  earnings: SalaryTemplateItem[]
+}
+
+export interface PayrollCharter {
+  payrollRun: PayrollRun
+  employeePayrollRuns: EmployeePayrollRun[]
+  salaryLessProfile: Profile[]
+  missedTimesheets: MissedTimesheet[]
+}
+
+export interface PayrollRun {
+  id: any
+  createdAt: any
+  updatedAt: any
+  createdBy: any
+  updatedBy: any
+  active: boolean
+  organisation: Organisation
+  payPeriodStartDate: string
+  payPeriodEndDate: string
+  payDate: any
+  totalEarnings: number
+  totalDeductions: number
+  grossPay: number
+  netPay: number
+  headCount: number
+  status: string
+}
+
+export interface EmployeePayrollRun {
+  id: any
+  createdAt: any
+  updatedAt: any
+  createdBy: any
+  updatedBy: any
+  active: boolean
+  profile: Profile
+  payrollRun: PayrollRun
+  totalDays: number
+  loggedDays: number
+  totalEarnings: number
+  totalDeductions: number
+  lossOfPay: number
+  grossPay: number
+  netPay: number
+}
+
+export interface MissedTimesheet {
+  profile: Profile
+  unclaimedDays: number
+  unclaimedDates: string[]
 }

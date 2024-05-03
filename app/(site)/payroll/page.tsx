@@ -17,6 +17,7 @@ import { columns } from "./_components/columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ComingSoonPage } from "@/components/common/coming-soon";
 import RunPage from "./_components/run";
+import TestPage from "./_components/test";
 
 const PayrollPage = () => {
 
@@ -59,10 +60,14 @@ const PayrollPage = () => {
                     <Tabs defaultValue="run" className="space-y-4">
                         <TabsList>
                             <TabsTrigger value="run">Run Payroll</TabsTrigger>
+                            <TabsTrigger value="test">Test</TabsTrigger>
                             <TabsTrigger value="history">Payroll History</TabsTrigger>
                         </TabsList>
                         <TabsContent value="run" className="space-y-4">
                             <RunPage />
+                        </TabsContent>
+                        <TabsContent value="test" className="space-y-4">
+                            <TestPage />
                         </TabsContent>
                         <TabsContent value="history" className="space-y-4">
                             <EmptyStateTable

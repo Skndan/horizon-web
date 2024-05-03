@@ -380,7 +380,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
-                              <Button
+                              <Button disabled={loading}
                                 variant={"outline"}
                                 className={cn(
                                   "pl-3 text-left font-normal",
@@ -526,6 +526,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
+                                disabled={loading}
                                 variant={"outline"}
                                 className={cn(
                                   "pl-3 text-left font-normal",
