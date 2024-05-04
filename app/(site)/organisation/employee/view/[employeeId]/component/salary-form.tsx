@@ -38,8 +38,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { calculationType, inWords, numberToEnglish } from "@/lib/utils/string-utils"
-import { SubHeading } from "@/components/ui/sub-heading";
+import { calculationType, inWords } from "@/lib/utils/string-utils"
 import { Label } from "@/components/ui/label";
 import { SalaryTemplate, SalaryTemplateItem } from "@/types/payroll";
 import { Input } from "@/components/ui/input";

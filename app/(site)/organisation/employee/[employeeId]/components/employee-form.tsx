@@ -1,12 +1,11 @@
 "use client"
 
 import * as z from "zod"
-import axios from "axios"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { Loader, Pencil, Trash } from "lucide-react"
+import { Loader } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -23,7 +22,6 @@ import {
 } from "@/components/ui/form"
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
-import { AlertModal } from "@/components/modals/alert-modal"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { CalendarIcon, SlashIcon } from "@radix-ui/react-icons"
 
@@ -44,12 +42,10 @@ import { format } from "date-fns"
 import { SubHeading } from "@/components/ui/sub-heading"
 import apiClient from "@/lib/api/api-client"
 import { Shift } from "@/types/attendance"
-import Link from "next/link"
-import { ComingSoonPage } from "@/components/common/coming-soon"
 import { EmptyStateTable } from "@/components/common/empty-state-table"
 import { FileCard } from "../../view/[employeeId]/component/file-view"
 import { SalaryFormCard } from "../../view/[employeeId]/component/salary-form"
-import { SalaryTemplate, SalaryTemplateItem } from "@/types/payroll"
+import { SalaryTemplateItem } from "@/types/payroll"
 import { toTitleCase } from "@/lib/utils/string-utils"
 
 const formSchema = z.object({

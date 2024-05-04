@@ -127,7 +127,43 @@ export function inWords(num: string) {
 
 
 export function convertTime(timeString: string) {
-    const date = new Date(`1970-01-01T${timeString}`); 
-    const updatedDate = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); 
+    const date = new Date(`1970-01-01T${timeString}`);
+    const updatedDate = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
     return updatedDate;
 };
+
+export function formatDateToMonthYear(dateString: string | undefined) {
+    // Create a Date object from the input date string
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+
+    // Define an array of month names
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+
+    // Get the month index (0-11) from the Date object
+    const monthIndex = date.getMonth();
+
+    // Get the year from the Date object
+    const year = date.getFullYear();
+
+    // Format the month and year
+    const formattedDate = `${months[monthIndex]} ${year}`;
+
+    // Return the formatted date string
+    return formattedDate;
+}
+ 

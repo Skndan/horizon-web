@@ -87,9 +87,9 @@ const type = [
 
 const PostPage = ({ params }: { params: { postId: string } }) => {
 
-    const router = useRouter(); 
-    const [loading, setLoading] = useState(false); 
-    const {user} = useAuth();
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const { user } = useAuth();
 
     const title = 'Create Post ✨';
     const description = 'Add a new post';
@@ -122,7 +122,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
     const onSubmit = async (data: EmployeeFormValues) => {
         try {
-        
+
             data.initiator.id = user?.profileId;
 
             const profile: Profile = data.attendies.map((option: Option) => {
@@ -382,17 +382,14 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                                 <FormItem>
                                     <FormLabel>Description <span className="text-red-600">*</span></FormLabel>
                                     <FormControl>
-                                        <ReactQuill
-                                            className={cn(
-                                                "rounded-md border border-input bg-background "
-                                            )}
-                                              value={field.value} onChange={field.onChange} />
+                                        <ReactQuill 
+                                            value={field.value} onChange={field.onChange} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
- 
+
                         <Button disabled={loading} className="ml-auto" type="submit">
                             {loading &&
                                 <Loader className="animate-spin h-5 w-5 mr-3" />}
