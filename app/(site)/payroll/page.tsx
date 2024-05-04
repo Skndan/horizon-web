@@ -1,21 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
 import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
 import apiClient from "@/lib/api/api-client";
-import { Loader, Plus } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useDeleteStore } from "@/store/use-delete-store";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
-import Link from "next/link";
 import { Address } from "@/types/profile";
-import { columns } from "./_components/columns";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ComingSoonPage } from "@/components/common/coming-soon";
 import RunPage from "./_components/run";
 import TestPage from "./_components/test";
 

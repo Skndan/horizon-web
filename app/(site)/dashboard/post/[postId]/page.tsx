@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import Multiselect from 'multiselect-react-dropdown';
 import { useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -13,7 +12,6 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -40,7 +38,6 @@ import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import MultipleSelector, { Option } from '@/components/ui/multiple-selector';
 import { Textarea } from "@/components/ui/textarea";
-import { Loader } from "lucide-react";
 import apiClient from "@/lib/api/api-client";
 import { Profile } from "@/types/profile";
 
@@ -48,6 +45,7 @@ import { Profile } from "@/types/profile";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useAuth } from "@/context/auth-provider";
+import { Loader } from "lucide-react";
 
 const formSchema = z.object({
     name: z.string().min(1),

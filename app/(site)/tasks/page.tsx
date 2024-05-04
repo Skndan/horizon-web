@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import apiClient from "@/lib/api/api-client";
 import { formatDate } from "date-fns/format";
-import { SubHeading } from "@/components/ui/sub-heading";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Loader, Plus } from "lucide-react";
