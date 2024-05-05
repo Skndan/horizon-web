@@ -30,7 +30,7 @@ const AuthenticationPage = () => {
           </div>
           <div className="relative z-20 mt-auto">
             <h1 className="text-4xl font-semibold tracking-tight">
-              Give your business everything it need to grow.
+              Give your business everything it need to grow
             </h1>
             <p className="mt-4 text-lg">
               Manage your business at one place
