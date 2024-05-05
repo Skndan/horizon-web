@@ -37,5 +37,5 @@ jobs:
           # SOURCE: "dist/"
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }} #IP
           REMOTE_USER: ${{ secrets.REMOTE_USER }} #root
-          TARGET: "/var/www/html/horizon-app" #
+          TARGET: "/home/horizon-app" #
           EXCLUDE: "/dist/, /node_modules/"
