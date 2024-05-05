@@ -39,3 +39,4 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }} #root
           TARGET: "/var/www/html" #
           EXCLUDE: "/dist/, /node_modules/"
+    - run: npm run start
