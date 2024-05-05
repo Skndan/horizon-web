@@ -12,8 +12,9 @@ on:
 jobs:
   build:
 
+    # ubuntu-latest: github virtual server
     runs-on: ubuntu-latest
-
+    
     strategy:
       matrix:
         node-version: [20]
