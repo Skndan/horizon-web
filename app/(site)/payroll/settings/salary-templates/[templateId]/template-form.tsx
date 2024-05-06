@@ -417,12 +417,12 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
                                                         <div className="flex flex-row gap-1">
-                                                            <Label>Fixed Allowance</Label>
+                                                            <Label>Special Allowance</Label>
                                                             <Info className="h-4 w-4" />
                                                         </div>
                                                     </TooltipTrigger>
                                                     <TooltipContent>
-                                                        <p className="w-40">Fixed allowance is a residual component of salary that is left after allocations are made for all other components.</p>
+                                                        <p className="w-40">Special allowance is a residual component of salary that is left after allocations are made for all other components.</p>
                                                     </TooltipContent>
                                                 </Tooltip>
 

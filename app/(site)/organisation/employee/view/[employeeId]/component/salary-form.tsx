@@ -38,8 +38,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { calculationType, inWords, numberToEnglish } from "@/lib/utils/string-utils"
-import { SubHeading } from "@/components/ui/sub-heading";
+import { calculationType, inWords } from "@/lib/utils/string-utils"
 import { Label } from "@/components/ui/label";
 import { SalaryTemplate, SalaryTemplateItem } from "@/types/payroll";
 import { Input } from "@/components/ui/input";
@@ -377,12 +376,12 @@ export const SalaryFormCard: React.FC<SalaryCardProps> = ({
                                                                     <Tooltip>
                                                                         <TooltipTrigger asChild>
                                                                             <div className="flex flex-row gap-1">
-                                                                                <Label>Fixed Allowance</Label>
+                                                                                <Label>Special Allowance</Label>
                                                                                 <Info className="h-4 w-4" />
                                                                             </div>
                                                                         </TooltipTrigger>
                                                                         <TooltipContent>
-                                                                            <p className="w-40">Fixed allowance is a residual component of salary that is left after allocations are made for all other components.</p>
+                                                                            <p className="w-40">Special allowance is a residual component of salary that is left after allocations are made for all other components.</p>
                                                                         </TooltipContent>
                                                                     </Tooltip>
 

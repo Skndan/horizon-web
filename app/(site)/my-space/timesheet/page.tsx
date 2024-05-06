@@ -1,25 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { SubHeading } from "@/components/ui/sub-heading";
 import { Loader, Plus } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { DataTable } from "@/components/ui/data-table";
-import { LeaveRequest } from "@/types/leave";
 import { useEffect, useState } from "react";
 import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
 import Link from "next/link";
 import { columns } from "./columns";
-import { Daylog, Timesheet } from "@/types/attendance";
+import { Timesheet } from "@/types/attendance";
 import { useAuth } from "@/context/auth-provider";
 import { useRouter } from "next/navigation";
 

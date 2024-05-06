@@ -126,7 +126,7 @@ const OverviewPage = () => {
                         <TabsList>
                             <TabsTrigger value="overview">Overview</TabsTrigger>
                             <TabsTrigger value="activity">
-                                Activity
+                                Invites
                             </TabsTrigger>
                             <TabsTrigger value="approvals">
                                 Approvals

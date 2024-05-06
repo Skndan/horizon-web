@@ -1,7 +1,5 @@
 "use client";
 
-import { Metadata } from "next";
-import React, { useEffect } from "react";
 import Link from "next/link";
 import Login from "@/components/login";
 import Image from "next/image";

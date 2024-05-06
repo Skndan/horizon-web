@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import apiClient from "@/lib/api/api-client"; 
 import { Loader, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { columns } from "./components/columns";
 import { useDeleteStore } from "@/store/use-delete-store";
 import { EmptyStateTable } from "@/components/common/empty-state-table";

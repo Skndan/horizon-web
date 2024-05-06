@@ -1,33 +1,26 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm, useWatch } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
-
 import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {
     Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Eye } from "lucide-react"
+} from "@/components/ui/select" 
+import { Loader } from "lucide-react"
 import { PaySchedule } from "@/types/payroll"
 import { useAuth } from "@/context/auth-provider"
 import { useState } from "react"
@@ -41,6 +34,7 @@ const payScheduleFormSchema = z.object({
     payDayValue: z.any(),
     payCheck: z.string(),
     payCheckValue: z.any(),
+    payMonth: z.any(),
 }).refine(input => {
 
     // allows bar to be optional only when foo is 'foo'
@@ -55,6 +49,10 @@ type payScheduleFormValues = z.infer<typeof payScheduleFormSchema>
 interface PayScheduleProps {
     initialData: PaySchedule | null;
 };
+
+const days = [
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"
+]
 
 export const PayScheduleForm: React.FC<PayScheduleProps> = ({
     initialData
@@ -125,10 +123,33 @@ export const PayScheduleForm: React.FC<PayScheduleProps> = ({
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <h3 className="mb-4 text-lg font-semibold">Process payslips on <span className="text-red-600">*</span></h3>
+                <h3 className="mb-4 text-lg font-semibold">When you process payrolls <span className="text-red-600">*</span></h3>
                 <FormField
                     control={form.control}
-                    name="payDay"
+                    name="payMonth"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormControl>
+                                <RadioGroup defaultValue="NEXT_MONTH" className="space-y-2" value={field.value} onValueChange={field.onChange}>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="NEXT_MONTH" id="r5" />
+                                        <Label htmlFor="r5">Next Month</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="SAME_MONTH" id="r6" />
+                                        <Label htmlFor="r6">Same Month</Label>
+                                    </div>
+                                </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <h3 className="mb-4 text-lg font-semibold pt-4">Process payslips on <span className="text-red-600">*</span></h3>
+                <FormField
+                    control={form.control}
+                    name="payCheck"
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
@@ -142,18 +163,18 @@ export const PayScheduleForm: React.FC<PayScheduleProps> = ({
                                         <Label htmlFor="r2">Every month on </Label>
                                         <FormField
                                             control={form.control}
-                                            name="payDayValue"
+                                            name="payCheckValue"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <Select disabled={isPayDay === "SPECIFIC" ? false : true} required={isPayDay === "SPECIFIC" ? true : false} defaultValue={field.value} value={field.value} onValueChange={field.onChange}>
+                                                    <Select disabled={isPayCheck === "SPECIFIC" ? false : true} required={isPayCheck === "SPECIFIC" ? true : false} defaultValue={field.value.toString()} value={field.value.toString()} onValueChange={field.onChange}>
                                                         <FormControl>
                                                             <SelectTrigger className="w-[150px]">
-                                                                <SelectValue defaultValue={field.value} placeholder="Select a date" />
+                                                                <SelectValue defaultValue={field.value.toString()} placeholder="Select a date" />
                                                             </SelectTrigger>
                                                         </FormControl>
-                                                        <SelectContent defaultValue={field.value}> 
-                                                            {Array.from({ length: 28 }).map((_, index) => (
-                                                                <SelectItem key={index} value={String(index + 1)} >{String(index + 1)}</SelectItem>
+                                                        <SelectContent>
+                                                            {days.map((day) => (
+                                                                <SelectItem key={day} value={day}>{day}</SelectItem>
                                                             ))}
                                                         </SelectContent>
                                                     </Select>
@@ -172,7 +193,7 @@ export const PayScheduleForm: React.FC<PayScheduleProps> = ({
                 <h3 className="mb-4 text-lg font-semibold pt-4">Pay your employees on <span className="text-red-600">*</span></h3>
                 <FormField
                     control={form.control}
-                    name="payCheck"
+                    name="payDay"
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
@@ -187,18 +208,18 @@ export const PayScheduleForm: React.FC<PayScheduleProps> = ({
 
                                         <FormField
                                             control={form.control}
-                                            name="payCheckValue"
+                                            name="payDayValue"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <Select disabled={isPayCheck === "SPECIFIC" ? false : true} defaultValue={field.value} value={field.value} onValueChange={field.onChange}>
+                                                    <Select disabled={isPayDay === "SPECIFIC" ? false : true} defaultValue={field.value.toString()} value={field.value.toString()} onValueChange={field.onChange}>
                                                         <FormControl>
                                                             <SelectTrigger className="w-[150px]">
-                                                                <SelectValue defaultValue={field.value} placeholder="Select a date" />
+                                                                <SelectValue defaultValue={field.value.toString()} placeholder="Select a date" />
                                                             </SelectTrigger>
                                                         </FormControl>
                                                         <SelectContent>
-                                                            {Array.from({ length: 28 }).map((_, index) => (
-                                                                <SelectItem key={index} value={String(index + 1)} >{String(index + 1)}</SelectItem>
+                                                            {days.map((day) => (
+                                                                <SelectItem key={day} value={day}>{day}</SelectItem>
                                                             ))}
                                                         </SelectContent>
                                                     </Select>
@@ -214,7 +235,11 @@ export const PayScheduleForm: React.FC<PayScheduleProps> = ({
                     )}
                 />
                 <p className="text-muted-foreground text-sm">Note: When payday falls on a non-working day or a holiday, employees will get paid on the previous working day.</p>
-                <Button type="submit">Update</Button>
+                <Button disabled={loading} type="submit">
+                    {loading &&
+                        <Loader className="animate-spin h-5 w-5 mr-3" />}
+                    Update
+                </Button>
             </form>
         </Form>
     )

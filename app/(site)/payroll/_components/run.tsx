@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -23,6 +23,12 @@ import { formatDate } from "date-fns/format";
 import { useAuth } from "@/context/auth-provider";
 import apiClient from "@/lib/api/api-client";
 import toast from "react-hot-toast";
+import Link from "next/link";
+import { PayrollRun } from "@/types/payroll";
+import DateTimeCell from "@/components/common/date-time-cell";
+import { formatDateToMonthYear } from "@/lib/utils/string-utils";
+import { usePayrollStore } from "@/store/use-payroll-store";
+import { useRouter } from "next/navigation";
 
 
 const formSchema = z.object({
@@ -42,6 +48,7 @@ type PayRunFormValues = z.infer<typeof formSchema>
 const RunPage = () => {
 
   const { user } = useAuth();
+  const router = useRouter();
   const form = useForm<PayRunFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,6 +64,8 @@ const RunPage = () => {
   const [loading, setLoading] = useState(false)
   const [formLoading, setFormLoading] = useState(true)
   const [isOpen, setOpen] = useState(false);
+  const [data, setData] = useState<PayrollRun | null>(null)
+  const { set } = usePayrollStore();
   const [date, setDate] = useState({
     from: '',
     to: '',
@@ -72,7 +81,8 @@ const RunPage = () => {
 
     await apiClient.post(`/payroll-run`, data).then((res) => res.data)
       .then((data) => {
-        console.log(data);
+        set(data);
+        router.push(`/payroll/charter`);
       }).catch((err) => {
         setLoading(false)
 
@@ -106,6 +116,20 @@ const RunPage = () => {
       }
     }
   }
+
+  async function fetchData() {
+    setLoading(true)
+    await apiClient.get(`/payroll-run/run/${user?.orgId}`).then((res) => res.data)
+      .then((data) => {
+        setData(data)
+        setLoading(false)
+      });
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [])
 
   return <>
     <Modal title={"Create custom pay run"} description={""} isOpen={isOpen} onClose={() => setOpen(false)}>
@@ -174,9 +198,9 @@ const RunPage = () => {
     </Modal>
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl tracking-tight">Process Pay Run for <span className="font-bold">February 2024</span></h2>
+        <h2 className="text-xl tracking-tight">Process Pay Run for <span className="font-bold">{formatDateToMonthYear(data?.payPeriodStartDate)}</span></h2>
         <Button onClick={() => setOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Create Pay Run
+          <Plus className="mr-2 h-4 w-4" /> Create Custom Pay Run
         </Button>
       </div>
       <div className="grid md:grid-cols-4 md:grid-flow-col gap-4 rounded-lg border p-4">
@@ -188,22 +212,25 @@ const RunPage = () => {
             </div>
             <div className="flex flex-col gap-2">
               <Label className="text-muted-foreground">Payment Date</Label>
-              <Label className="text-md">Yet to process</Label>
+              <DateTimeCell dateStr={data?.payDate} isTime={0} />
             </div>
             <div className="flex flex-col gap-2">
               <Label className="text-muted-foreground">No. of Employees</Label>
-              <Label className="text-md">Yet to process</Label>
+              <Label className="text-md">{data?.headCount}</Label>
             </div>
           </div>
         </div>
-        <div className="col-span-3 text-muted-foreground">
+        {/* <div className="col-span-3 text-muted-foreground">
           <div className="flex flex-row items-center">
             <Info className="h-4 w-4 mr-1" />
             <p>There are no employees, with completed profiles in this payroll. Please complete their profile to process this payrun.</p>
           </div>
-        </div>
+        </div> */}
         <div className="row-span-2 justify-center flex flex-col">
-          <Button disabled={true}>Create Pay Run</Button>
+          {/* <Button disabled={true}>View Details</Button> */}
+          <Link href={`/payroll/`}>
+            <Button>View Details</Button>
+          </Link>
         </div>
       </div>
 
