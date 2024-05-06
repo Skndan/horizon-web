@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import Multiselect from 'multiselect-react-dropdown';
 import { useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -13,7 +12,6 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -40,7 +38,6 @@ import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import MultipleSelector, { Option } from '@/components/ui/multiple-selector';
 import { Textarea } from "@/components/ui/textarea";
-import { Loader } from "lucide-react";
 import apiClient from "@/lib/api/api-client";
 import { Profile } from "@/types/profile";
 
@@ -48,6 +45,7 @@ import { Profile } from "@/types/profile";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useAuth } from "@/context/auth-provider";
+import { Loader } from "lucide-react";
 
 const formSchema = z.object({
     name: z.string().min(1),
@@ -87,9 +85,9 @@ const type = [
 
 const PostPage = ({ params }: { params: { postId: string } }) => {
 
-    const router = useRouter(); 
-    const [loading, setLoading] = useState(false); 
-    const {user} = useAuth();
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const { user } = useAuth();
 
     const title = 'Create Post ✨';
     const description = 'Add a new post';
@@ -122,7 +120,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
     const onSubmit = async (data: EmployeeFormValues) => {
         try {
-        
+
             data.initiator.id = user?.profileId;
 
             const profile: Profile = data.attendies.map((option: Option) => {
@@ -382,17 +380,14 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                                 <FormItem>
                                     <FormLabel>Description <span className="text-red-600">*</span></FormLabel>
                                     <FormControl>
-                                        <ReactQuill
-                                            className={cn(
-                                                "rounded-md border border-input bg-background "
-                                            )}
-                                              value={field.value} onChange={field.onChange} />
+                                        <ReactQuill 
+                                            value={field.value} onChange={field.onChange} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
- 
+
                         <Button disabled={loading} className="ml-auto" type="submit">
                             {loading &&
                                 <Loader className="animate-spin h-5 w-5 mr-3" />}

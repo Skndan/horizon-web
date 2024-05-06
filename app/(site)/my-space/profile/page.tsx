@@ -1,10 +1,8 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
 import { BasicCard } from "../components/basic-card";
 import { SubHeading } from "@/components/ui/sub-heading";
 import { useEffect, useState } from "react";
-import { Organisation, Profile } from "@/types/profile";
 import apiClient from "@/lib/api/api-client";
 import { WorkCard } from "../components/work-card";
 import { useAuth } from "@/context/auth-provider";

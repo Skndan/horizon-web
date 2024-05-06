@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { EmployeeForm } from "./components/employee-form";
 import apiClient from "@/lib/api/api-client";
 import { Loader } from "lucide-react";
-import { Department, Address, Profile, Account } from "@/types/profile";
+import { Department, Address, Profile, Account, Role } from "@/types/profile";
 import { Shift } from "@/types/attendance";
 import { useAuth } from "@/context/auth-provider";
 import { useRouter } from "next/router";
@@ -22,6 +22,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
     const [location, setLocation] = useState<Address[]>([])
     const [profile, setProfile] = useState<Profile[]>([])
     const [shifts, setShifts] = useState<Shift[]>([])
+    const [roles, setRoles] = useState<Role[]>([])
     const [accounts, setAccounts] = useState(null)
 
     const searchParams = useSearchParams()
@@ -90,6 +91,9 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
             const shifts = await apiClient.get(`/shift`);
             setShifts(shifts.data.content)
 
+            const roles = await apiClient.get(`/role`);
+            setRoles(roles.data.content)
+
             setLoading(false);
         })()
     }, [params.employeeId])
@@ -111,6 +115,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
                         orgId={user?.orgId}
                         earningType={earningType}
                         deductionType={deductionType}
+                        roles={roles}
                         tab={`${searchParams.get('tab')}`}
                         initialDataAccount={accounts} />)}
             </div>

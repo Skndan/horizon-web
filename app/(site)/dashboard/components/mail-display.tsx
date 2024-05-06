@@ -49,6 +49,7 @@ import { toTitleCase } from "@/lib/utils/string-utils"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
+import Image from "next/image";
 
 interface MailDisplayProps {
   mail: Activity | null
@@ -85,7 +86,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         </Link>
       </div>
       {mail ? (
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col border my-4 rounded-md">
           <div className="flex items-start p-4">
             <div className="flex items-start gap-4 text-sm">
               <Avatar>
@@ -152,8 +153,14 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
         </div>
       ) : (
-        <div className="p-8 text-center text-muted-foreground align-middle">
-          No activity selected
+        <div className="flex flex-col p-8 text-center text-muted-foreground align-middle items-center border m-4 rounded-md gap-4">
+          <Image
+            src="/empty-folder2.png"
+            width="100"
+            height="56"
+            alt="Empty-Folder"
+          />
+          No activity/event selected
         </div>
       )}
     </div>
