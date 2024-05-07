@@ -8,6 +8,7 @@ export type Profile = {
     profilePicture?: any;
     username: string;
     email?: any;
+    departmentId?: any;
     mobile?: any;
   };
 

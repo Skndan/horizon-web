@@ -29,10 +29,10 @@ export function UserNav() {
   // };
 
   const refresh = async () => {
-    // console.log(profile);
-    // console.log(profile.name)
+;
+
     // const session = await getSession();
-    // console.log(session);
+;
   };
 
   return (

@@ -64,6 +64,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             username: data.name,
             email: data.email,
             mobile: data.mobile,
+            departmentId: data.department.id
           };
           setUser(profile);
           setRoles(groups);

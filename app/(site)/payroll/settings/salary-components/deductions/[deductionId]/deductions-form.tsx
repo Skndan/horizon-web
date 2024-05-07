@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -64,7 +65,7 @@ export const DeductionForm: React.FC<DeductionFormProps> = ({
 
     const router = useRouter();
 
-    const [type, setType] = useState('FIXED_AMOUNT');
+    const [type, setType] = useState(initialData ? initialData.calculationType : 'FIXED_AMOUNT');
     const [loading, setLoading] = useState(false);
 
     const title = initialData ? 'Edit Deduction ✨' : 'Create Deduction ✨';
@@ -192,7 +193,8 @@ export const DeductionForm: React.FC<DeductionFormProps> = ({
                                 }} >
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="FIXED_AMOUNT" id="r3" />
-                                        <Label htmlFor="r3">Flat Amount <span className="text-muted-foreground">{`(Yearly)`}</span></Label>
+                                        <Label htmlFor="r3">Flat Amount <span className="text-muted-foreground">{`(Yearly/Monthly)`}</span></Label>
+                                        <FormDescription>Use Monthly Flat Amount for Expenses and Adjustments</FormDescription>
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="PERCENTAGE_OF_CTC" id="r4" />

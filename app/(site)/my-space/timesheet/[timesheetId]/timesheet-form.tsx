@@ -128,7 +128,7 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({
         data.toDate = date.to;
         data.profile.id = user?.profileId;
         data.dayLogs = dayLog;
-        console.log(data)
+
 
         await apiClient
             .post("/time-sheet", data)

@@ -27,7 +27,7 @@ export const EmployeeClient: React.FC<EmployeeClientProps> = ({
     <>
       <div className="flex items-center justify-between">
         <Heading title={`Employees (${data.length})`} description="Manage your employees" />
-        <Link href={`/organisation/employee/new`}>
+        <Link href={`/organisation/employee/new?tab=info`}>
           <Button>
             <Plus className="mr-2 h-4 w-4" /> Add
           </Button>
@@ -39,7 +39,7 @@ export const EmployeeClient: React.FC<EmployeeClientProps> = ({
         title={"No employees added"}
         description={"You have not added any employees. Add one below."}
         action={"Add Empoyee"}
-        onClick={() => router.push(`/organisation/employee/new`)}
+        onClick={() => router.push(`/organisation/employee/new?tab=info`)}
       /> : <DataTable searchKey="name" columns={columns} data={data} />}
     </>
   );
