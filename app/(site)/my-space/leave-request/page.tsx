@@ -52,11 +52,11 @@ const LeaveTrackerPage = () => {
         <>
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                    <SubHeading title="Leave Request" description="Manage your organisation address here" />
+                    <SubHeading title="My Leave" description="Manage your leave requests and check balance" />
                     <Link href={`/my-space/leave-request/new`}>
                         <Button>
-                            <Plus className="mr-2 h-4 w-4" /> Add
-                        </Button>
+                            <Plus className="mr-2 h-4 w-4" /> Request
+                        </Button>   
                     </Link>
                 </div>
                 <Separator />

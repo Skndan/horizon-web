@@ -41,7 +41,7 @@ const ShiftSchedule = () => {
     });
 
     // Convert formData to JSON format
-    // console.log(JSON.stringify(formData));
+;
   };
 
   return (

@@ -144,12 +144,12 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                     setCtc(data?.ctc ? { monthly: data.ctc / 12, yearly: data.ctc } : { monthly: 0, yearly: 0 });
                 });
         } else {
-            console.log(`fieldName:${fieldName} value:${value} index:${index}`)
+
 
             let item = earnings[index];
             item.value = value;
 
-            console.log(item);
+;
 
             await apiClient
                 .put(`/salary-template/line/${initialData?.id}`, item)
@@ -175,7 +175,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     const addEarning = async (value: SalaryTemplateItem) => {
         // const earnings = getValues('earnings');
 
-        console.log(value);
+;
 
         if ((earnings.find(x => x.componentName === "Basic") === undefined) && (value.componentName !== "Basic")) {
             toast.error("Please add Basic first")

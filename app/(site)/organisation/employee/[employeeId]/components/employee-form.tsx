@@ -153,10 +153,13 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [initData, setInitialData] = useState(initialData);
+  const [data, setData] = useState(initialData ? true : false);
 
   const title = initialData ? 'Edit employee ✨' : 'Create Employee ✨';
   const description = initialData ? 'Edit a employee.' : 'Add a new employee';
   const toastMessage = initialData ? 'Employee updated.' : 'Employee created.';
+  const toastMessage2 = initialDataAccount ? 'Account updated.' : 'Account created.';
   const action = initialData ? 'Save changes' : 'Create';
 
   const form = useForm<EmployeeFormValues>({
@@ -197,7 +200,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           .then((data) => {
             toast.success(toastMessage);
             router.refresh();
-            initialData = data;
+            setInitialData(data);
+            setData(true);
           });
       } else {
         await apiClient
@@ -206,7 +210,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           .then((data) => {
             toast.success(toastMessage);
             router.refresh();
-            initialData = data;
+            setInitialData(data);
+            setData(true);
           });
       }
 
@@ -220,10 +225,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   const onSubmit2 = async (data: AccountFormValues) => {
     try {
 
-      data.profile.id = initialData?.id;
-
-      console.log(data);
-
+      data.profile.id = initData?.id; 
       setLoading(true);
 
       if (initialDataAccount) {
@@ -231,7 +233,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           .put(`/account/${initialDataAccount.id}`, data)
           .then((res) => res.data)
           .then((data) => {
-            toast.success(toastMessage);
+            toast.success(toastMessage2);
             router.refresh();
             initialDataAccount = data;
           });
@@ -240,7 +242,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           .post("/account", data)
           .then((res) => res.data)
           .then((data) => {
-            toast.success(toastMessage);
+            toast.success(toastMessage2);
             router.refresh();
             initialDataAccount = data;
           });
@@ -612,7 +614,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
         </TabsContent>
         <TabsContent value="account" className="space-y-4">
-          {!initialData ?
+          {!data ?
             <EmptyStateTable title={"Employee information not found"} description={"Submit the form in the Information Tab before adding Account details"} action={null} onClick={function (): void {
               throw new Error("Function not implemented.")
             }} /> :
@@ -717,20 +719,20 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           }
         </TabsContent>
         <TabsContent value="file" className="space-y-4">
-          {!initialData ?
+          {!data ?
             <EmptyStateTable title={"Employee information not found"} description={"Submit the form in the Information Tab before adding Files"} action={null} onClick={function (): void {
               throw new Error("Function not implemented.")
             }} /> :
-            <FileCard profile={initialData} />
+            <FileCard profile={initData} />
           }
         </TabsContent>
         <TabsContent value="salary" className="space-y-4">
-          {!initialData ?
+          {!data ?
             <EmptyStateTable title={"Employee information not found"} description={"Submit the form in the Information Tab before adding Files"} action={null} onClick={function (): void {
               throw new Error("Function not implemented.")
             }} /> :
             <SalaryFormCard
-              profile={initialData}
+              profile={initData}
               earningType={earningType}
               deductionType={deductionType}
             />

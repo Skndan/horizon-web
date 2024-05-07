@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -28,7 +29,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ComponentType, SalaryTemplateItem } from "@/types/payroll"
+import { ComponentType, SalaryComponent, SalaryTemplateItem } from "@/types/payroll"
 import apiClient from "@/lib/api/api-client"
 import { useRouter } from "next/navigation"
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb"
@@ -50,11 +51,13 @@ type EarningsFormValues = z.infer<typeof earningsFormSchema>
 interface EarningFormProps {
     initialData: SalaryTemplateItem | null;
     types: ComponentType[];
+    components: SalaryComponent[];
 };
 
 export const EarningsForm: React.FC<EarningFormProps> = ({
     initialData,
     types,
+    components
 }) => {
     const form = useForm<EarningsFormValues>({
         resolver: zodResolver(earningsFormSchema),
@@ -64,7 +67,7 @@ export const EarningsForm: React.FC<EarningFormProps> = ({
 
     const router = useRouter();
 
-    const [type, setType] = useState('FIXED_AMOUNT');
+    const [type, setType] = useState(initialData ? initialData.calculationType : 'FIXED_AMOUNT');
     const [loading, setLoading] = useState(false);
 
     const title = initialData ? 'Edit Earning ✨' : 'Create Earning ✨';
@@ -192,8 +195,9 @@ export const EarningsForm: React.FC<EarningFormProps> = ({
                                 }} >
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="FIXED_AMOUNT" id="r3" />
-                                        <Label htmlFor="r3">Flat Amount <span className="text-muted-foreground">{`(Yearly)`}</span></Label>
+                                        <Label htmlFor="r3">Flat Amount <span className="text-muted-foreground">{`(Yearly/Monthly)`}</span></Label>
                                     </div>
+                                    <FormDescription>Use Monthly Flat Amount for commissions and bonuses</FormDescription>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="PERCENTAGE_OF_CTC" id="r4" />
                                         <Label htmlFor="r4">Percentage of CTC</Label>
@@ -202,6 +206,27 @@ export const EarningsForm: React.FC<EarningFormProps> = ({
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="PERCENTAGE_OF_BASIC" id="r4" />
                                         <Label htmlFor="r4">Percentage of Basic</Label>
+                                    </div>
+
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="SPECIFIC" id="r5" />
+                                        <Label htmlFor="r5">Percentage of </Label>
+                                        <FormItem>
+                                            <Select defaultValue={field.value.toString()} value={field.value.toString()} onValueChange={field.onChange}>
+                                                <FormControl>
+                                                    <SelectTrigger className="w-[200px]">
+                                                        <SelectValue defaultValue={field.value.toString()} placeholder="Select Salary Component" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {components.map((day) => (
+                                                        <SelectItem key={day.id} value={day.id}>{day.componentName}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+
                                     </div>
                                 </RadioGroup>
                                 <FormMessage />

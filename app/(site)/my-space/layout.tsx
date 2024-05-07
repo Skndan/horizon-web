@@ -5,6 +5,7 @@ import { SidebarNav } from "./components/side-bar-nav"
 import { Heading } from "@/components/ui/heading"
 import { useUserStore } from "@/store/use-user-store"
 import { useAuth } from "@/context/auth-provider";
+import { SubHeading } from "@/components/ui/sub-heading";
 
 const sidebarNavItems = [
     // {
@@ -13,18 +14,23 @@ const sidebarNavItems = [
     //     badge: true,
     // },
     {
-        title: "Tasks",
-        href: "/my-space/tasks",
-        badge: false,
-    },
-    {
         title: "Profile",
         href: "/my-space/profile",
         badge: false,
     },
     {
-        title: "Attendance",
-        href: "/my-space/attendance",
+        title: "My Team",
+        href: "/my-space/team",
+        badge: false,
+    },
+    {
+        title: "My Projects",
+        href: "/my-space/project",
+        badge: true,
+    },
+    {
+        title: "My Tasks",
+        href: "/my-space/tasks",
         badge: false,
     },
     {
@@ -33,7 +39,12 @@ const sidebarNavItems = [
         badge: false,
     },
     {
-        title: "Leave Request",
+        title: "Attendance",
+        href: "/my-space/attendance",
+        badge: false,
+    },
+    {
+        title: "My Leave",
         href: "/my-space/leave-request",
         badge: false,
     },
@@ -46,10 +57,10 @@ interface SettingsLayoutProps {
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
 
     const { user } = useAuth();
-    
+
     return (
         <>
-            <div className="p-8 pb-16">
+            <div className="py-4 px-8 pb-16">
                 <Heading title={user?.username ?? ''} description={"Manage your account"} />
                 <Separator className="my-6" />
                 <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
