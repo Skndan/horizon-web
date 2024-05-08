@@ -19,7 +19,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select" 
+} from "@/components/ui/select"
 import { Loader } from "lucide-react"
 import { PaySchedule } from "@/types/payroll"
 import { useAuth } from "@/context/auth-provider"
@@ -35,6 +35,8 @@ const payScheduleFormSchema = z.object({
     payCheck: z.string(),
     payCheckValue: z.any(),
     payMonth: z.any(),
+    payDateFrom: z.any(),
+    payDateTo: z.any(),
 }).refine(input => {
 
     // allows bar to be optional only when foo is 'foo'
@@ -118,7 +120,6 @@ export const PayScheduleForm: React.FC<PayScheduleProps> = ({
         control: form.control,
         name: 'payCheck', // Name of the field you want to watch
     });
-
 
     return (
         <Form {...form}>
@@ -234,6 +235,58 @@ export const PayScheduleForm: React.FC<PayScheduleProps> = ({
                         </FormItem>
                     )}
                 />
+
+                <h3 className="text-lg font-semibold pt-4">Pay cycle <span className="text-red-600">*</span></h3>
+                <div className="flex items-center space-x-2">
+                    <Label htmlFor="r4">Pay period from </Label>
+                    <FormField
+                        control={form.control}
+                        name="payDateFrom"
+                        render={({ field }) => (
+                            <FormItem>
+                                <Select defaultValue={field.value.toString()} value={field.value.toString()} onValueChange={(s) => {
+                                    field.onChange(s);
+                                    form.setValue("payDateTo", s);
+                                }}>
+                                    <FormControl>
+                                        <SelectTrigger className="w-[150px]">
+                                            <SelectValue defaultValue={field.value.toString()} placeholder="Select a date" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {days.map((day) => (
+                                            <SelectItem key={day} value={day}>{day}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Label htmlFor="r4"> to </Label>
+                    <FormField
+                        control={form.control}
+                        name="payDateTo"
+                        render={({ field }) => (
+                            <FormItem>
+                                <Select disabled={true} defaultValue={field.value.toString()} value={field.value.toString()} onValueChange={field.onChange}>
+                                    <FormControl>
+                                        <SelectTrigger className="w-[150px]">
+                                            <SelectValue defaultValue={field.value.toString()} placeholder="Select a date" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {days.map((day) => (
+                                            <SelectItem key={day} value={day}>{day}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
                 <p className="text-muted-foreground text-sm">Note: When payday falls on a non-working day or a holiday, employees will get paid on the previous working day.</p>
                 <Button disabled={loading} type="submit">
                     {loading &&

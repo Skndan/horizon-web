@@ -49,11 +49,11 @@ const OverviewPage = () => {
                             if (res.data.status == "IN") {
                                 // SET IN
                                 setClockedIn(true);
-                                toast.success('You have clocked in', { icon: '🤝' });
+                                toast.success('You have logged in', { icon: '🤝' });
                             } else {
                                 // SET OUT
                                 setClockedIn(false);
-                                toast.success('You have clocked out', { icon: '👋' });
+                                toast.success('You have logged out', { icon: '👋' });
                             }
 
                             setLastCheckInTime(res.data.createdAt);
@@ -98,11 +98,11 @@ const OverviewPage = () => {
                     if (res.data.status == "IN") {
                         // SET IN
                         setClockedIn(true);
-                        toast.success('You have clocked in', { icon: '🤝' });
+                        toast.success('You have logged in', { icon: '🤝' });
                     } else {
                         // SET OUT
                         setClockedIn(false);
-                        toast.success('You have clocked out', { icon: '👋' });
+                        toast.success('You have logged out', { icon: '👋' });
                     }
 
                     setLastCheckInTime(res.data.createdAt);
@@ -149,7 +149,7 @@ const OverviewPage = () => {
                                                     <AlarmClockOff className="mr-2 h-4 w-4" /> :
                                                     <AlarmClock className="mr-2 h-4 w-4" />
                                             }
-                                            {` ${clockedIn ? "Check Out" : "Check In"} `}
+                                            {` ${clockedIn ? "Logged Out" : "Logged In"} `}
                                         </Button>
                                     </CardHeader>
                                     <CardContent>

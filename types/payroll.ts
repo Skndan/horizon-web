@@ -117,6 +117,7 @@ export interface EmployeePayrollRun {
   profile: Profile
   payrollRun: PayrollRun
   totalDays: number
+  workingDays: number
   loggedDays: number
   totalEarnings: number
   totalDeductions: number
