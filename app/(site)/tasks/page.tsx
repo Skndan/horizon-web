@@ -9,15 +9,9 @@ import { formatDate } from "date-fns/format";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Loader, Plus } from "lucide-react";
-import { EmptyStateTable } from "@/components/common/empty-state-table";
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion"
+import { EmptyStateTable } from "@/components/common/empty-state-table"; 
 import { Calendar } from "@/components/ui/calendar";
-import { OrganisationTask } from "@/types/task";
+import { OrganisationTask, Task } from "@/types/task";
 import { Heading } from "@/components/ui/heading";
 import { columns } from "../my-space/tasks/_components/columns";
 import { DataTable } from "../my-space/tasks/_components/data-table";
@@ -25,7 +19,7 @@ import { DataTable } from "../my-space/tasks/_components/data-table";
 const TaskPage = () => {
 
     const router = useRouter();
-    const [data, setData] = useState<OrganisationTask[]>([])
+    const [data, setData] = useState<Task[]>([])
     const [isLoading, setLoading] = useState(false)
     const [isOpen, setOpen] = useState(false);
     const { user } = useAuth();
@@ -36,7 +30,7 @@ const TaskPage = () => {
         setLoading(true)
         await apiClient.get(`/tasks/get-by-org/${user?.orgId}/${formatDate(date!.toISOString(), "yyyy-MM-dd")}`).then((res) => res.data)
             .then((data) => {
-                setData(data)
+                setData(data.content)
                 setLoading(false)
             });
     }
@@ -73,16 +67,7 @@ const TaskPage = () => {
                                             action={"Assign Task"}
                                             onClick={() => router.push(`/tasks/new`)} />
                                         :
-                                        <Accordion type="multiple" className="w-full rounded-md border px-6">
-                                            {data.map((task, index) => (
-                                                <AccordionItem key={task.profileId} value={task.profileId}>
-                                                    <AccordionTrigger className="text-xl font-semibold">{task.profileCode} | {task.profileName}</AccordionTrigger>
-                                                    <AccordionContent>
-                                                        <DataTable columns={columns} data={task.tasks} />
-                                                    </AccordionContent>
-                                                </AccordionItem>
-                                            ))}
-                                        </Accordion>
+                                        <DataTable columns={columns} data={data} /> 
                                 }
                             </div>
                             <Calendar

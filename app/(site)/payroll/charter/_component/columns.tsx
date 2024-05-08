@@ -29,6 +29,34 @@ export const columns: ColumnDef<EmployeePayrollRun>[] = [
     },
   },
   {
+    header: "Total Days",
+    cell: ({ row }) => {
+      const data = row.original;
+      return <Label>{data.totalDays}</Label>
+    }
+  },
+  {
+    header: "Working Days",
+    cell: ({ row }) => {
+      const data = row.original;
+      return <Label>{data.workingDays}</Label>
+    }
+  },
+  {
+    header: "Logged Days",
+    cell: ({ row }) => {
+      const data = row.original;
+      return <Label>{data.loggedDays}</Label>
+    }
+  }, 
+  {
+    header: "Loss Of Pay (Days)",
+    cell: ({ row }) => {
+      const data = row.original;
+      return <Label>{data.lossOfPay}</Label>
+    }
+  },
+  {
     header: "Gross Pay",
     cell: ({ row }) => {
       const data = row.original;
