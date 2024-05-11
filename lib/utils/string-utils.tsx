@@ -1,3 +1,5 @@
+import { SalaryTemplateItem } from "@/types/payroll";
+
 export function toTitleCase(str: string) {
     return str.replace(
         /\w\S*/g,
@@ -7,12 +9,14 @@ export function toTitleCase(str: string) {
     );
 }
 
-export function calculationType(str: string) {
+export function calculationType(str: string, item: SalaryTemplateItem) {
     switch (str) {
         case "FIXED_AMOUNT":
             return "Fixed";
         case "PERCENTAGE_OF_CTC":
             return "% of CTC";
+        case "PERCENTAGE_OF_COMPONENT":
+            return `% of ${item.salaryComponent.componentName}`;
         case "PERCENTAGE_OF_BASIC":
             return "% of Basic";
     }
@@ -166,4 +170,3 @@ export function formatDateToMonthYear(dateString: string | undefined) {
     // Return the formatted date string
     return formattedDate;
 }
- 
