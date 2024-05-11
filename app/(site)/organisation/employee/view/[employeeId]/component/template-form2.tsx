@@ -468,7 +468,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                                                                 <FormControl>
                                                                     <div className="relative">
                                                                         <div className='absolute right-0 h-10 flex justify-center items-center rounded-r-lg border'>
-                                                                            <Label className="text-foreground px-4 text-sm">{calculationType(item.calculationType)}</Label>
+                                                                            <Label className="text-foreground px-4 text-sm">{calculationType(item.calculationType, item)}</Label>
                                                                         </div>
                                                                         <Input
                                                                             key={`${item.id}-input`}

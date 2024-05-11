@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table"
 import { calculationType, inWords } from "@/lib/utils/string-utils"
 import { Label } from "@/components/ui/label";
-import { SalaryTemplate } from "@/types/payroll";
+import { SalaryTemplate, SalaryTemplateItem } from "@/types/payroll";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SubHeading } from "@/components/ui/sub-heading";
 import { Button } from "@/components/ui/button";
@@ -27,11 +27,11 @@ export const SalaryCard: React.FC<SalaryCardProps> = ({
     template,
 }) => {
 
-    function typeBuilder(type: string, value: string) {
+    function typeBuilder(type: string, item: SalaryTemplateItem) {
         if (type === "FIXED_AMOUNT") {
-            return `Fixed - ₹${value}`;
+            return `Fixed - ₹${item.value}`;
         } else {
-            return `${value}${calculationType(type)}`;
+            return `${item.value}${calculationType(type, item)}`;
         }
     }
 
@@ -93,7 +93,7 @@ export const SalaryCard: React.FC<SalaryCardProps> = ({
                                                 <TableCell>
                                                     <div className="flex flex-col">
                                                         <Label className="text-sm">{item.componentName}</Label>
-                                                        <Label className="text-muted-foreground pt-2">{item.calculationType !== "FIXED_AMOUNT" ? typeBuilder(item.calculationType, item.value) : ""}</Label>
+                                                        <Label className="text-muted-foreground pt-2">{item.calculationType !== "FIXED_AMOUNT" ? typeBuilder(item.calculationType, item) : ""}</Label>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
