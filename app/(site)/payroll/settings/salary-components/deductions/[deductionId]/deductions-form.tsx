@@ -39,9 +39,10 @@ import { Separator } from "@radix-ui/react-dropdown-menu"
 const deductionsFormSchema = z.object({
     componentName: z.string().min(1),
     componentInPayslip: z.string().min(1),
+    value: z.number(),
     componentType: z.any(),
     calculationType: z.any(),
-    value: z.any(),
+    salaryComponent: z.any(), 
     active: z.any(),
 })
 
@@ -51,15 +52,21 @@ type DeductionsFormValues = z.infer<typeof deductionsFormSchema>
 interface DeductionFormProps {
     initialData: SalaryComponent | null;
     types: ComponentType[];
+    components: SalaryComponent[];
 };
 
 export const DeductionForm: React.FC<DeductionFormProps> = ({
     initialData,
     types,
+    components
 }) => {
     const form = useForm<DeductionsFormValues>({
         resolver: zodResolver(deductionsFormSchema),
-        defaultValues: initialData || {},
+        defaultValues: initialData || {
+            salaryComponent: {
+                id: ''
+            }
+        },
         mode: "onChange",
     })
 
@@ -204,6 +211,36 @@ export const DeductionForm: React.FC<DeductionFormProps> = ({
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="PERCENTAGE_OF_BASIC" id="r4" />
                                         <Label htmlFor="r4">Percentage of Basic</Label>
+                                    </div>
+
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="PERCENTAGE_OF_COMPONENT" id="r5" />
+                                        <Label htmlFor="r5">Percentage of </Label>
+
+                                        <FormField
+                                            control={form.control}
+                                            name="salaryComponent.id"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormControl>
+                                                        <Select defaultValue={field.value.toString()} value={field.value.toString()} onValueChange={field.onChange}>
+                                                            <FormControl>
+                                                                <SelectTrigger className="w-[250px]">
+                                                                    <SelectValue defaultValue={field.value.toString()} placeholder="Select Salary Component" />
+                                                                </SelectTrigger>
+                                                            </FormControl>
+                                                            <SelectContent>
+                                                                {components.map((day) => (
+                                                                    <SelectItem key={day.id} value={day.id}>{day.componentName}</SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
                                     </div>
                                 </RadioGroup>
                                 <FormMessage />

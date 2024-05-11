@@ -12,6 +12,7 @@ export interface SalaryTemplateItem {
   componentType: ComponentType
   value: number
   calculationType: string
+  salaryComponent: SalaryTemplateItem
 }
 
 export interface SalaryComponent {

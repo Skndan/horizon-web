@@ -18,6 +18,10 @@ const calculationType = [
   {
     value: "PERCENTAGE_OF_BASIC",
     label: "% of Basic",
+  },
+  {
+    value: "PERCENTAGE_OF_COMPONENT",
+    label: "% of ",
   }
 ]
 
@@ -42,14 +46,22 @@ export const columns: ColumnDef<SalaryTemplateItem>[] = [
 
       if (earning.calculationType === "FIXED_AMOUNT") {
         return (
-          <div className="flex w-[100px] items-center">
-            <span>{status?.label}</span>
+          <div className="flex w-[200px] items-center">
+            <span>{status?.label} of ₹{earning.value.toLocaleString()}</span>
+          </div>
+        )
+      }
+
+      if(earning.calculationType === "PERCENTAGE_OF_COMPONENT"){
+        return (
+          <div className="flex w-[200px] items-center">
+            <span>{earning.value}{status?.label}{earning.salaryComponent.componentName}</span>
           </div>
         )
       }
 
       return (
-        <div className="flex w-[100px] items-center">
+        <div className="flex w-[200px] items-center">
           <span>{earning.value}{status?.label}</span>
         </div>
       )

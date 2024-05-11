@@ -41,7 +41,8 @@ const earningsFormSchema = z.object({
     componentInPayslip: z.string().min(1),
     componentType: z.any(),
     calculationType: z.any(),
-    value: z.any(),
+    salaryComponent: z.any(),
+    value: z.number(),
     active: z.any(),
 })
 
@@ -61,7 +62,11 @@ export const EarningsForm: React.FC<EarningFormProps> = ({
 }) => {
     const form = useForm<EarningsFormValues>({
         resolver: zodResolver(earningsFormSchema),
-        defaultValues: initialData || {},
+        defaultValues: initialData || {
+            salaryComponent: {
+                id: ''
+            }
+        },
         mode: "onChange",
     })
 
@@ -209,23 +214,32 @@ export const EarningsForm: React.FC<EarningFormProps> = ({
                                     </div>
 
                                     <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="SPECIFIC" id="r5" />
+                                        <RadioGroupItem value="PERCENTAGE_OF_COMPONENT" id="r5" />
                                         <Label htmlFor="r5">Percentage of </Label>
-                                        <FormItem>
-                                            <Select defaultValue={field.value.toString()} value={field.value.toString()} onValueChange={field.onChange}>
-                                                <FormControl>
-                                                    <SelectTrigger className="w-[200px]">
-                                                        <SelectValue defaultValue={field.value.toString()} placeholder="Select Salary Component" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    {components.map((day) => (
-                                                        <SelectItem key={day.id} value={day.id}>{day.componentName}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
+
+                                        <FormField
+                                            control={form.control}
+                                            name="salaryComponent.id"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormControl>
+                                                        <Select defaultValue={field.value.toString()} value={field.value.toString()} onValueChange={field.onChange}>
+                                                            <FormControl>
+                                                                <SelectTrigger className="w-[250px]">
+                                                                    <SelectValue defaultValue={field.value.toString()} placeholder="Select Salary Component" />
+                                                                </SelectTrigger>
+                                                            </FormControl>
+                                                            <SelectContent>
+                                                                {components.map((day) => (
+                                                                    <SelectItem key={day.id} value={day.id}>{day.componentName}</SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
                                     </div>
                                 </RadioGroup>
