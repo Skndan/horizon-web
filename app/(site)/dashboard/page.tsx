@@ -21,6 +21,10 @@ import { useAuth } from "@/context/auth-provider";
 import Overview from "@/components/dashboard/overview";
 import { DashboardData } from "@/types/dashboard";
 import DashboardTimesheetPage from "./components/time-sheet-page";
+import { Dialog } from "@/components/ui/dialog";
+import { Modal } from "@/components/ui/modal";
+import WhosOutCard from "./components/whos-out-card";
+import ActiveNowCard from "./components/active-now-card";
 
 const OverviewPage = () => {
 
@@ -175,7 +179,7 @@ const OverviewPage = () => {
                                         }
                                     </CardContent>
                                 </Card>
-                                <Card>
+                                <Card className="hover:bg-muted hover:cursor-pointer">
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                         <CardTitle className="text-md font-medium">
                                             Leave Requests
@@ -189,32 +193,8 @@ const OverviewPage = () => {
                                         </p>
                                     </CardContent>
                                 </Card>
-                                <Card>
-                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-md font-medium">Whos Out</CardTitle>
-                                        <DoorOpen />
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="text-2xl font-bold">#{dashboardData?.inBreakCount}</div>
-                                        <p className="text-sm text-muted-foreground">
-                                            +2 since last hour
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                                <Card>
-                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-md font-medium">
-                                            Active Now
-                                        </CardTitle>
-                                        <MonitorCheck />
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="text-2xl font-bold">#{dashboardData?.activeCount}</div>
-                                        <p className="text-sm text-muted-foreground">
-                                            +2 since last hour
-                                        </p>
-                                    </CardContent>
-                                </Card>
+                                <WhosOutCard inBreakList={dashboardData?.inBreakCount ?? []} />
+                                <ActiveNowCard activeList={dashboardData?.activeCount ?? []} />
                             </div>
                             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                                 <Card className="col-span-4">
