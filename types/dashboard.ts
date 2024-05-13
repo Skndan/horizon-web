@@ -1,8 +1,10 @@
+import { Daylog } from "./attendance"
+
 export interface DashboardData {
     leaveRequestCount: number
     totalHeadCount: number
-    inBreakCount: number
-    activeCount: number
+    inBreakCount: Daylog[]
+    activeCount: Daylog[]
     monthwiseHeadCount: MonthwiseHeadCount[]
 }
 
