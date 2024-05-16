@@ -129,9 +129,8 @@ const MySpaceAttendancePage = () => {
                                 <DialogDescription>
                                     Make change request to adjustment
                                 </DialogDescription>
-                            </DialogHeader>
-
-
+                            </DialogHeader> 
+                            
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                                     <div className="grid gap-x-8 gap-y-4">

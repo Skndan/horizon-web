@@ -62,30 +62,17 @@ export interface Timesheet {
     totalBreak: number
 }
 
-// {
-//     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//     "createdAt": "2022-03-10",
-//     "updatedAt": "2022-03-10",
-//     "createdBy": "string",
-//     "updatedBy": "string",
-//     "active": true,
-//     "shift": {
-//       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//       "createdAt": "2022-03-10",
-//       "updatedAt": "2022-03-10",
-//       "createdBy": "string",
-//       "updatedBy": "string",
-//       "active": true,
-//       "name": "string",
-//       "startTime": "13:45:30.123456789",
-//       "endTime": "13:45:30.123456789",
-//       "isDynamic": true,
-//       "workDays": [
-//         "MON"
-//       ]
-//     },
-//     "workDays": [
-//       "MON"
-//     ],
-//     "weekNumber": 0
-//   }
+export interface Attendance {
+    id: string
+    createdAt: string
+    updatedAt: string
+    createdBy: string
+    updatedBy: string
+    active: boolean
+    profile: Profile
+    setDate: string
+    setTime: string
+    reason: string
+    remarks: string
+    status: string
+  }
