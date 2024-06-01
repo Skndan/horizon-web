@@ -107,10 +107,10 @@ const RunPage = () => {
                 toast.error("You already have payroll created for this time frame");
                 setFormLoading(true);
               } else {
-                console.log('Error:', error.message);
+;
               }
             } else {
-              console.log('Error:', error.message);
+;
             }
           })
       }

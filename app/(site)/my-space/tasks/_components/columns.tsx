@@ -2,22 +2,38 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 
-import { priorities, statuses } from "../_data/data" 
+import { priorities, statuses } from "../_data/data"
 import { DataTableColumnHeader } from "./data-table-column-header"
-import { DataTableRowActions } from "./data-table-row-actions" 
+import { DataTableRowActions } from "./data-table-row-actions"
 import { Task } from "@/types/task"
+import AvatarCell from "@/components/common/avatar-cell"
 // import { Task } from "../_data/schema"
 
-export const columns: ColumnDef<Task>[] = [ 
+export const columns: ColumnDef<Task>[] = [
+  {
+    accessorKey: "assignee",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Assignee" />
+    ),
+    cell: ({ row }) => {
+      const task = row.original;
+      return <AvatarCell
+        avatarUrl={""}
+        employeeId={task.assignee.id}
+        employeeName={task.assignee.name}
+        employeeCode={task.assignee.employeeId} // Assuming you have a strategy for the ID
+      />
+    },
+  },
   {
     accessorKey: "title",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Title" />
     ),
     cell: ({ row }) => {
- 
+
       return (
-        <div className="flex space-x-2"> 
+        <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
             {row.getValue("title")}
           </span>

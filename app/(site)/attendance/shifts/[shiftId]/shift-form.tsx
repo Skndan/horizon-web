@@ -101,7 +101,7 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
             data.endTime = timeObjectToString(data.endTime);
 
 
-            // console.log(data);
+;
             setLoading(true);
 
             if (initialData) {
@@ -125,7 +125,7 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
             }
 
         } catch (error: any) {
-            // console.log(error);
+;
             toast.error('Something went wrong.');
         } finally {
             setLoading(false);
@@ -159,7 +159,7 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
         });
 
         // Convert formData to JSON format
-        // console.log(JSON.stringify(formData));
+;
     };
 
 

@@ -136,6 +136,12 @@ export function MainNav({
           label: "Shifts",
           description:
             "Manage employee shifts",
+        },
+        {
+          href: `/attendance/adjustment`,
+          label: "Adjustment",
+          description:
+            "Manage login time adjustments",
         }
       ]
     },

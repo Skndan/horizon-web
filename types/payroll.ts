@@ -12,6 +12,7 @@ export interface SalaryTemplateItem {
   componentType: ComponentType
   value: number
   calculationType: string
+  salaryComponent: SalaryTemplateItem
 }
 
 export interface SalaryComponent {
@@ -117,6 +118,7 @@ export interface EmployeePayrollRun {
   profile: Profile
   payrollRun: PayrollRun
   totalDays: number
+  workingDays: number
   loggedDays: number
   totalEarnings: number
   totalDeductions: number

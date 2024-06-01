@@ -94,12 +94,12 @@ export const SalaryFormCard: React.FC<SalaryCardProps> = ({
                     setCtc(data?.ctc ? { monthly: data.ctc / 12, yearly: data.ctc } : { monthly: 0, yearly: 0 });
                 });
         } else {
-            console.log(`fieldName:${fieldName} value:${value} index:${index}`)
+
 
             let item = earnings[index];
             item.value = value;
 
-            console.log(item);
+;
 
             await apiClient
                 .put(`/profile-salary-template/line/${template?.id}`, item)
@@ -125,7 +125,7 @@ export const SalaryFormCard: React.FC<SalaryCardProps> = ({
     const addEarning = async (value: SalaryTemplateItem) => {
         // const earnings = getValues('earnings');
 
-        console.log(value);
+;
 
         if ((earnings.find(x => x.componentName === "Basic") === undefined) && (value.componentName !== "Basic")) {
             toast.error("Please add Basic first")
@@ -178,11 +178,11 @@ export const SalaryFormCard: React.FC<SalaryCardProps> = ({
                         // alert('Bad request. Please check your input.');
                     } else {
                         // For other errors, log the error message
-                        console.log('Error:', error.message);
+;
                     }
                 } else {
                     // The request was made but no response was received
-                    console.log('Error:', error.message);
+;
                 }
             });
     }
@@ -194,7 +194,7 @@ export const SalaryFormCard: React.FC<SalaryCardProps> = ({
     }, [flag])
 
     const onSubmit = async (data: EmployeeFormValues) => {
-        console.log(data)
+
     };
 
 
@@ -323,7 +323,7 @@ export const SalaryFormCard: React.FC<SalaryCardProps> = ({
                                                                                     <FormControl>
                                                                                         <div className="relative">
                                                                                             <div className='absolute right-0 h-10 flex justify-center items-center rounded-r-lg border'>
-                                                                                                <Label className="text-foreground px-4 text-sm">{calculationType(item.calculationType)}</Label>
+                                                                                                <Label className="text-foreground px-4 text-sm">{calculationType(item.calculationType, item)}</Label>
                                                                                             </div>
                                                                                             <Input
                                                                                                 key={`${item.id}-input`}

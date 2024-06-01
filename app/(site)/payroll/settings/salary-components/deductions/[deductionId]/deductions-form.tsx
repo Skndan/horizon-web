@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -38,9 +39,10 @@ import { Separator } from "@radix-ui/react-dropdown-menu"
 const deductionsFormSchema = z.object({
     componentName: z.string().min(1),
     componentInPayslip: z.string().min(1),
+    value: z.number(),
     componentType: z.any(),
     calculationType: z.any(),
-    value: z.any(),
+    salaryComponent: z.any(), 
     active: z.any(),
 })
 
@@ -50,21 +52,27 @@ type DeductionsFormValues = z.infer<typeof deductionsFormSchema>
 interface DeductionFormProps {
     initialData: SalaryComponent | null;
     types: ComponentType[];
+    components: SalaryComponent[];
 };
 
 export const DeductionForm: React.FC<DeductionFormProps> = ({
     initialData,
     types,
+    components
 }) => {
     const form = useForm<DeductionsFormValues>({
         resolver: zodResolver(deductionsFormSchema),
-        defaultValues: initialData || {},
+        defaultValues: initialData || {
+            salaryComponent: {
+                id: ''
+            }
+        },
         mode: "onChange",
     })
 
     const router = useRouter();
 
-    const [type, setType] = useState('FIXED_AMOUNT');
+    const [type, setType] = useState(initialData ? initialData.calculationType : 'FIXED_AMOUNT');
     const [loading, setLoading] = useState(false);
 
     const title = initialData ? 'Edit Deduction ✨' : 'Create Deduction ✨';
@@ -192,7 +200,8 @@ export const DeductionForm: React.FC<DeductionFormProps> = ({
                                 }} >
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="FIXED_AMOUNT" id="r3" />
-                                        <Label htmlFor="r3">Flat Amount <span className="text-muted-foreground">{`(Yearly)`}</span></Label>
+                                        <Label htmlFor="r3">Flat Amount <span className="text-muted-foreground">{`(Yearly/Monthly)`}</span></Label>
+                                        <FormDescription>Use Monthly Flat Amount for Expenses and Adjustments</FormDescription>
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="PERCENTAGE_OF_CTC" id="r4" />
@@ -202,6 +211,36 @@ export const DeductionForm: React.FC<DeductionFormProps> = ({
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="PERCENTAGE_OF_BASIC" id="r4" />
                                         <Label htmlFor="r4">Percentage of Basic</Label>
+                                    </div>
+
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="PERCENTAGE_OF_COMPONENT" id="r5" />
+                                        <Label htmlFor="r5">Percentage of </Label>
+
+                                        <FormField
+                                            control={form.control}
+                                            name="salaryComponent.id"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormControl>
+                                                        <Select defaultValue={field.value.toString()} value={field.value.toString()} onValueChange={field.onChange}>
+                                                            <FormControl>
+                                                                <SelectTrigger className="w-[250px]">
+                                                                    <SelectValue defaultValue={field.value.toString()} placeholder="Select Salary Component" />
+                                                                </SelectTrigger>
+                                                            </FormControl>
+                                                            <SelectContent>
+                                                                {components.map((day) => (
+                                                                    <SelectItem key={day.id} value={day.id}>{day.componentName}</SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
                                     </div>
                                 </RadioGroup>
                                 <FormMessage />

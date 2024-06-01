@@ -5,7 +5,7 @@ const isExpired = (exp: number) => {
         return false;
     }
 
-    // console.log(`isExpired ${Math.floor(Date.now() / 1000)}`)
+
     return Math.floor(Date.now() / 1000) < exp;
 };
 
@@ -17,7 +17,7 @@ export function middleware(req: NextRequest) {
 
     const { pathname } = req.nextUrl;
 
-    // console.log(pathname);
+;
 
     // Exclude specific paths from the redirect logic to prevent loops
     if (pathname === '/' || pathname.startsWith('/_next') || pathname.match('.svg') || pathname.match('.ico')) {
@@ -26,7 +26,7 @@ export function middleware(req: NextRequest) {
 
     const verifiedToken = token && isExpired(parseInt(exp ?? '0'));
 
-    // console.log(verifiedToken);
+;
 
     if (!verifiedToken) {
         return NextResponse.redirect(new URL('/', req.url));
