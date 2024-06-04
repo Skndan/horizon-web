@@ -73,7 +73,11 @@ export const PayScheduleForm: React.FC<PayScheduleProps> = ({
         defaultValues: initialData || {
             organisation: {
                 id: ''
-            }
+            },
+            payCheckValue: "1",
+            payDayValue: "1",
+            payDateFrom: "1",
+            payDateTo: "1",
         },
         mode: "onChange",
     })

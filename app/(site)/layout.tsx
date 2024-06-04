@@ -7,6 +7,7 @@ import { UserNav } from "@/components/dashboard/user-nav";
 import { MainNav } from "@/components/navigation/top-menu";
 import MobileNav from "@/components/navigation/top-menu-mobile";
 import { CommandMenu } from "@/components/common/command-center";
+import ErrorBoundary from "@/lib/error-boundary";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -38,7 +39,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             </div>
           </div>
         </header>
-        {children}
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
       </main>
     </div>
   );
