@@ -9,54 +9,46 @@ import { saveTokensOnCookies } from "@/lib/utils/save-cookies";
 import toast from "react-hot-toast";
 import { Profile } from "@/store/use-user-store";
 import { Loader } from "lucide-react";
+import React from "react";
 
-// type User = {
-//   email: string;
-//   permissions: string[];
-//   roles: string[];
-// };
+// Define your types here or import them if they're in a separate file
 
-type SignInCredentials = {
+interface SignInCredentials {
   email: string;
   password: string;
-};
-
-type AuthContextData = {
-  signIn(data: SignInCredentials): Promise<void>;
-  isAuthenticated: boolean;
-  loading: boolean;
-  roles: string[];
-  user?: Profile;
-};
-
-export const AuthContext = createContext({} as AuthContextData);
-
-type AuthProviderProps = {
-  children: React.ReactNode;
-};
-
-export function useAuth() {
-  return useContext(AuthContext);
 }
 
+interface AuthContextProps {
+  signIn: (credentials: SignInCredentials) => Promise<void>;
+  isAuthenticated: boolean;
+  user?: Profile;
+  roles: string[];
+  loading: boolean;
+}
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<Profile>();
+interface AuthProviderProps {
+  children: React.ReactNode;
+}
+
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<Profile | undefined>(undefined);
   const [roles, setRoles] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const isAuthenticated = !!user;
   const router = useRouter();
 
   useEffect(() => {
-    const { "nextauth.token": token } = parseCookies();
+    const { 'nextauth.token': token } = parseCookies();
 
     if (token) {
       const { jti, groups } = parseJwt(token);
 
       apiClient.get(`/profile/get-by-user/${jti}`)
         .then((res) => res.data)
-        .then(async (data) => {
-          var profile: Profile = {
+        .then((data) => {
+          const profile: Profile = {
             userId: jti,
             profileId: data.id,
             orgId: data.organisation.id,
@@ -64,15 +56,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
             username: data.name,
             email: data.email,
             mobile: data.mobile,
-            departmentId: data.department.id
+            departmentId: data.department.id,
           };
           setUser(profile);
           setRoles(groups);
-          toast.success("Welcome");
-          // No need to push to "/dashboard" here if you're already handling it in signIn
-        }).catch(() => {
+          toast.success('Welcome');
+        })
+        .catch(() => {
           signOut();
-        }).finally(() => {
+        })
+        .finally(() => {
           setIsLoading(false); // Set loading to false after the request completes
         });
     } else {
@@ -81,55 +74,59 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const signIn = useCallback(async ({ email, password }: SignInCredentials) => {
-    // your signIn logic
-    // Make sure to set `isLoading` to `false` once signIn process is completed or failed
-
+    setIsLoading(true); // Start loading when sign-in begins
     try {
-      const response = await apiClient.post("/auth/authenticate", {
+      const response = await apiClient.post('/auth/authenticate', {
         email,
         password,
       });
-  
-      const { token, refreshToken, expiry } = response.data;
 
+      const { token, refreshToken, expiry } = response.data;
       saveTokensOnCookies(token, refreshToken, expiry);
 
-      apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
+      apiClient.defaults.headers['Authorization'] = `Bearer ${token}`;
 
       const { jti, groups } = parseJwt(token);
 
-      await apiClient.get(`/profile/get-by-user/${jti}`)
-        .then((res) => res.data)
-        .then(async (data) => {
-          var profile: Profile = {
-            userId: jti,
-            profileId: data.id,
-            orgId: data.organisation.id,
-            profilePicture: '',
-            username: data.name,
-            email: data.email,
-            mobile: data.mobile,
-          };
+      const profileResponse = await apiClient.get(`/profile/get-by-user/${jti}`);
+      const data = profileResponse.data;
 
-          setUser(profile);
-          setRoles(groups);
+      const profile: Profile = {
+        userId: jti,
+        profileId: data.id,
+        orgId: data.organisation.id,
+        profilePicture: '',
+        username: data.name,
+        email: data.email,
+        mobile: data.mobile,
+      };
 
-          toast.success("Welcome");
-          router.push("/dashboard");
-        }).catch(() => {
-          signOut();
-        });
-      router.push("/dashboard");
-    } catch (err) { 
+      setUser(profile);
+      setRoles(groups);
+      toast.success('Welcome');
+      router.push('/dashboard'); // Redirect to dashboard after successful sign-in
+    } catch (err) {
+      toast.error('Failed to sign in. Please check your credentials.');
+      console.error('Sign-in error:', err);
     } finally {
-      setIsLoading(false); // Set loading to false after the request completes 
+      setIsLoading(false); // End loading when sign-in completes or fails
     }
-  }, []);
+  }, [router]);
+
+  const signOut = useCallback(() => {
+    setUser(undefined);
+    setRoles([]);
+    setIsLoading(false); // Reset loading state
+    // Clear tokens and navigate to login or home page
+    // e.g., clearTokens(); router.push('/login');
+  }, [router]);
 
   if (isLoading) {
-    return <div className="grid h-screen place-items-center bg-background z-40">
-      <Loader className="animate-spin h-5 w-5 mr-3" />
-    </div>
+    return (
+      <div className="grid h-screen place-items-center bg-background z-40">
+        <Loader className="animate-spin h-5 w-5 mr-3" />
+      </div>
+    );
   }
 
   return (
@@ -137,4 +134,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       {children}
     </AuthContext.Provider>
   );
-}
+};
+
+export const useAuth = () => {
+  const context = React.useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

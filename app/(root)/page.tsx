@@ -3,6 +3,13 @@
 import Link from "next/link";
 import Login from "@/components/login";
 import Image from "next/image";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+import Register from "@/components/login/register";
 
 const AuthenticationPage = () => {
   return (
@@ -44,7 +51,18 @@ const AuthenticationPage = () => {
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-2 text-center">
             </div>
-            <Login />
+            <Tabs defaultValue="account">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="account">Sign In</TabsTrigger>
+                <TabsTrigger value="password">Register</TabsTrigger>
+              </TabsList>
+              <TabsContent value="account">
+                <Login />
+              </TabsContent>
+              <TabsContent value="password">
+                <Register />
+              </TabsContent>
+            </Tabs>
             <p className="px-8 text-center text-sm text-muted-foreground pb-6">
               By logging in, you agree to our <br />
               <Link

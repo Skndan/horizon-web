@@ -17,11 +17,11 @@ export const WorkCard: React.FC<WorkCardProps> = ({
             <div className="grid md:grid-cols-3 rounded-md border">
                 <div className="flex flex-col p-4 hover:bg-muted border">
                     <Label className="text-muted-foreground">Shift</Label>
-                    <Label className="text-md pt-1">{profile?.shift.name}</Label>
+                    <Label className="text-md pt-1">{profile?.shift?.name}</Label>
                 </div>
                 <div className="flex flex-col  p-4 hover:bg-muted border">
                     <Label className="text-muted-foreground">Department</Label>
-                    <Label className="text-md pt-1">{profile?.department.name}</Label>
+                    <Label className="text-md pt-1">{profile?.department?.name}</Label>
                 </div>
                 <div className="flex flex-col p-4 hover:bg-muted border">
                     <Label className="text-muted-foreground">Office</Label>
