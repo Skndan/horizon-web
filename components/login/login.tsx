@@ -29,13 +29,19 @@ import { EyeClosedIcon } from '@radix-ui/react-icons';
 import { useUserStore } from '@/store/use-user-store';
 import { useAuth } from '@/context/auth-provider';
 import { Eye, Loader } from 'lucide-react';
+import apiClient from '@/lib/api/api-client';
 
 const formSchema = z.object({
   email: z.string().min(1),
   password: z.string().min(1),
 });
 
+const passwordFormSchema = z.object({
+  email: z.string().min(1)
+});
+
 type LoginFormValues = z.infer<typeof formSchema>;
+type ForgotFormValues = z.infer<typeof passwordFormSchema>;
 
 const Login = () => {
 
@@ -52,6 +58,10 @@ const Login = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const form2 = useForm<ForgotFormValues>({
+    resolver: zodResolver(passwordFormSchema),
+  });
+
   const { signIn } = useAuth();
 
   const { set } = useUserStore();
@@ -64,38 +74,44 @@ const Login = () => {
 
       await signIn(data);
 
-      // localStorage.clear();
-      // await apiClient
-      //   .post("/auth/authenticate", data)
-      //   .then((res) => res.data)
-      //   .then(async (data) => {
-      //     const { token, refreshToken } = data;
-      //     const { jti } = await parseJwt(token);
-      //     localStorage.setItem('token', token);
-      //     localStorage.setItem('refreshToken', refreshToken);
-      //     await apiClient.get(`/profile/get-by-user/${jti}`)
-      //       .then((res) => res.data)
-      //       .then(async (data) => {
-      //         var profile = {
-      //           userId: jti,
-      //           profileId: data.id,
-      //           orgId: data.organisation.id,
-      //           profilePicture: '',
-      //           username: data.name,
-      //           email: data.email,
-      //           mobile: data.mobile,
-      //         };
-      //         localStorage.setItem('userId', jti);
-      //         localStorage.setItem('profileId', data.id);
-      //         localStorage.setItem('orgId', data.organisation.id);
-      //         localStorage.setItem('username', data.name);
-      //         localStorage.setItem('email', data.email);
-      //         localStorage.setItem('mobile', data.mobile);
-      //         set(profile);
-      //         toast.success("Welcome");
-      //         router.push("/dashboard");
-      //       });
-      //   });
+      setLoading(false);
+    } catch (error: any) {
+      toast.error("Something went wrong.");
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const onSubmit2 = async (data: ForgotFormValues) => {
+    try {
+      setLoading(true);
+      data.email.trim();
+      await apiClient
+        .post("/auth/forgot-password", data)
+        .then((res) => res.data)
+        .then(async (data) => {
+          toast.success('We have sent reset email to your inbox'); 
+          setOpen(true);
+        }).catch(error => {
+          // Handle errors
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            if (error.response.status === 400) {
+
+              // Inform the user about the bad request
+              toast.error('Your email is invalid');
+            } else {
+              // For other errors, log the error message
+
+            }
+          } else {
+            // The request was made but no response was received
+
+          }
+        });
       setLoading(false);
     } catch (error: any) {
       toast.error("Something went wrong.");
@@ -166,13 +182,13 @@ const Login = () => {
                     )}
                   />
                 </div>
-                <div className="flex flex-col items-start">
-                  {/* <Button variant="link" className="p-0 h-auto" onClick={(e) => {
-                  e.preventDefault();
-                  setOpen(false);
-                }}>
-                  Forgot Password?
-                </Button> */}
+                <div className="flex flex-col items-end pb-2">
+                  <Button variant="link" className="p-0 h-auto" onClick={(e) => {
+                    e.preventDefault();
+                    setOpen(false);
+                  }}>
+                    Forgot Password?
+                  </Button>
                 </div>
               </div>
               <Button disabled={loading} type="submit" className="w-full">
@@ -184,37 +200,46 @@ const Login = () => {
           </Form>
         )}
         {!open && (
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email*</FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={loading}
-                          placeholder="Email"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
+          <Form {...form2}>
+            <form onSubmit={form2.handleSubmit(onSubmit2)}>
+              <div className="grid w-full items-center gap-4">
+                <div className="flex flex-col space-y-1.5">
+                  <FormField
+                    control={form2.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email <span className='text-red-500'>*</span></FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={loading}
+                            placeholder="Email"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col items-end pb-2">
+                  <Button variant="link" className="p-0 h-auto" onClick={(e) => {
+                    e.preventDefault();
+                    setOpen(true);
+                  }}>
+                    Sign in instead?
+                  </Button>
+                </div>
               </div>
-              <div className="flex flex-col items-start">
-                <Button variant="link" className="p-0 h-auto" onClick={(e) => {
-                  e.preventDefault();
-                  setOpen(true);
-                }}>
-                  Forgot Password?
-                </Button>
-              </div>
-            </div>
-          </form>)}
+              <Button disabled={loading} type="submit" className="w-full">
+                {loading &&
+                  <Loader className="animate-spin h-5 w-5 mr-3" />}
+                Send reset email 
+              </Button>
+            </form>
+          </Form>
+        )}
       </CardContent>
       {/* <CardFooter className="flex justify-between">
         <Button type="submit" className="w-full">Sign In</Button>

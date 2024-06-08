@@ -17,10 +17,8 @@ export function middleware(req: NextRequest) {
 
     const { pathname } = req.nextUrl;
 
-;
-
     // Exclude specific paths from the redirect logic to prevent loops
-    if (pathname === '/' || pathname.startsWith('/_next') || pathname.match('.svg') || pathname.match('.ico')) {
+    if (pathname === '/' || pathname.startsWith('/_next') || pathname.match('.svg') || pathname.match('.ico') || pathname.startsWith('/auth/reset')) {
         return NextResponse.next();
     }
 

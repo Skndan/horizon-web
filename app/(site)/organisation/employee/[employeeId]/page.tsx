@@ -64,16 +64,16 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
                             // The request was made and the server responded with a status code
                             // that falls out of the range of 2xx
                             if (error.response.status === 400) {
-;
+
                                 // Inform the user about the bad request
                                 // alert('Bad request. Please check your input.');
                             } else {
                                 // For other errors, log the error message
-;
+
                             }
                         } else {
                             // The request was made but no response was received
-;
+
                         }
                     })
 
