@@ -5,12 +5,15 @@ import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ShiftTable } from "./_components/client";
 import { Shift } from "@/types/attendance";
+import { useAuth } from "@/context/auth-provider";
 
 
 const AttendanceShiftPage = () => {
 
   const [data, setData] = useState<Shift[]>([])
+  const [total, setTotal] = useState(0);
   const [isLoading, setLoading] = useState(true)
+  const {user} = useAuth();
 
   useEffect(() => {
     // if ("geolocation" in navigator) {
@@ -27,15 +30,13 @@ const AttendanceShiftPage = () => {
     //   // console.log("Geolocation is not supported by this browser.");
     // }
 
-    apiClient.get('/shift').then((res) => res.data)
+    apiClient.get(`/shift/get-by-org/${user?.orgId}`).then((res) => res.data)
       .then((data) => {
         setData(data.content)
+        setTotal(data.totalElements)
         setLoading(false)
       });
   }, [])
-
-
-
 
   return (
     <div className="flex-col">
@@ -46,7 +47,7 @@ const AttendanceShiftPage = () => {
               <Loader className="animate-spin h-5 w-5 mr-3" />
             </div>
           )
-          : (<ShiftTable data={data} />)}
+          : (<ShiftTable data={data} total={total} />)}
       </div>
     </div>)
 }

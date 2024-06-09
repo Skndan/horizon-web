@@ -102,7 +102,7 @@ const Register = () => {
         .post("/organisation", data)
         .then((res) => res.data)
         .then((data) => {
-          toast.success("Sign in now");
+          toast.success("Sign in now, you will receive the login credentials in your inbox");
           router.refresh();
         });
       setLoading(false);

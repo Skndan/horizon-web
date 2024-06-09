@@ -36,10 +36,6 @@ interface LeaveTypeFormProps {
     onClose: () => void;
 }
 
-// name
-// from
-// to
-
 const formSchema = z.object({
     name: z.string().min(1),
     organisation: z.any(),
@@ -122,7 +118,7 @@ export const LeaveTypeForm: React.FC<LeaveTypeFormProps> = ({
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Name*</FormLabel>
+                                        <FormLabel>Name <span className="text-red-600">*</span></FormLabel>
                                         <FormLabel> {formData?.name}</FormLabel>
                                         <FormControl>
                                             <Input
@@ -141,12 +137,13 @@ export const LeaveTypeForm: React.FC<LeaveTypeFormProps> = ({
                                 name="count"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Total Leave *</FormLabel>
+                                        <FormLabel>Total Leave <span className="text-red-600">*</span></FormLabel>
                                         <FormLabel> {formData?.name}</FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={loading}
                                                 placeholder="Total Leave"
+                                                 type={'number'}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -156,7 +153,7 @@ export const LeaveTypeForm: React.FC<LeaveTypeFormProps> = ({
                             />
 
                         </div>
-                        <Button disabled={loading} className="ml-auto" type="submit">
+                        <Button disabled={loading || !form.formState.isValid} className="ml-auto" type="submit">
                             {loading &&
                                 <Loader className="animate-spin h-5 w-5 mr-3" />}
                             {action}

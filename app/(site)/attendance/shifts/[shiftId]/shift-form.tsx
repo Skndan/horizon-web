@@ -29,15 +29,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-const formSchema = z.object({
-    name: z.string().min(1),
-    startTime: z.any(),
-    endTime: z.any(),
-    isDynamic: z.boolean().optional(),
-    workDays: z.any(),
-    schedules: z.any()
-});
-
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { TimePicker } from "@/components/ui/time-picker"
@@ -45,6 +36,19 @@ import { stringToTimeObject, timeObjectToString } from "@/lib/utils/time-utils"
 import { Shift } from "@/types/attendance"
 import apiClient from "@/lib/api/api-client"
 import { Loader } from "lucide-react"
+import { useAuth } from "@/context/auth-provider"
+
+const formSchema = z.object({
+    name: z.string().min(1),
+    startTime: z.any(),
+    endTime: z.any(),
+    isDynamic: z.boolean().optional(),
+    workDays: z.any(),
+    schedules: z.any(),
+    organisation: z.object({
+        id: z.any()
+    })
+});
 
 type ShiftFormValues = z.infer<typeof formSchema>
 
@@ -64,10 +68,11 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const weeks = ['1st Week', '2nd Week', '3rd Week', '4th Week', '5th Week'];
 
-    const title = initialData ? 'Edit shift ✨' : 'Create Shift ✨';
+    const title = initialData ? 'Edit Shift ✨' : 'Create Shift ✨';
     const description = initialData ? 'Edit a shift.' : 'Add a new shift';
     const toastMessage = initialData ? 'Shift updated.' : 'Shift created.';
     const action = initialData ? 'Save changes' : 'Create';
+    const { user } = useAuth();
 
     const form = useForm<ShiftFormValues>({
         resolver: zodResolver(formSchema),
@@ -75,6 +80,9 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
             ...initialData,
             startTime: stringToTimeObject(initialData?.startTime),
             endTime: stringToTimeObject(initialData?.endTime),
+            organisation: {
+                id: user?.orgId
+            }
         } || {
             isDynamic: false,
             // schedules: weeks.map((week, index) => ({ // Assuming 'weeks' is accessible here, otherwise define it similarly to ShiftSchedule
@@ -100,8 +108,6 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
             data.startTime = timeObjectToString(data.startTime);
             data.endTime = timeObjectToString(data.endTime);
 
-
-;
             setLoading(true);
 
             if (initialData) {
@@ -125,7 +131,6 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
             }
 
         } catch (error: any) {
-;
             toast.error('Something went wrong.');
         } finally {
             setLoading(false);
@@ -159,7 +164,7 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
         });
 
         // Convert formData to JSON format
-;
+        ;
     };
 
 
@@ -192,7 +197,7 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
                                 <FormItem>
                                     <FormLabel>Name <span className="text-red-600">*</span></FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Employee name" {...field} />
+                                        <Input disabled={loading} placeholder="Shift name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

@@ -13,19 +13,22 @@ import { useDeleteStore } from "@/store/use-delete-store";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import Link from "next/link";
 import { Address } from "@/types/profile";
+import { useAuth } from "@/context/auth-provider";
 
 const LocationPage = () => {
 
     const router = useRouter();
     const [data, setData] = useState<Address[]>([])
+    const [total, setTotal] = useState(0);
     const [isLoading, setLoading] = useState(true)
     const { flag } = useDeleteStore();
-
+    const { user } = useAuth();
+    
     async function fetchData() {
-        setLoading(true)
-        await apiClient.get('/address').then((res) => res.data)
+        await apiClient.get(`/address/get-by-org/${user?.orgId}`).then((res) => res.data)
             .then((data) => {
                 setData(data.content)
+                setTotal(data.totalElements)
                 setLoading(false)
             });
         setLoading(false)
@@ -39,7 +42,7 @@ const LocationPage = () => {
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">
                 <div className="flex items-center justify-between">
-                    <Heading title={`Locations (${data.length})`} description="Manage your office locations" /> 
+                    <Heading title={`Locations (${total})`} description="Manage your office locations" /> 
                     <Link href={`/organisation/location/new`}>
                         <Button>
                             <Plus className="mr-2 h-4 w-4" /> Add
@@ -52,8 +55,7 @@ const LocationPage = () => {
                         <Loader className="animate-spin h-5 w-5 mr-3" />
                     </div>
                 ) : (
-
-
+ 
                     data.length == 0 ?
                         <EmptyStateTable
                             title={"No location added"}

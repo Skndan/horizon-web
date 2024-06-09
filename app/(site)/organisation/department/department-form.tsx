@@ -28,6 +28,7 @@ import { toast } from "react-hot-toast";
 import { Department } from "@/types/profile";
 import apiClient from "@/lib/api/api-client";
 import { Loader } from "lucide-react";
+import { useAuth } from "@/context/auth-provider";
 
 interface DepartmentFormProps {
     initialData: Department | null;
@@ -38,6 +39,9 @@ interface DepartmentFormProps {
 const formSchema = z.object({
     name: z.string().min(1),
     code: z.string().min(1),
+    organisation: z.object({
+        id: z.any()
+    })
 });
 
 type DepartmentFormValues = z.infer<typeof formSchema>;
@@ -50,9 +54,14 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
 
+    const { user } = useAuth();
+
     const onSubmit = async (data: DepartmentFormValues) => {
         try {
             setLoading(true);
+
+            data.organisation.id = user?.orgId;
+
             if (initialData) {
                 await apiClient
                     .put(`/department/${initialData.id}`, data)
@@ -71,6 +80,7 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                     });
             }
         } catch (error: any) {
+            console.log(error)
             toast.error("Something went wrong.");
             onClose();
         } finally {
@@ -86,7 +96,11 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
 
     const form = useForm<DepartmentFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: formData || {},
+        defaultValues: formData || {
+            organisation: {
+                id: user?.orgId
+            }
+        },
         mode: "onChange",
     });
 
@@ -107,7 +121,7 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Name*</FormLabel>
+                                        <FormLabel>Name <span className="text-red-600">*</span></FormLabel>
                                         <FormLabel> {formData?.name}</FormLabel>
                                         <FormControl>
                                             <Input
@@ -125,7 +139,7 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                                 name="code"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Code*</FormLabel>
+                                        <FormLabel>Code <span className="text-red-600">*</span></FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={loading}

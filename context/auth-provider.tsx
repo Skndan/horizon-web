@@ -56,13 +56,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             username: data.name,
             email: data.email,
             mobile: data.mobile,
-            departmentId: data.department.id,
+            departmentId: data.department?.id,
           };
           setUser(profile);
           setRoles(groups);
-          toast.success('Welcome');
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
           signOut();
         })
         .finally(() => {
@@ -111,7 +111,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } finally {
       setIsLoading(false); // End loading when sign-in completes or fails
     }
-  }, [router]);
+  }, []);
 
   const signOut = useCallback(() => {
     setUser(undefined);
@@ -119,7 +119,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsLoading(false); // Reset loading state
     // Clear tokens and navigate to login or home page
     // e.g., clearTokens(); router.push('/login');
-  }, [router]);
+  }, []);
 
   if (isLoading) {
     return (

@@ -41,7 +41,7 @@ const OrgSettingsPage = () => {
     const { user, loading } = useAuth();
 
     async function loadAddress() {
-        await apiClient.get(`/address/get-by-organisation/${user?.orgId}`).then((res) => res.data)
+        await apiClient.get(`/address/get-by-org/${user?.orgId}`).then((res) => res.data)
             .then((data) => {
                 setAddressList(data);
             });

@@ -23,7 +23,7 @@ const LeaveTrackerPage = () => {
 
     async function fetchData() {
         setLoading(true)
-        await apiClient.get(`/leave-request/get-by-organisation/${user?.orgId}`).then((res) => res.data)
+        await apiClient.get(`/leave-request/get-by-org/${user?.orgId}`).then((res) => res.data)
             .then(async (data) => {
                 setData(data)
                 await apiClient.get(`/leave/balance/org/${user?.orgId}`).then((res) => res.data)

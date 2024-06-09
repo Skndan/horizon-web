@@ -11,20 +11,24 @@ import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
 import { useAuth } from "@/context/auth-provider";
 import { Profile } from "@/types/profile";
+import toast from "react-hot-toast";
 
 const TeamPage = () => {
 
     const [data, setData] = useState<Profile[]>([])
-    const [isLoading, setLoading] = useState(false)
+    const [isLoading, setLoading] = useState(true)
     const { user } = useAuth();
 
     async function fetchData() {
-        setLoading(true)
-        await apiClient.get(`/profile/get-by-department/${user?.departmentId}`).then((res) => res.data)
+        if(user?.departmentId){
+            await apiClient.get(`/profile/get-by-department/${user?.departmentId}`).then((res) => res.data)
             .then(async (data) => {
                 setData(data)
             }).finally(() => setLoading(false));
-
+        } else {
+            toast.error("You are not added to any team yet.")
+            setLoading(false)
+        }
     }
     const { flag } = useUpdateStore();
 

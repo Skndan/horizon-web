@@ -82,7 +82,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
             const departments = await apiClient.get(`/department`);
             setDepartment(departments.data.content)
 
-            const locations = await apiClient.get(`/address/get-by-organisation/${user?.orgId}`);
+            const locations = await apiClient.get(`/address/get-by-org/${user?.orgId}`);
             setLocation(locations.data)
 
             const profiles = await apiClient.get(`/profile?pageSize=100`);

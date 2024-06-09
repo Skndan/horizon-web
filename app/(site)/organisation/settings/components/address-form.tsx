@@ -28,7 +28,9 @@ const addressFormSchema = z.object({
     city: z.string().min(1),
     state: z.string().min(1),
     pincode: z.string().min(1),
-    organisation: z.any(),
+    organisation: z.object({
+        id: z.any()
+    }),
     isPrimary: z.any()
 })
 
@@ -39,32 +41,28 @@ interface AddressFormProps {
 
 type AddressFormValues = z.infer<typeof addressFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<AddressFormValues> = {
-}
-
 export const AddressForm: React.FC<AddressFormProps> = ({
     initialData,
     onClose,
 }) => {
 
+    const { user } = useAuth();
+
     const form = useForm<AddressFormValues>({
         resolver: zodResolver(addressFormSchema),
-        defaultValues: initialData || {},
+        defaultValues: initialData || {
+            organisation: {
+                id: user?.orgId
+            }
+        },
         mode: "onChange",
     })
 
     const toastMessage = initialData ? 'Address updated.' : 'Address created.';
     const action = initialData ? 'Save changes' : 'Create';
 
-    const {user} = useAuth();
-
     async function onSubmit(data: AddressFormValues) {
- 
-        data.organisation = {
-            id: user?.orgId
-        }
-
+  
         if (initialData) {
             await apiClient
                 .put(`/address/${initialData.id}`, data)
@@ -193,7 +191,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                         </FormItem>
                     )}
                 />
-                <Button type="submit">{action}</Button>
+                <Button type="submit" disabled={!form.formState.isValid} >{action}</Button>
                 <Button variant={"secondary"} className="m-4" onClick={onClose}>Cancel </Button>
             </form>
         </Form>

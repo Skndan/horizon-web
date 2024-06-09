@@ -10,7 +10,7 @@ import {
 import { RecentActivities } from "@/components/dashboard/recent-activities";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { AlarmClock, AlarmClockMinus, AlarmClockOff, DoorOpen, MonitorCheck, Users } from "lucide-react";
+import { AlarmClock, AlarmClockMinus, AlarmClockOff, Plus, Terminal, Users } from "lucide-react";
 import ActivityPage from "./components/activity";
 import { ComingSoonPage } from "@/components/common/coming-soon";
 import { useEffect, useState } from "react";
@@ -21,10 +21,15 @@ import { useAuth } from "@/context/auth-provider";
 import Overview from "@/components/dashboard/overview";
 import { DashboardData } from "@/types/dashboard";
 import DashboardTimesheetPage from "./components/time-sheet-page";
-import { Dialog } from "@/components/ui/dialog";
-import { Modal } from "@/components/ui/modal";
 import WhosOutCard from "./components/whos-out-card";
 import ActiveNowCard from "./components/active-now-card";
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+} from "@/components/ui/alert"
+import { Label } from "@/components/ui/label";
+import Link from "next/link";
 
 const OverviewPage = () => {
 
@@ -124,6 +129,64 @@ const OverviewPage = () => {
         <>
             <div className="flex-col md:flex">
                 <div className="flex-1 space-y-4 p-8 pt-6">
+                    {dashboardData && <> 
+                        {dashboardData.departmentCount === 0 && <div className="flex md:flex-row flex-col p-4 border rounded-md justify-between gap-4 border-destructive/50 dark:border-destructive">
+                            <div className="flex flex-row">
+                                <p>🏢</p>
+                                <div className="flex flex-col ml-2">
+                                    <p className={"mb-1 font-medium leading-none tracking-tight"}>{"Setup your Organisation's Department"}</p>
+                                    <p className={"text-sm [&_p]:leading-relaxed text-muted-foreground"}>Create departments to organize your team. Add your first department now!</p>
+                                </div>
+                            </div>
+                            <Link href={`/organisation/department`}>
+                                <Button className="ml-8">
+                                    <Plus className="mr-2 h-4 w-4" /> Add Department
+                                </Button>
+                            </Link>
+                        </div>}
+                        {dashboardData.shiftCount === 0 && <div className="flex md:flex-row flex-col p-4 border rounded-md justify-between gap-4 border-destructive/50 dark:border-destructive">
+                            <div className="flex flex-row">
+                                <p>⏰</p>
+                                <div className="flex flex-col ml-2">
+                                    <p className={"mb-1 font-medium leading-none tracking-tight"}>{"Setup your Shifts"}</p>
+                                    <p className={"text-sm [&_p]:leading-relaxed text-muted-foreground"}>Define work shifts to keep your team organized. Add your first shift now!</p>
+                                </div>
+                            </div>
+                            <Link href={`/attendance/shifts/new`}>
+                                <Button className="ml-8">
+                                    <Plus className="mr-2 h-4 w-4" /> Add Shift
+                                </Button>
+                            </Link>
+                        </div>}
+                        {dashboardData.officeCount === 0 && <div className="flex md:flex-row flex-col p-4 border rounded-md justify-between gap-4 border-destructive/50 dark:border-destructive">
+                            <div className="flex flex-row">
+                                <p>📍</p>
+                                <div className="flex flex-col ml-2">
+                                    <p className={"mb-1 font-medium leading-none tracking-tight"}>{"Setup your Office Locations"}</p>
+                                    <p className={"text-sm [&_p]:leading-relaxed text-muted-foreground"}>Complete your profile by adding your business address. Add your address now!</p>
+                                </div>
+                            </div>
+                            <Link href={`/organisation/location/new`}>
+                                <Button className="ml-8">
+                                    <Plus className="mr-2 h-4 w-4" /> Add Address
+                                </Button>
+                            </Link>
+                        </div>}
+                        {dashboardData.leaveTypeCount === 0 && <div className="flex md:flex-row flex-col p-4 border rounded-md justify-between gap-4 border-destructive/50 dark:border-destructive">
+                            <div className="flex flex-row">
+                                <p>🏖️</p>
+                                <div className="flex flex-col ml-2">
+                                    <p className={"mb-1 font-medium leading-none tracking-tight"}>{"Setup Your Leave Types"}</p>
+                                    <p className={"text-sm [&_p]:leading-relaxed text-muted-foreground"}>Add your leave types and quotas now to streamline time-off management!</p>
+                                </div>
+                            </div>
+                            <Link href={`/organisation/settings/leave`}>
+                                <Button className="ml-8">
+                                    <Plus className="mr-2 h-4 w-4" /> Add Leave Types
+                                </Button>
+                            </Link>
+                        </div>}
+                    </>}
                     <div className="flex items-center justify-between space-y-2">
                         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
                     </div>

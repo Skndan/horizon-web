@@ -36,14 +36,20 @@ import {
 } from "@/components/ui/breadcrumb"
 import apiClient from "@/lib/api/api-client"
 import { Address } from "@/types/profile"
+import { useAuth } from "@/context/auth-provider"
 
-
+ 
 const formSchema = z.object({
-    name: z.string().min(1),
-    address: z.string().min(1),
+    label: z.string().min(1),
+    addressLine1: z.string().min(1),
+    addressLine2: z.string().min(1),
+    city: z.string().min(1),
     country: z.string().min(1),
     state: z.string().min(1),
-    pincode: z.string().min(1),
+    pincode: z.string().min(6),
+    organisation: z.object({
+        id: z.any()
+    })
 });
 
 type LocationFormValues = z.infer<typeof formSchema>
@@ -61,14 +67,20 @@ export const LocationFormPage: React.FC<LocationFormProps> = ({
 
     const [loading, setLoading] = useState(false);
 
-    const title = initialData ? 'Edit location' : 'Create Location';
+    const title = initialData ? 'Edit Location' : 'Create Location';
     const description = initialData ? 'Edit a location.' : 'Add a new location';
     const toastMessage = initialData ? 'Location updated.' : 'Location created.';
     const action = initialData ? 'Save changes' : 'Create';
 
+    const { user } = useAuth();
+
     const form = useForm<LocationFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData || {}
+        defaultValues: initialData || {
+            organisation: {
+                id: user?.orgId
+            }
+        }
     });
 
     const onSubmit = async (data: LocationFormValues) => {
@@ -76,7 +88,7 @@ export const LocationFormPage: React.FC<LocationFormProps> = ({
             setLoading(true);
             if (initialData) {
                 await apiClient
-                    .put(`/location/${initialData.id}`, data)
+                    .put(`/address/${initialData.id}`, data)
                     .then((res) => res.data)
                     .then((data) => {
                         toast.success(toastMessage);
@@ -85,7 +97,7 @@ export const LocationFormPage: React.FC<LocationFormProps> = ({
                     });
             } else {
                 await apiClient
-                    .post("/location", data)
+                    .post("/address", data)
                     .then((res) => res.data)
                     .then((data) => {
                         toast.success(toastMessage);
@@ -145,10 +157,10 @@ export const LocationFormPage: React.FC<LocationFormProps> = ({
                         <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
                             <FormField
                                 control={form.control}
-                                name="name"
+                                name="label"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Location name*</FormLabel>
+                                        <FormLabel>Location name <span className="text-red-600">*</span></FormLabel>
                                         <FormControl>
                                             <Input disabled={loading} placeholder="Location name" {...field} />
                                         </FormControl>
@@ -158,13 +170,38 @@ export const LocationFormPage: React.FC<LocationFormProps> = ({
                             />
                             <FormField
                                 control={form.control}
-                                name="address"
+                                name="addressLine1"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Address</FormLabel>
+                                        <FormLabel>Address Line 1</FormLabel>
                                         <FormControl>
-                                            <Input disabled={loading} placeholder="Address" {...field} />
-
+                                            <Input disabled={loading} placeholder="Address Line 1" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="addressLine2"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Address Line 2</FormLabel>
+                                        <FormControl>
+                                            <Input disabled={loading} placeholder="Address Line 2" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="city"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>City</FormLabel>
+                                        <FormControl>
+                                            <Input disabled={loading} placeholder="City" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -228,7 +265,8 @@ export const LocationFormPage: React.FC<LocationFormProps> = ({
                                 )}
                             />
                         </div>
-                        <Button disabled={loading} className="ml-auto" type="submit">
+
+                        <Button disabled={loading || !form.formState.isValid} className="ml-auto" type="submit">
                             {loading &&
                                 <Loader className="animate-spin h-5 w-5 mr-3" />}
                             {action}

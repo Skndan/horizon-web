@@ -21,20 +21,22 @@ const LeaveSettingPage = () => {
     const [data, setData] = useState<LeaveType[]>([])
     const [isLoading, setLoading] = useState(true)
     const { flag, set } = useUpdateStore();
-    const [isOpen, setOpen] = useState(false);  
-    const {user} = useAuth();
+    const [isOpen, setOpen] = useState(false);
+    const { user } = useAuth();
 
     useEffect(() => {
         function fetchData() {
-            setLoading(true)
-
-            // apiClient.get(`/leave/type/get-by-org`).then((res) => res.data)
-            apiClient.get(`/leave/type/get-by-org/${user?.orgId}`).then((res) => res.data)
-                .then((data) => {
-                    setData(data)
-                    setLoading(false)
-                });
-            setLoading(false)
+            try {
+                apiClient.get(`/leave/type/get-by-org/${user?.orgId}`).then((res) => res.data)
+                    .then((data) => {
+                        setData(data)
+                        setLoading(false)
+                    });
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
+            }
         }
 
         fetchData();

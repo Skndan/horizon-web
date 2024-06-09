@@ -81,6 +81,7 @@ export interface Department {
   active?: boolean
   name?: string
   code?: string
+  organisation?: Organisation
 }
 
 export interface Address {
@@ -98,6 +99,7 @@ export interface Address {
   state: string
   country: string
   pincode: string
+  organisation: Organisation
 }
 
 export interface Account {

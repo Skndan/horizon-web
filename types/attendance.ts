@@ -1,4 +1,4 @@
-import { Profile } from "./profile"
+import { Organisation, Profile } from "./profile"
 
 export interface Shift {
     id: string
@@ -8,6 +8,7 @@ export interface Shift {
     isDynamic: boolean
     schedules: ShiftSchedule[]
     workDays: string[]
+    organisation: Organisation
 }
 
 export interface ShiftSchedule {

@@ -29,7 +29,7 @@ const LocationForm = ({
 
     return (
         <div className="flex-col">
-            <div className="flex-1 space-y-4 p-8 pt-6">
+            <div className="flex-1 space-y-4">
                 {isLoading ? (
                     <div className="grid h-screen place-items-center">
                         <Loader className="animate-spin h-5 w-5 mr-3" />

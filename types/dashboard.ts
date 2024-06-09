@@ -6,6 +6,10 @@ export interface DashboardData {
     inBreakCount: Daylog[]
     activeCount: Daylog[]
     monthwiseHeadCount: MonthwiseHeadCount[]
+    departmentCount: number; 
+    shiftCount: number; 
+    officeCount: number; 
+    leaveTypeCount: number;
 }
 
 export interface MonthwiseHeadCount {

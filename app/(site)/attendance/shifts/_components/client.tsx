@@ -15,10 +15,12 @@ import { Shift } from "@/types/attendance";
 
 interface ShiftTableProps {
   data: Shift[];
+  total: number;
 }
 
 export const ShiftTable: React.FC<ShiftTableProps> = ({
-  data
+  data,
+  total
 }) => {
   const params = useParams();
   const router = useRouter();
@@ -26,7 +28,7 @@ export const ShiftTable: React.FC<ShiftTableProps> = ({
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title={`Shifts (${data.length})`} description="Manage your employee's shifts" />
+        <Heading title={`Shifts (${total})`} description="Manage your employee's shifts" />
         <Link href={`/attendance/shifts/new`}>
           <Button>
             <Plus className="mr-2 h-4 w-4" /> Add
@@ -38,8 +40,8 @@ export const ShiftTable: React.FC<ShiftTableProps> = ({
       {data.length == 0 ? <EmptyStateTable
         title={"No shifts added"}
         description={"You have not added any shifts. Add one below."}
-        action={"Add Empoyee"}
-        onClick={() => router.push(`/organisation/employee/new`)}
+        action={"Add Shift"}
+        onClick={() => router.push(`/attendance/shifts/new`)}
       /> : <DataTable searchKey="name" columns={columns} data={data} />}
     </>
   );
