@@ -31,22 +31,14 @@ const SidebarNav = () => {
       role: ["hr", "admin", "user"],
       children: []
     },
-    {
-      href: `/tasks`,
-      label: "Tasks",
-      icon: CardStackIcon,
-      active: pathname.match(`/tasks`),
-      role: ["admin", "hr"],
-      children: []
-    },
-    {
-      href: `/leave-tracker`,
-      label: "Leave Tracker",
-      icon: ReaderIcon,
-      active: pathname.match(`/leave-tracker`),
-      role: ["admin", "hr"],
-      children: []
-    },
+    // {
+    //   href: `/leave-tracker`,
+    //   label: "Leave Tracker",
+    //   icon: ReaderIcon,
+    //   active: pathname.match(`/leave-tracker`),
+    //   role: ["admin", "hr"],
+    //   children: []
+    // },
     {
       href: `/organisation`,
       label: "Organisation",
@@ -80,33 +72,18 @@ const SidebarNav = () => {
       ]
     },
     {
-      href: '/payroll',
-      label: 'Payroll',
-      icon: PaperPlaneIcon,
-      active: pathname.match(`/payroll`),
-      role: ["admin", "hr"],
-      children: [
-        {
-          href: `/payroll/runs`,
-          label: "Payroll Runs",
-          description:
-            "Manage payroll runs",
-        },
-        {
-          href: `/payroll/settings`,
-          label: "Settings",
-          description:
-            "Manage payroll settings",
-        }
-      ]
-    },
-    {
       href: `/attendance`,
       label: "Attendance",
       icon: CalendarIcon,
       active: pathname.match(`/attendance`),
       role: ["admin", "hr"],
       children: [
+        {
+          href: `/leave-tracker`,
+          label: "Leave tracker",
+          description:
+            "Track Employee Leaves",
+        },
         {
           href: `/attendance/timesheet`,
           label: "Timesheet",
@@ -134,11 +111,40 @@ const SidebarNav = () => {
       ]
     },
     {
+      href: `/tasks`,
+      label: "Tasks",
+      icon: CardStackIcon,
+      active: pathname.match(`/tasks`),
+      role: ["admin"],
+      children: []
+    },
+    {
+      href: '/payroll',
+      label: 'Payroll',
+      icon: PaperPlaneIcon,
+      active: pathname.match(`/payroll`),
+      role: ["admin", "hr"],
+      children: [
+        {
+          href: `/payroll`,
+          label: "Payroll Runs",
+          description:
+            "Manage payroll runs",
+        },
+        {
+          href: `/payroll/settings`,
+          label: "Settings",
+          description:
+            "Manage payroll settings",
+        }
+      ]
+    }, 
+    {
       href: `/reports`,
       label: "Reports",
       icon: BarChartIcon,
       active: pathname.match(`/reports`),
-      role: ["admin", "hr"],
+      role: ["admin"],
       children: []
     }
   ];

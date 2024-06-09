@@ -10,13 +10,13 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import Register from "@/components/login/register";
+import { Label } from "@/components/ui/label";
 
 const AuthenticationPage = () => {
   return (
     <>
       <div className="relative h-full flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-        <div className="relative md: min-h-screen  hidden flex-col bg-muted p-10 dark:border-r lg:flex">
-          <div className="absolute inset-0" />
+        <div className="relative min-h-screen hidden flex-col bg-muted p-10 dark:border-r lg:flex">
           <div className="relative z-20 flex items-center ">
             <Image
               src="/horizon-light.svg"
@@ -47,12 +47,26 @@ const AuthenticationPage = () => {
             </blockquote>
           </div>
         </div>
-        <div className="lg:p-8">
-          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-            <div className="flex flex-col space-y-2 text-center">
-            </div>
+        <div>
+          <div className="container sm:mx-auto grid w-full grid-col-1 justify-center space-y-6 sm:w-[350px] "> 
+          <div className="flex justify-center align-middle p-8 lg:hidden">
+            <Image
+              src="/horizon-light.svg"
+              className="hidden dark:block"
+              width="150"
+              height="56"
+              alt="Logo"
+            />
+            <Image
+              src="/horizon-dark.svg"
+              className="block dark:hidden"
+              width="150"
+              height="56"
+              alt="Logo"
+            />
+          </div>
             <Tabs defaultValue="account">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid grid-cols-2 w-[350px]" >
                 <TabsTrigger value="account">Sign In</TabsTrigger>
                 <TabsTrigger value="password">Register</TabsTrigger>
               </TabsList>

@@ -39,7 +39,7 @@ const PasswordResetPage = ({ params }: { params: { token: string } }) => {
             if (error.response.status === 400) {
 
               // Inform the user about the bad request
-              toast.error('Your token is invalid');
+              toast.error('Your token is invalid!!');
               router.push("../../");
             } else {
               // For other errors, log the error message
@@ -52,7 +52,7 @@ const PasswordResetPage = ({ params }: { params: { token: string } }) => {
         })
 
       } else {
-        toast.error("Invalid token")
+        toast.error("Invalid token!")
       }
       setLoading(false);
     })()

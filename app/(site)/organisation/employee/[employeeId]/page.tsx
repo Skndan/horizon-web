@@ -49,6 +49,21 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
             setEarningType(earningTemp)
             setDeductionType(deductionTemp)
 
+            const departments = await apiClient.get(`/department/get-by-org/${user?.orgId}`);
+            setDepartment(departments.data.content)
+
+            const locations = await apiClient.get(`/address/get-by-org/${user?.orgId}`);
+            setLocation(locations.data.content)
+
+            const profiles = await apiClient.get(`/profile?pageSize=100`);
+            setProfile(profiles.data.content)
+
+            const shifts = await apiClient.get(`/shift/get-by-org/${user?.orgId}`);
+            setShifts(shifts.data.content)
+
+            const roles = await apiClient.get(`/role`);
+            setRoles(roles.data.content)
+
             if (params.employeeId != 'new') {
                 const employees = await apiClient.get(`/profile/${params.employeeId}`);
                 setData(employees.data)
@@ -77,22 +92,7 @@ const OnboardingPage = ({ params }: { params: { employeeId: string } }) => {
                         }
                     })
 
-            }
-
-            const departments = await apiClient.get(`/department`);
-            setDepartment(departments.data.content)
-
-            const locations = await apiClient.get(`/address/get-by-org/${user?.orgId}`);
-            setLocation(locations.data)
-
-            const profiles = await apiClient.get(`/profile?pageSize=100`);
-            setProfile(profiles.data.content)
-
-            const shifts = await apiClient.get(`/shift`);
-            setShifts(shifts.data.content)
-
-            const roles = await apiClient.get(`/role`);
-            setRoles(roles.data.content)
+            } 
 
             setLoading(false);
         })()
