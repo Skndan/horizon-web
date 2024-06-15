@@ -58,9 +58,9 @@ export const CellAction: React.FC<CellActionProps> = ({
       } else {
         setLoading(true);
         await apiClient.put(`/attendance/${data.id}`, data);
-        toast.success('Login time approved.');
+        toast.success('Login time approved');
         router.refresh();
-        set(`${Math.random()}`) 
+        set(`${Math.random()}`)
         setOpen(false);
         setLoading(false);
       }
@@ -77,22 +77,22 @@ export const CellAction: React.FC<CellActionProps> = ({
   const onSubmit = async (datum: AdjustmentFormValues) => {
     try {
 
-    setLoading(true);
-    data.status = "REJECTED";
-    data.remarks = datum.remarks;
-    await apiClient
-      .put(`/attendance/${data.id}`, data)
-      .then((res) => res.data)
-      .then((data) => {
-        toast.success("Remarks added and Request rejected");
-        router.refresh();
-        setOpen1(false);
-        set(`${Math.random()}`)
-      });
+      setLoading(true);
+      data.status = "REJECTED";
+      data.remarks = datum.remarks;
+      await apiClient
+        .put(`/attendance/${data.id}`, data)
+        .then((res) => res.data)
+        .then((data) => {
+          toast.success("Remarks added and Request rejected");
+          router.refresh();
+          setOpen1(false);
+          set(`${Math.random()}`)
+        });
     } catch (error: any) {
-        toast.error('Something went wrong.');
+      toast.error('Something went wrong.');
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -104,7 +104,10 @@ export const CellAction: React.FC<CellActionProps> = ({
         title="Drop some remarks before rejecting"
         description=""
         isOpen={open1}
-        onClose={() => setOpen1(false)}
+        onClose={() => {
+          data.status = "INITIATED";
+          setOpen1(false);
+        }}
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
@@ -126,7 +129,10 @@ export const CellAction: React.FC<CellActionProps> = ({
 
             <div className="pt-4 space-x-2 flex items-center justify-end w-full">
 
-              <Button disabled={loading} variant="outline" onClick={() => setOpen1(false)}>Cancel</Button>
+              <Button disabled={loading} variant="outline" onClick={() => {
+                data.status = "INITIATED";
+                setOpen1(false);
+              }}>Cancel</Button>
               <Button disabled={loading} variant="destructive" onClick={() => onConfirm("REJECTED")}>
                 {loading &&
                   <Loader className="animate-spin h-5 w-5 mr-3" />}
@@ -144,10 +150,16 @@ export const CellAction: React.FC<CellActionProps> = ({
         title="Are you approving this time adjustment?"
         description=""
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          data.status = "INITIATED";
+          setOpen(false);
+        }}
       >
         <div className="pt-4 space-x-2 flex items-center justify-end w-full">
-          <Button disabled={loading} variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button disabled={loading} variant="outline" onClick={() => {
+            data.status = "INITIATED";
+            setOpen(false);
+          }}>Cancel</Button>
           <Button disabled={loading} variant="destructive" onClick={() => onConfirm("REJECTED")}>Reject</Button>
           <Button disabled={loading} onClick={() => onConfirm("APPROVED")}>Approve</Button>
         </div>
