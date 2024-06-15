@@ -24,7 +24,7 @@ export const AdjustmentPage: React.FC<AdjustmentPageProps> = ({
       setLoading(true)
       await apiClient.get(`/attendance/get-by-org/${user?.orgId}/${status}`).then((res) => res.data)
         .then((data) => {
-          setData(data)
+          setData(data.content)
           setLoading(false)
         });
     }

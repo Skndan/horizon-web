@@ -109,11 +109,7 @@ const MySpaceAttendancePage = () => {
     };
 
     return (
-        <>
-
-
-
-
+        <> 
             <div>
                 <div className="flex items-center justify-between">
                     <SubHeading title="Attendance" description="Your attendance record" />
@@ -167,12 +163,13 @@ const MySpaceAttendancePage = () => {
                                                                     selected={field.value}
                                                                     onSelect={field.onChange}
                                                                     fromYear={1970}
+                                                                    toDate={new Date()}
                                                                     today={new Date()}
                                                                     toYear={new Date().getFullYear()}
                                                                 />
                                                             </PopoverContent>
                                                         </Popover>
-                                                    </FormControl>
+                                                    </FormControl> 
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
