@@ -42,7 +42,7 @@ const earningsFormSchema = z.object({
     componentType: z.any(),
     calculationType: z.any(),
     salaryComponent: z.any(),
-    value: z.number(),
+    value: z.any(),
     active: z.any(),
 })
 
@@ -84,6 +84,9 @@ export const EarningsForm: React.FC<EarningFormProps> = ({
         try {
             setLoading(true);
             if (initialData) {
+                if(data.salaryComponent.id === ''){
+                    data.salaryComponent = null;
+                }
                 await apiClient
                     .put(`/salary-component/${initialData.id}`, data)
                     .then((res) => res.data)
@@ -92,6 +95,10 @@ export const EarningsForm: React.FC<EarningFormProps> = ({
                         router.push(`../../salary-components`);
                     });
             } else {
+                if(data.salaryComponent.id === ''){
+                    data.salaryComponent = {};
+                    data.salaryComponent = null;
+                }
                 await apiClient
                     .post("/salary-component", data)
                     .then((res) => res.data)
@@ -289,6 +296,10 @@ export const EarningsForm: React.FC<EarningFormProps> = ({
     )
 }
 
+
+function cleanUserProfile(data: { componentName: string; componentInPayslip: string; componentType?: any; calculationType?: any; salaryComponent?: any; value?: any; active?: any }): { componentName: string; componentInPayslip: string; componentType?: any; calculationType?: any; salaryComponent?: any; value?: any; active?: any } {
+    throw new Error("Function not implemented.")
+}
 // PARTICULARS AMOUNT (RS.)
 // BASIC 24,220
 // HOUSE RENT ALLOWANCE 12,110

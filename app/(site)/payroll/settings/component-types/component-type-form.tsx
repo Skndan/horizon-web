@@ -49,7 +49,7 @@ const formSchema = z.object({
     name: z.string().min(1),
     description: z.string().min(1),
     type: z.string(),
-    fixed: z.boolean(),
+    fixed: z.boolean().optional(),
 });
 
 type ComponentTypeFormValues = z.infer<typeof formSchema>;
