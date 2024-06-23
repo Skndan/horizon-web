@@ -13,7 +13,6 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/context/auth-provider";
 import apiClient from "@/lib/api/api-client";
-import { columns } from "./components/columns";
 import { Reports } from "@/types/reports";
 import { CellAction } from "./components/cell-action";
 import toast from "react-hot-toast";
