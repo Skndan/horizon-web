@@ -66,7 +66,6 @@ export const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
     initialData,
     leaveType
 }) => {
-    const params = useParams();
     const router = useRouter();
 
     const [open, setOpen] = useState(false);
@@ -155,7 +154,7 @@ export const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
                                     <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue defaultValue={field.value} placeholder="Select the shift" />
+                                                <SelectValue defaultValue={field.value} placeholder="Select leave type" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>

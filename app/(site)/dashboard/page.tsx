@@ -216,7 +216,7 @@ const OverviewPage = () => {
                                                     <AlarmClockOff className="mr-2 h-4 w-4" /> :
                                                     <AlarmClock className="mr-2 h-4 w-4" />
                                             }
-                                            {` ${clockedIn ? "Logged Out" : "Logged In"} `}
+                                            {` ${clockedIn ? "Log Out" : "Log In"} `}
                                         </Button>
                                     </CardHeader>
                                     <CardContent>
