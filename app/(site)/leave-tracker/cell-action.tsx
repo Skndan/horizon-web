@@ -34,7 +34,7 @@ export const CellAction: React.FC<CellActionProps> = ({
       setOpen(false);
       set(`${Math.random()}`)
     } catch (error) {
-      toast.error('Make sure you re-assign all employees using this department first.');
+      toast.error('Something went wrong...');
     } finally {
       setOpen(false);
       setLoading(false);

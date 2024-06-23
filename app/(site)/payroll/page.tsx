@@ -22,11 +22,11 @@ const PayrollPage = () => {
 
     async function fetchData() {
         setLoading(true)
-        await apiClient.get('/address').then((res) => res.data)
-            .then((data) => {
-                setData(data.content)
-                setLoading(false)
-            });
+        // await apiClient.get('/address').then((res) => res.data)
+        //     .then((data) => {
+        //         setData(data.content)
+        //         setLoading(false)
+        //     });
         setLoading(false)
     }
 
@@ -53,23 +53,18 @@ const PayrollPage = () => {
                 ) : (
                     <Tabs defaultValue="run" className="space-y-4">
                         <TabsList>
-                            <TabsTrigger value="run">Run Payroll</TabsTrigger>
-                            <TabsTrigger value="test">Test</TabsTrigger>
+                            <TabsTrigger value="run">Run Payroll</TabsTrigger> 
                             <TabsTrigger value="history">Payroll History</TabsTrigger>
                         </TabsList>
                         <TabsContent value="run" className="space-y-4">
                             <RunPage />
-                        </TabsContent>
-                        <TabsContent value="test" className="space-y-4">
-                            <TestPage />
-                        </TabsContent>
+                        </TabsContent> 
                         <TabsContent value="history" className="space-y-4">
                             <EmptyStateTable
                                 title={"No payroll runs"}
                                 description={"You have not ran payrolls. Add one below."}
                                 action={"Create Payroll Run"}
-                                onClick={() => router.push(`/organisation/location/new`)} />
-                            {/* <DataTable searchKey="name" columns={columns} data={data} /> */}
+                                onClick={() => router.push(`/dashboard`)} />
                         </TabsContent>
                     </Tabs>
                 )}

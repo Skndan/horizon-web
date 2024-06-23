@@ -131,7 +131,7 @@ export function inWords(num: string) {
 
 
 export function convertTime(timeString: string) {
-    const date = new Date(`1970-01-01T${timeString}`);
+    const date = new Date(`${timeString}`);
     const updatedDate = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
     return updatedDate;
 };
