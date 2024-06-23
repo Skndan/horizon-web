@@ -39,10 +39,10 @@ import { Separator } from "@radix-ui/react-dropdown-menu"
 const deductionsFormSchema = z.object({
     componentName: z.string().min(1),
     componentInPayslip: z.string().min(1),
-    value: z.number(),
+    value: z.any().optional(),
     componentType: z.any(),
     calculationType: z.any(),
-    salaryComponent: z.any(), 
+    salaryComponent: z.any(),
     active: z.any(),
 })
 
@@ -84,6 +84,9 @@ export const DeductionForm: React.FC<DeductionFormProps> = ({
         try {
             setLoading(true);
             if (initialData) {
+                if (data.salaryComponent.id === '') {
+                    data.salaryComponent = null;
+                }
                 await apiClient
                     .put(`/salary-component/${initialData.id}`, data)
                     .then((res) => res.data)
@@ -92,6 +95,9 @@ export const DeductionForm: React.FC<DeductionFormProps> = ({
                         router.push(`../../salary-components`);
                     });
             } else {
+                if (data.salaryComponent.id === '') {
+                    data.salaryComponent = null;
+                }
                 await apiClient
                     .post("/salary-component", data)
                     .then((res) => res.data)

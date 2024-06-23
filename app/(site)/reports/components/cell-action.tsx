@@ -36,7 +36,7 @@ export const CellAction: React.FC<CellActionProps> = ({
           <DropdownMenuItem disabled>
             <FileText className="mr-2 h-4 w-4" /> PDF
           </DropdownMenuItem>
-          <DropdownMenuItem   onClick={() => onAction(data)}>
+          <DropdownMenuItem onClick={() => onAction(data)}>
             <FileSpreadsheet className="mr-2 h-4 w-4" /> Excel
           </DropdownMenuItem>
         </DropdownMenuContent>
