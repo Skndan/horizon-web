@@ -84,6 +84,38 @@ export function MainNav({
       ]
     },
     {
+      href: `/hiring`,
+      label: "Hiring",
+      icon: HomeIcon,
+      active: pathname.match(`/hiring`),
+      role: ["admin", "hr"],
+      children: [{
+        href: `/hiring/candidate`,
+        label: "Candidate",
+        description:
+          "View all your candidates at one place",
+      },
+      {
+        href: `/hiring/interview`,
+        label: "Interview",
+        description:
+          "-",
+      },
+      {
+        href: `/hiring/job-board`,
+        label: "Job Board",
+        description:
+          "-",
+      },
+      {
+        href: `/hiring/workflow`,
+        label: "Workflow",
+        description:
+          "-",
+      }
+      ]
+    },
+    {
       href: `/attendance`,
       label: "Attendance",
       icon: CalendarIcon,
