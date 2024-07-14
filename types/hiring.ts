@@ -12,7 +12,7 @@ export interface Candidate {
   email: string
   phone: string
   canRelocate: boolean
-  latestTransition: LatestTransition
+  latestTransition: Workflow
   source: string
   screeningRating: number
   interviewRating: number
@@ -21,7 +21,7 @@ export interface Candidate {
   position: Position
 }
 
-export interface LatestTransition {
+export interface Workflow {
   id: string
   createdAt: string
   updatedAt: string
