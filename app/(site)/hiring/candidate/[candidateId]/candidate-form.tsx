@@ -219,7 +219,7 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({
                                     <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue defaultValue={field.value} placeholder="Select the source" />
+                                                <SelectValue defaultValue={field.value} placeholder="Select the position" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>

@@ -113,7 +113,7 @@ export const WorkflowForm: React.FC<PositionFormProps> = ({
     }
 
     useEffect(() => {
-        fetchData();
+        fetchData(); 
     }, [])
 
 
