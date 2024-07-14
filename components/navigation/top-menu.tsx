@@ -102,16 +102,16 @@ export function MainNav({
           "-",
       },
       {
-        href: `/hiring/job-board`,
-        label: "Job Board",
+        href: `/hiring/position`,
+        label: "Positions",
         description:
-          "-",
+          "Manage your job roles",
       },
       {
         href: `/hiring/workflow`,
         label: "Workflow",
         description:
-          "-",
+          "Manage your workflow",
       }
       ]
     },
@@ -154,14 +154,14 @@ export function MainNav({
         }
       ]
     },
-    {
-      href: `/tasks`,
-      label: "Tasks",
-      icon: CardStackIcon,
-      active: pathname.match(`/tasks`),
-      role: ["admin"],
-      children: []
-    },
+    // {
+    //   href: `/tasks`,
+    //   label: "Tasks",
+    //   icon: CardStackIcon,
+    //   active: pathname.match(`/tasks`),
+    //   role: ["admin"],
+    //   children: []
+    // },
     {
       href: '/payroll',
       label: 'Payroll',
