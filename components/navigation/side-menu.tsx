@@ -111,6 +111,38 @@ const SidebarNav = () => {
       ]
     },
     {
+      href: `/hiring`,
+      label: "Hiring",
+      icon: HomeIcon,
+      active: pathname.match(`/hiring`),
+      role: ["admin", "hr"],
+      children: [{
+        href: `/hiring/candidate`,
+        label: "Employee",
+        description:
+          "View all your employees at one place",
+      },
+      {
+        href: `/organisation/department`,
+        label: "Department",
+        description:
+          "Define departments in your organisation",
+      },
+      {
+        href: `/organisation/location`,
+        label: "Locations",
+        description:
+          "Manage locations for your organisation",
+      },
+      {
+        href: `/organisation/settings`,
+        label: "Settings",
+        description:
+          "Manage organisation settings",
+      }
+      ]
+    },
+    {
       href: `/tasks`,
       label: "Tasks",
       icon: CardStackIcon,

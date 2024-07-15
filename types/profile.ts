@@ -24,6 +24,18 @@ export interface Profile {
   user: User
 }
 
+export interface Designation {
+  id: string
+  createdAt: string
+  updatedAt: string
+  createdBy: string
+  updatedBy: string
+  active: boolean
+  name: string
+  code: string
+  level: string
+}
+
 export interface Organisation {
   id: string
   createdAt: string

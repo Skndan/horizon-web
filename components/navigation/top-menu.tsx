@@ -84,6 +84,38 @@ export function MainNav({
       ]
     },
     {
+      href: `/hiring`,
+      label: "Hiring",
+      icon: HomeIcon,
+      active: pathname.match(`/hiring`),
+      role: ["admin", "hr"],
+      children: [{
+        href: `/hiring/candidate`,
+        label: "Candidate",
+        description:
+          "View all your candidates at one place",
+      },
+      {
+        href: `/hiring/interview`,
+        label: "Interview",
+        description:
+          "-",
+      },
+      {
+        href: `/hiring/position`,
+        label: "Positions",
+        description:
+          "Manage your job roles",
+      },
+      {
+        href: `/hiring/workflow`,
+        label: "Workflow",
+        description:
+          "Manage your workflow",
+      }
+      ]
+    },
+    {
       href: `/attendance`,
       label: "Attendance",
       icon: CalendarIcon,
@@ -122,14 +154,14 @@ export function MainNav({
         }
       ]
     },
-    {
-      href: `/tasks`,
-      label: "Tasks",
-      icon: CardStackIcon,
-      active: pathname.match(`/tasks`),
-      role: ["admin"],
-      children: []
-    },
+    // {
+    //   href: `/tasks`,
+    //   label: "Tasks",
+    //   icon: CardStackIcon,
+    //   active: pathname.match(`/tasks`),
+    //   role: ["admin"],
+    //   children: []
+    // },
     {
       href: '/payroll',
       label: 'Payroll',
