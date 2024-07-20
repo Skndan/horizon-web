@@ -91,8 +91,8 @@ export interface Department {
   createdBy?: string
   updatedBy?: string
   active?: boolean
-  name?: string
-  code?: string
+  name: string
+  code: string
   organisation?: Organisation
 }
 
