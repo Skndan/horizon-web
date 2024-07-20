@@ -8,6 +8,8 @@ import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
 import ProgressBarProvider from "@/providers/progress-bar-provider";
 import { AuthProvider } from "@/context/auth-provider";
+import { Suspense } from "react";
+import { Loader } from "lucide-react";
 
 const urbanist = Urbanist({ subsets: ["latin"] });
 
@@ -22,6 +24,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  const Loading = () => (
+    <div className="grid h-screen place-items-center">
+      <Loader className="animate-spin h-5 w-5 mr-3" />
+    </div>
+  )
+
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <head>
@@ -32,7 +41,9 @@ export default function RootLayout({
           <ProgressBarProvider>
             <AuthProvider>
               <ToastProvider />
-              {children}
+              <Suspense fallback={<Loading />}>
+                {children}
+              </Suspense>
             </AuthProvider>
           </ProgressBarProvider>
         </ThemeProvider>

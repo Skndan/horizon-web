@@ -11,8 +11,8 @@ import { Workflow } from "@/types/hiring";
 
 export const columns: ColumnDef<Workflow>[] = [
   {
-    header: "Transition Name",
-    accessorKey: "transitionName"
+    header: "Workflow Name",
+    accessorKey: "name"
   }, 
   // {
   //   header: "Description",

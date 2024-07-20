@@ -28,6 +28,18 @@ export interface Workflow {
   createdBy: string
   updatedBy: string
   active: boolean
+  organisation: Organisation
+  name: string
+}
+
+export interface WorkflowLine {
+  id: string
+  createdAt: string
+  updatedAt: string
+  createdBy: string
+  updatedBy: string
+  active: boolean
+  workflow: Workflow
   transitionName: string
   transitionLevel: number
   sendEmail: boolean

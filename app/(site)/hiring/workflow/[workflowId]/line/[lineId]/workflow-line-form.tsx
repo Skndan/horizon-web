@@ -19,6 +19,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Separator } from "@/components/ui/separator"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { SlashIcon } from "@radix-ui/react-icons"
 
 import {
@@ -33,32 +34,37 @@ import {
 import { SubHeading } from "@/components/ui/sub-heading"
 import apiClient from "@/lib/api/api-client"
 import { useAuth } from "@/context/auth-provider"
-import { Workflow } from "@/types/hiring"
+import { WorkflowLine } from "@/types/hiring"
 import { Profile } from "@/types/profile"
 
 const formSchema = z.object({
-    organisation: z.any(),
-    name: z.string().min(1)
+    workflow: z.any(),
+    transitionName: z.any(),
+    transitionLevel: z.any(),
+    sendEmail: z.any(),
+    approver: z.any()
 });
 
 type PositionFormValues = z.infer<typeof formSchema>
 
 interface PositionFormProps {
-    initialData: Workflow | null;
+    initialData: WorkflowLine | null;
+    workflowId: String
 };
 
-export const WorkflowForm: React.FC<PositionFormProps> = ({
-    initialData
+export const WorkflowLineForm: React.FC<PositionFormProps> = ({
+    initialData,
+    workflowId
 }) => {
     const router = useRouter();
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [profile, setProfile] = useState<Profile[]>([])
 
 
-    const title = initialData ? 'Edit Workflow' : 'Create Workflow';
-    const description = initialData ? 'Update workflow' : 'Adding new workflow';
-    const toastMessage = initialData ? 'Workflow updated' : 'Workflow created';
+    const title = initialData ? 'Edit Workflow Step' : 'Create Workflow Step';
+    const description = initialData ? 'Update workflow step' : 'Adding new workflow step';
+    const toastMessage = initialData ? 'Workflow step updated' : 'Workflow step created';
     const action = initialData ? 'Save changes' : 'Create';
 
     const { user } = useAuth(); 
@@ -66,8 +72,8 @@ export const WorkflowForm: React.FC<PositionFormProps> = ({
     const form = useForm<PositionFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
-            organisation: {
-                id: ''
+            workflow: {
+                id: workflowId
             }
         }
     });
@@ -75,25 +81,25 @@ export const WorkflowForm: React.FC<PositionFormProps> = ({
     const onSubmit = async (data: PositionFormValues) => {
 
         setLoading(true);
-        data.organisation.id = user?.orgId;
+        data.workflow.id = workflowId;
 
         if (initialData) {
             await apiClient
-                .put(`/workflow/${initialData.id}`, data)
+                .put(`/workflow-line/${initialData.id}`, data)
                 .then((res) => res.data)
                 .then((data) => {
                     toast.success(toastMessage);
                     router.refresh();
-                    router.push(`../workflow`);
+                    router.push(`../line`);
                 });
         } else {
             await apiClient
-                .post("/workflow", data)
+                .post("/workflow-line", data)
                 .then((res) => res.data)
                 .then((data) => {
                     toast.success(toastMessage);
                     router.refresh();
-                    router.push(`../workflow`);
+                    router.push(`../line`);
                 });
         }
     };
@@ -138,17 +144,42 @@ export const WorkflowForm: React.FC<PositionFormProps> = ({
                     <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="transitionName"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name <span className="text-red-600">*</span></FormLabel>
+                                    <FormLabel>Transition Name <span className="text-red-600">*</span></FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Workflow Name" {...field} />
+                                        <Input disabled={loading} placeholder="Transition Name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         /> 
+
+                        <FormField
+                            control={form.control}
+                            name="approver.id"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Interview Panel</FormLabel>
+                                    <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue defaultValue={field.value} placeholder="Select the Interview Panel" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {profile.map((size) => (
+                                                <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+
                     </div>
 
                     <Button disabled={loading} className="ml-auto" type="submit">
