@@ -18,8 +18,8 @@ const AttendanceShiftPage = () => {
   useEffect(() => {
     // if ("geolocation" in navigator) {
     //   navigator.geolocation.getCurrentPosition(function (position) {
-    //     // console.log("Latitude: ", position.coords.latitude);
-    //     // console.log("Longitude: ", position.coords.longitude);
+    //     
+    //     
     //   }, function (error) {
     //     console.error("Error: ", error);
     //   }, {
@@ -27,7 +27,7 @@ const AttendanceShiftPage = () => {
     //     maximumAge: 0
     //   });
     // } else {
-    //   // console.log("Geolocation is not supported by this browser.");
+    //   
     // }
 
     apiClient.get(`/shift/get-by-org/${user?.orgId}`).then((res) => res.data)

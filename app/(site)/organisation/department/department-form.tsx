@@ -80,7 +80,7 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                     });
             }
         } catch (error: any) {
-            console.log(error)
+            
             toast.error("Something went wrong.");
             onClose();
         } finally {

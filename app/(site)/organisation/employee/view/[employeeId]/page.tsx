@@ -43,11 +43,6 @@ const EmployeeDetailPage = ({ params }: { params: { employeeId: string } }) => {
                     setData(data)
                 });
 
-            await apiClient.get(`/profile/${params.employeeId}`).then((res) => res.data)
-                .then((data) => {
-                    setData(data)
-                });
-
             //get if the salary template is associated 
             await apiClient.get(`/profile-salary-template/get-by-profile/${params.employeeId}`).then((res) => res.data)
                 .then((data) => {

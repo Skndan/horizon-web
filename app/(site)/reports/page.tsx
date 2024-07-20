@@ -39,11 +39,10 @@ const ReportPage = () => {
             var startTime = dateObjectToString(date.from!);
             var endTime = dateObjectToString(date.to!);
 
-            console.log(startTime);
             await apiClient.get(`${data.url}/${data.isOrg ? user?.orgId : user?.profileId}/${startTime}/${endTime}`, {
                 responseType: 'blob' // important to handle the file as a blob
             }).then(response => {
-                // console.log(response.data)
+                
                 // if(response.data.status === 400){
                 //    // Inform the user about the bad request
                 //    toast.error('Oops...Report is not available'); 

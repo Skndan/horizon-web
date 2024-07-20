@@ -46,7 +46,7 @@ const WorkflowPage = ({ params }: { params: { workflowId: string } }) => {
                     // that falls out of the range of 2xx
                     if (error.response.status === 404) {
 
-                        console.log(error.response);
+                        
                         // Inform the user about the bad request
                         // alert('Bad request. Please check your input.');
                         toast.error("Workflow ID is not present");

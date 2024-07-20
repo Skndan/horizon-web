@@ -82,7 +82,7 @@ const OverviewPage = () => {
 
         const getDashboard = async () => {
             try {
-                console.log(user);
+                
                 await apiClient.get(`/dashboard/get-by-org/${user?.orgId}`)
                     .then((res) => {
                         setDashboardData(res.data);
