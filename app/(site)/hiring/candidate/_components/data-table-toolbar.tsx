@@ -8,12 +8,12 @@ import { Input } from "@/components/ui/input"
 
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
 import { DataTableViewOptions } from "./data-table-view-options"
-import { Workflow } from "@/types/hiring"
+import { WorkflowLine } from "@/types/hiring"
 import { source } from "../_data/data"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
-  level: Workflow[]
+  level: WorkflowLine[]
 }
 
 export function DataTableToolbar<TData>({
@@ -35,7 +35,7 @@ export function DataTableToolbar<TData>({
         />
         {/* <Button onClick={()=>{
           {table.getAllColumns().forEach(column => {
-            console.log(column.id, column);
+            
           })} 
         }}>
           h

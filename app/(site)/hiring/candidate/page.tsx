@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Candidate, Workflow } from "@/types/hiring";
+import { Candidate, Workflow, WorkflowLine } from "@/types/hiring";
 import Link from "next/link";
 import { DataTable } from "./_components/data-table";
 import { useWorkflow } from "@/store/use-workflow-store";
@@ -22,7 +22,7 @@ const CandidatePage = () => {
 
     const router = useRouter();
     const [data, setData] = useState<Candidate[]>([])
-    const [workflow, setWorkflow] = useState<Workflow[]>([])
+    const [workflow, setWorkflow] = useState<WorkflowLine[]>([])
     const [isLoading, setLoading] = useState(true)
     const [total, setTotal] = useState(0);
 
@@ -34,7 +34,7 @@ const CandidatePage = () => {
                 setTotal(data.totalElements)
             });
 
-        await apiClient.get(`/workflow/get-by-org/${user?.orgId}`).then((res) => res.data)
+        await apiClient.get(`/workflow-line/get-by-org/${user?.orgId}`).then((res) => res.data)
             .then((data) => {
                 setWorkflow(data.content)
                 set(data.content)

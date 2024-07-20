@@ -28,11 +28,11 @@ import {
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar } from "./data-table-toolbar"
 import { Button } from "@/components/ui/button"
-import { Workflow } from "@/types/hiring"
+import { WorkflowLine } from "@/types/hiring"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
-  level: Workflow[]
+  level: WorkflowLine[]
   data: TData[]
 }
 

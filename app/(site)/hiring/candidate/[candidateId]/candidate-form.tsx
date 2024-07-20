@@ -165,7 +165,7 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({
                         // that falls out of the range of 2xx
                         if (error.response.status === 400) {
 
-                            console.log(error.response);
+                            
                             // Inform the user about the bad request
                             // alert('Bad request. Please check your input.');
                             toast.error(error.response.data.error);
