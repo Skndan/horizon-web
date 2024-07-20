@@ -1,32 +1,36 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
+import { Button } from "@/components/ui/button"; 
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { columns } from "./columns";
-import { Profile } from "@/types/profile";
+import { Address, Department, Profile } from "@/types/profile";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import Link from "next/link";
+import { DataTable } from "./data-table";
 
 
 interface EmployeeClientProps {
   data: Profile[];
+  department: Department[];
+  address: Address[];
 }
 
 export const EmployeeClient: React.FC<EmployeeClientProps> = ({
-  data
+  data,
+  department,
+  address
 }) => {
-  const params = useParams();
   const router = useRouter();
+
 
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title={`Employees (${data.length})`} description="Manage your employees" />
+        <Heading title={`Employees (${data.length})`} description={`Manage ${address.length}  ${department.length}  your employees`} />
         <Link href={`/organisation/employee/new?tab=info`}>
           <Button>
             <Plus className="mr-2 h-4 w-4" /> Add
@@ -40,7 +44,7 @@ export const EmployeeClient: React.FC<EmployeeClientProps> = ({
         description={"You have not added any employees. Add one below."}
         action={"Add Empoyee"}
         onClick={() => router.push(`/organisation/employee/new?tab=info`)}
-      /> : <DataTable searchKey="name" columns={columns} data={data} />}
+      /> : <DataTable columns={columns} data={data} department={department} address={address} />}
     </>
   );
 };
