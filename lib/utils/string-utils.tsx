@@ -170,3 +170,21 @@ export function formatDateToMonthYear(dateString: string | undefined) {
     // Return the formatted date string
     return formattedDate;
 }
+
+// Convert CamelCase to normal string
+export function formatString(str: string): string {
+    if (!str) return '';
+
+    // Split by underscores to handle snake_case
+    const segments = str.split('_');
+
+    // Transform each segment to handle CamelCase
+    const formattedSegments = segments.map(segment => {
+        return segment
+            .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space between camel case words
+            .replace(/^./, (firstChar) => firstChar.toUpperCase()); // Capitalize first letter
+    });
+
+    // Join the segments back together
+    return formattedSegments.join(' ');
+}
