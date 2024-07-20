@@ -20,3 +20,18 @@ export function cleanInterface(user: any): RemoveEmptyObjects<any> {
 
   return cleanedUser as RemoveEmptyObjects<any>;
 }
+
+type KeyOf<T> = keyof T;
+
+export function filterDuplicates<T>(array: T[], key: KeyOf<T>): T[] {
+  const seen = new Set();
+  return array.filter(item => {
+    const keyValue = item[key];
+    if (seen.has(keyValue)) {
+      return false;
+    } else {
+      seen.add(keyValue);
+      return true;
+    }
+  });
+}
