@@ -62,9 +62,9 @@ export const WorkflowLineForm: React.FC<PositionFormProps> = ({
     const [profile, setProfile] = useState<Profile[]>([])
 
 
-    const title = initialData ? 'Edit Workflow' : 'Create Workflow';
-    const description = initialData ? 'Update workflow' : 'Adding new workflow';
-    const toastMessage = initialData ? 'Workflow updated' : 'Workflow created';
+    const title = initialData ? 'Edit Workflow Step' : 'Create Workflow Step';
+    const description = initialData ? 'Update workflow step' : 'Adding new workflow step';
+    const toastMessage = initialData ? 'Workflow step updated' : 'Workflow step created';
     const action = initialData ? 'Save changes' : 'Create';
 
     const { user } = useAuth(); 
@@ -90,7 +90,7 @@ export const WorkflowLineForm: React.FC<PositionFormProps> = ({
                 .then((data) => {
                     toast.success(toastMessage);
                     router.refresh();
-                    router.push(`../workflow`);
+                    router.push(`../line`);
                 });
         } else {
             await apiClient
@@ -99,7 +99,7 @@ export const WorkflowLineForm: React.FC<PositionFormProps> = ({
                 .then((data) => {
                     toast.success(toastMessage);
                     router.refresh();
-                    router.push(`../workflow`);
+                    router.push(`../line`);
                 });
         }
     };
@@ -161,11 +161,11 @@ export const WorkflowLineForm: React.FC<PositionFormProps> = ({
                             name="approver.id"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Hiring Manager</FormLabel>
+                                    <FormLabel>Interview Panel</FormLabel>
                                     <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue defaultValue={field.value} placeholder="Select the Hiring Manager" />
+                                                <SelectValue defaultValue={field.value} placeholder="Select the Interview Panel" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>

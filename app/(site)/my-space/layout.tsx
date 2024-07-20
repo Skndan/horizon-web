@@ -23,16 +23,16 @@ const sidebarNavItems = [
         href: "/my-space/team",
         badge: false,
     },
-    {
-        title: "My Projects",
-        href: "/my-space/project",
-        badge: true,
-    },
-    {
-        title: "My Tasks",
-        href: "/my-space/tasks",
-        badge: false,
-    },
+    // {
+    //     title: "My Projects",
+    //     href: "/my-space/project",
+    //     badge: true,
+    // },
+    // {
+    //     title: "My Tasks",
+    //     href: "/my-space/tasks",
+    //     badge: false,
+    // },
     {
         title: "Timesheet",
         href: "/my-space/timesheet",

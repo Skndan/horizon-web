@@ -6,7 +6,7 @@ import { Loader } from "lucide-react";
 import { WorkflowLineForm } from "./workflow-line-form";
 
 
-const WorkflowPage = ({ params }: { params: { lineId: string } }) => {
+const WorkflowPage = ({ params }: { params: { lineId: string, workflowId: string } }) => {
 
   const [data, setData] = useState(null);
 
@@ -16,7 +16,7 @@ const WorkflowPage = ({ params }: { params: { lineId: string } }) => {
     (async () => {
       if (params.lineId != 'new') {
         setLoading(true)
-        const candidate = await apiClient.get(`/workflow/${params.lineId}`);
+        const candidate = await apiClient.get(`/workflow-line/${params.lineId}`);
         setData(candidate.data)
         setLoading(false)
       }
@@ -32,7 +32,7 @@ const WorkflowPage = ({ params }: { params: { lineId: string } }) => {
           </div>
         ) : (
           <WorkflowLineForm
-            initialData={data} workflowId={params.lineId} />)}
+            initialData={data} workflowId={params.workflowId} />)}
       </div>
     </div>)
 }
