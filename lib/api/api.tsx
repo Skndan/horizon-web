@@ -15,7 +15,7 @@ export function setupAPIClient(ctx?: GetServerSidePropsContext) {
   let cookies = parseCookies(ctx);
 
   const api = axios.create({
-    baseURL: "https://api.horizon.skndan.com/api"
+    baseURL: process.env.NEXT_PUBLIC_API_URL
   });
 
   api.interceptors.response.use(
