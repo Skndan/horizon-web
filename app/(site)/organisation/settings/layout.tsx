@@ -8,8 +8,8 @@ const sidebarNavItems = [
         href: "/organisation/settings",
     },
     {
-        title: "Payroll",
-        href: "/organisation/settings/payroll",
+        title: "Designation",
+        href: "/organisation/settings/designation",
     },
     {
         title: "Notifications",

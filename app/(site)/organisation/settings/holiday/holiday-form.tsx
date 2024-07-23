@@ -127,7 +127,6 @@ export const HolidayForm: React.FC<HolidayFormProps> = ({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Name*</FormLabel>
-                                        <FormLabel> {formData?.name}</FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={loading}

@@ -1,13 +1,13 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { OrganisationForm } from "./components/organisation-form";
+import { OrganisationForm } from "./_components/organisation-form";
 import { SubHeading } from "@/components/ui/sub-heading";
 import { useEffect, useState } from "react";
 import { Address, Organisation } from "@/types/profile";
 import apiClient from "@/lib/api/api-client";
 import Image from "next/image"
-import { AddressForm } from "./components/address-form";
+import { AddressForm } from "./_components/address-form";
 import {
     Card,
     CardContent,

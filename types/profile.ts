@@ -144,3 +144,15 @@ export interface FileInfo {
   hash?: string
   fileUrl?: string
 }
+
+export interface Designation {
+  id: string
+  createdAt: string
+  updatedAt: string
+  createdBy: string
+  updatedBy: string
+  active: boolean
+  name: string
+  code: string
+  level: string
+}
