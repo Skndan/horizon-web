@@ -36,16 +36,14 @@ const MonthlyAttendancePage = () => {
                 setData(data)
                 setLoading(false)
             });
-    }, [selectedMonth])
 
-    useEffect(() => {
         apiClient.get(`/holiday/${user?.orgId}/${formatDate(selectedMonth!.toISOString(), "yyyy")}`).then((res) => res.data)
             .then((data) => {
                 const holidayDates = data.filter((holiday: Holiday) => holiday.active).map((holiday: Holiday) => format(holiday.holiday!, 'yyyy-MM-dd'));
                 setHoliday(holidayDates)
                 setLoading(false)
             });
-    }, [])
+    }, [selectedMonth])
 
 
     const daysInMonth = getDaysInMonth(selectedMonth);
@@ -107,11 +105,13 @@ const MonthlyAttendancePage = () => {
 
                                                         const isHoliday = holiday.includes(dateKey);
 
-                                                        const icon = isFutureDate ? '⚪'
+                                                        var icon = isFutureDate ? '⚪'
                                                             : dayLog.log.includes(dateKey) ? '🟢'
                                                                 : isWeekend(dateKey) ? '🔵'
-                                                                    : isHoliday ? '✨' // Change this icon to whatever you use for holidays
-                                                                        : '🔴';
+                                                                    : '🔴';
+                                                        if (isHoliday) {
+                                                            icon = '✨'
+                                                        }
                                                         return <TableCell key={index}>
                                                             {icon}
                                                         </TableCell>;
