@@ -33,6 +33,7 @@ import apiClient from "@/lib/api/api-client"
 import { Textarea } from "@/components/ui/textarea"
 import { useAuth } from "@/context/auth-provider"
 import { Candidate, Position } from "@/types/hiring"
+import EmployeeDetailPage from "@/app/(site)/organisation/employee/view/[employeeId]/page"
 
 const formSchema = z.object({
     organisation: z.any(),
@@ -43,6 +44,7 @@ const formSchema = z.object({
     source: z.any(),
     refer: z.any(),
     position: z.any(),
+    file: z.any()
 });
 
 type CandidateFormValues = z.infer<typeof formSchema>
@@ -135,15 +137,43 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({
         }
     });
 
+    const fileRef = form.register('file', { required: true });
+
     const onSubmit = async (data: CandidateFormValues) => {
         // try {
 
         setLoading(true);
         data.organisation.id = user?.orgId;
 
+        var dd = {
+            organisation: {
+                id: user?.orgId
+            },
+            position: {
+                id: data.position.id
+            },
+            name: data.name,
+            mobile: data.mobile,
+            source: data.source,
+            refer: data.refer
+        };
+
+
+        var formData = new FormData();
+        formData.append('data', JSON.stringify(dd));
+
+        // for (const file of data.file) {
+        formData.append("file", data.file);
+        // }
+
+
         if (initialData) {
             await apiClient
-                .put(`/candidate/${initialData.id}`, data)
+                .put(`/candidate/${initialData.id}`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    }
+                })
                 .then((res) => res.data)
                 .then((data) => {
                     toast.success(toastMessage);
@@ -152,7 +182,11 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({
                 });
         } else {
             await apiClient
-                .post("/candidate", data)
+                .post("/candidate", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    }
+                })
                 .then((res) => res.data)
                 .then((data) => {
                     toast.success(toastMessage);
@@ -165,7 +199,7 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({
                         // that falls out of the range of 2xx
                         if (error.response.status === 400) {
 
-                            
+
                             // Inform the user about the bad request
                             // alert('Bad request. Please check your input.');
                             toast.error(error.response.data.error);
@@ -296,6 +330,26 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({
                                 </FormItem>
                             )}
                         />
+
+                        <FormField
+                            control={form.control}
+                            name="file"
+                            render={({ field }) => {
+                                return (
+                                    <FormItem>
+                                        <FormLabel>Resume <span className="text-red-500">*</span></FormLabel>
+                                        <FormControl>
+                                            <Input type="file" disabled={loading}
+                                                {...fileRef}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                );
+                            }}
+                        />
+
                         <FormField
                             control={form.control}
                             name="refer"
