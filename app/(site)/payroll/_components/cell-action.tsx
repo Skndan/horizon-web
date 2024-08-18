@@ -15,7 +15,6 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { useDepartmentSheet } from "@/store/sheet/use-department-sheet";
 import apiClient from "@/lib/api/api-client";
 import { Address } from "@/types/profile";
 import { revalidatePath } from "next/cache";

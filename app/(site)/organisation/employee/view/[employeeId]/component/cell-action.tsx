@@ -7,12 +7,12 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button"; 
 import { AlertModal } from "@/components/modals/alert-modal";
-import { Department } from "@/types/profile";
+import { Department, FileInfo } from "@/types/profile";
 import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
 
 interface CellActionProps {
-  data: Department;
+  data: FileInfo;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({

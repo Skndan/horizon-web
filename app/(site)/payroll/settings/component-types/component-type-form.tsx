@@ -38,9 +38,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { ComponentType } from "@/types/payroll";
 
 interface ComponentTypeFormProps {
-    initialData: Department | null;
+    initialData: ComponentType | null;
     isOpen: boolean;
     onClose: () => void;
 }
