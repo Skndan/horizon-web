@@ -62,7 +62,7 @@ const LocationPage = () => {
                             description={"You have not added any locations. Add one below."}
                             action={"Add Location"}
                             onClick={() => router.push(`/organisation/location/new`)} />
-                        : <DataTable searchKey="name" columns={columns} data={data} />
+                        : <DataTable searchKey="label" columns={columns} data={data} />
 
                 )}
 

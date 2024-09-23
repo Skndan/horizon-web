@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import apiClient, { parseJwt } from "@/lib/api/api-client";

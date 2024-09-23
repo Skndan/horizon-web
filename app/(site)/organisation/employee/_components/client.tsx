@@ -30,7 +30,7 @@ export const EmployeeClient: React.FC<EmployeeClientProps> = ({
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title={`Employees (${data.length})`} description={`Manage ${address.length}  ${department.length}  your employees`} />
+        <Heading title={`Employees (${data.length})`} description={`Manage your employees`} />
         <Link href={`/organisation/employee/new?tab=info`}>
           <Button>
             <Plus className="mr-2 h-4 w-4" /> Add

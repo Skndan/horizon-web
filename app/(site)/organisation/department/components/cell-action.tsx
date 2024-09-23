@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { Department } from "@/types/profile"; 
+import { Department } from "@/types/profile";
 import { DepartmentForm } from "../department-form";
 import apiClient from "@/lib/api/api-client";
 import { useUpdateStore } from "@/store/use-update-store";
@@ -26,7 +26,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({
   data,
 }) => {
-  const router = useRouter(); 
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openForm, setOpenForm] = useState(false);
@@ -35,11 +35,16 @@ export const CellAction: React.FC<CellActionProps> = ({
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await apiClient.delete(`/department/${data.id}`);
-      set(data?.id ?? '');
-      toast.success('Department deleted.');
-      router.refresh();
+      await apiClient.delete(`/department/${data.id}`).then((res) => {
+        set(data?.id ?? '');
+        toast.success('Department deleted.');
+        router.refresh();
+      }).catch((e) => {
+        toast.error(e.response.data.error);
+        return;
+      }); 
     } catch (error) {
+      console.log(error);
       toast.error('Make sure you re-assign all employees using this department first.');
     } finally {
       setOpen(false);
@@ -81,6 +86,7 @@ export const CellAction: React.FC<CellActionProps> = ({
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setOpen(true)}
+            className="text-red-500"
           >
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>

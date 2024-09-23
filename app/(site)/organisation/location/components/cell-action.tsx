@@ -36,9 +36,14 @@ export const CellAction: React.FC<CellActionProps> = ({
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await apiClient.delete(`/location/${data.id}`);
-      toast.success('Location deleted.');
-      set(`delete-location-${data.id}`);
+      await apiClient.delete(`/address/${data.id}`).then((res) => {
+        set(`delete-location-${data.id}`);
+        toast.success('Location deleted.');
+      }).catch((e) => {
+        toast.error(e.response.data.error);
+        return;
+      });
+
     } catch (error) {
       toast.error('Make sure you re-assign all employees using this location first.' + error);
     } finally {
@@ -63,7 +68,7 @@ export const CellAction: React.FC<CellActionProps> = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          
+
           <DropdownMenuItem
             onClick={() => router.push(`/organisation/location/${data.id}`)}
           >
@@ -71,7 +76,7 @@ export const CellAction: React.FC<CellActionProps> = ({
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={() => setOpen(true)}    className="text-red-600"
+            onClick={() => setOpen(true)} className="text-red-600"
           >
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>

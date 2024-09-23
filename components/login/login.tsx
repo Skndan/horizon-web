@@ -30,6 +30,7 @@ import { useUserStore } from '@/store/use-user-store';
 import { useAuth } from '@/context/auth-provider';
 import { Eye, Loader } from 'lucide-react';
 import apiClient from '@/lib/api/api-client';
+import { signOut } from '@/lib/utils/sign-out';
 
 const formSchema = z.object({
   email: z.string().min(1),
