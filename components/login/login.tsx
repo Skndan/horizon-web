@@ -30,7 +30,6 @@ import { useUserStore } from '@/store/use-user-store';
 import { useAuth } from '@/context/auth-provider';
 import { Eye, Loader } from 'lucide-react';
 import apiClient from '@/lib/api/api-client';
-import { signOut } from '@/lib/utils/sign-out';
 
 const formSchema = z.object({
   email: z.string().min(1),
@@ -146,6 +145,7 @@ const Login = () => {
                           <Input
                             disabled={loading}
                             placeholder="Email"
+                            tabIndex={1}
                             {...field}
                           />
                         </FormControl>
@@ -163,7 +163,7 @@ const Login = () => {
                         <FormLabel>Password <span className='text-red-500'>*</span></FormLabel>
                         <FormControl className="relative">
                           <div className="relative">
-                            <Button size={"icon"} variant={"ghost"} className='absolute right-0' onClick={(e) => {
+                            <Button size={"icon"} variant={"ghost"} tabIndex={3} className='absolute right-0' onClick={(e) => {
                               e.preventDefault();
                               setEye(!eye);
                             }}>
@@ -174,6 +174,7 @@ const Login = () => {
                               type={eye ? 'text' : 'password'}
                               placeholder="Password"
                               className="pr-8"
+                              tabIndex={2}
                               {...field}
                             />
                           </div>
@@ -184,7 +185,8 @@ const Login = () => {
                   />
                 </div>
                 <div className="flex flex-col items-end pb-2">
-                  <Button variant="link" className="p-0 h-auto" onClick={(e) => {
+                  <Button variant="link" className="p-0 h-auto" tabIndex={4}
+                  onClick={(e) => {
                     e.preventDefault();
                     setOpen(false);
                   }}>
@@ -192,7 +194,7 @@ const Login = () => {
                   </Button>
                 </div>
               </div>
-              <Button disabled={loading} type="submit" className="w-full">
+              <Button disabled={loading} tabIndex={5} type="submit" className="w-full">
                 {loading &&
                   <Loader className="animate-spin h-5 w-5 mr-3" />}
                 Sign In

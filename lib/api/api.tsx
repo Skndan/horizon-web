@@ -3,7 +3,7 @@ import { GetServerSidePropsContext } from "next";
 import { parseCookies } from "nookies";
 import { saveTokensOnCookies } from "../utils/save-cookies";
 import { AuthTokenError } from "@/service/auth-token-error";
-import { signOut } from "../utils/sign-out";
+import { clearCache } from "../utils/clear-cache";
 
 let isRefreshing = false;
 let failedRequestsQueue: {
@@ -51,7 +51,7 @@ export function setupAPIClient(ctx?: GetServerSidePropsContext) {
                 );
 
                 if (typeof window) {
-                  signOut(ctx);
+                  clearCache(ctx);
                 }
               })
               .finally(() => {
@@ -75,7 +75,7 @@ export function setupAPIClient(ctx?: GetServerSidePropsContext) {
           });
         } else {
           if (typeof window) {
-            signOut();
+            clearCache();
           } else {
             return Promise.reject(new AuthTokenError());
           }

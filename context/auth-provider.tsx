@@ -4,7 +4,7 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import apiClient, { parseJwt } from "@/lib/api/api-client";
-import { signOut } from "@/lib/utils/sign-out";
+import { clearCache } from "@/lib/utils/clear-cache";
 import { saveTokensOnCookies } from "@/lib/utils/save-cookies";
 import toast from "react-hot-toast";
 import { Profile } from "@/store/use-user-store";
@@ -75,6 +75,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signIn = useCallback(async ({ email, password }: SignInCredentials) => {
     setIsLoading(true); // Start loading when sign-in begins
+    signOut();
     try {
       const response = await apiClient.post('/auth/authenticate', {
         email,
@@ -118,7 +119,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setRoles([]);
     setIsLoading(false); // Reset loading state
     // Clear tokens and navigate to login or home page
-    // e.g., clearTokens(); router.push('/login');
+    clearCache();
   }, []);
 
   if (isLoading) {
