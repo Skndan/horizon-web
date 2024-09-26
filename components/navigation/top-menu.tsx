@@ -36,7 +36,7 @@ export function MainNav({
       children: []
     },
     {
-      href: `/my-space`,
+      href: `/my-space/profile`,
       label: "My Space",
       icon: RocketIcon,
       active: pathname.match(`/my-space`),
