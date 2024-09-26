@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -37,7 +38,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { useAuth } from "@/context/auth-provider"
 import { Position } from "@/types/hiring"
 import { Address, Department, Profile } from "@/types/profile"
-
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css';
 const formSchema = z.object({
     organisation: z.any(),
     title: z.any(),
@@ -229,6 +231,9 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                                     <FormControl>
                                         <Input disabled={loading} placeholder="CTC" {...field} />
                                     </FormControl>
+                                    <FormDescription>
+                                        in Lakhs.
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -362,23 +367,21 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                                 </FormItem>
                             )}
                         />
-
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Description <span className="text-red-600">*</span></FormLabel>
-                                    <FormControl>
-                                        <Textarea disabled={loading} placeholder="Description" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
                     </div>
-
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Description <span className="text-red-600">*</span></FormLabel>
+                                <FormControl>
+                                    <ReactQuill
+                                        value={field.value} onChange={field.onChange} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <Button disabled={loading} className="ml-auto" type="submit">
                         {loading &&
                             <Loader className="animate-spin h-5 w-5 mr-3" />}
