@@ -5,7 +5,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 import DateTimeCell from "@/components/common/date-time-cell";
 import StatusCell from "@/components/common/status-cell";
-import AvatarCell from "@/components/common/avatar-cell";
 import { Position } from "@/types/hiring";
 
 
@@ -15,8 +14,12 @@ export const columns: ColumnDef<Position>[] = [
     accessorKey: "title"
   }, 
   {
-    header: "Description",
-    accessorKey: "description"
+    header: "CTC (in lakhs.)",
+    accessorKey: "ctc"
+  }, 
+  {
+    header: "Min. Experience",
+    accessorKey: "minExperience"
   }, 
   {
     header: "Job Code",

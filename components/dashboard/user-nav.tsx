@@ -3,17 +3,13 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/auth-provider";
-import { signOut } from "@/lib/utils/sign-out";
-import { useUserStore } from "@/store/use-user-store";
-// import { useUserStore } from "@/store/use-user-store"; 
+import { clearCache } from "@/lib/utils/clear-cache";
 import { useRouter } from "next/navigation";
 
 export function UserNav() {
@@ -76,7 +72,7 @@ export function UserNav() {
         <DropdownMenuItem
           className="text-red-600 cursor-pointer"
           onClick={() => {
-            signOut();
+            clearCache();
             router.push("/");
           }}>
           Log out

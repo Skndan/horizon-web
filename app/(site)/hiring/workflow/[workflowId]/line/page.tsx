@@ -138,7 +138,7 @@ const WorkflowPage = ({ params }: { params: { workflowId: string } }) => {
                         <>
                             <Alert variant={"warning"}>
                                 <TriangleAlert className="h-4 w-4" />
-                                <AlertTitle>Causion</AlertTitle>
+                                <AlertTitle>Warning</AlertTitle>
                                 <AlertDescription>
                                     Changing the order may affect the exist candidates level in the pipeline
                                 </AlertDescription>
