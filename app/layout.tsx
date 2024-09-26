@@ -38,14 +38,14 @@ export default function RootLayout({
       </head>
       <body className={urbanist.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ProgressBarProvider>
-            <AuthProvider>
+          <AuthProvider>
+            <ProgressBarProvider>
               <ToastProvider />
               <Suspense fallback={<Loading />}>
                 {children}
               </Suspense>
-            </AuthProvider>
-          </ProgressBarProvider>
+            </ProgressBarProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
