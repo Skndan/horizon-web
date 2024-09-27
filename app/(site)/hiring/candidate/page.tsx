@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Candidate, Workflow, WorkflowLine } from "@/types/hiring";
+import { Candidate, WorkflowLine } from "@/types/hiring";
 import Link from "next/link";
 import { DataTable } from "./_components/data-table";
 import { useWorkflow } from "@/store/use-workflow-store";
@@ -15,6 +15,7 @@ import { DataTableRowActions } from "./_components/data-table-row-actions";
 import { DataTableColumnHeader } from "./_components/data-table-column-header";
 import { source } from "./_data/data";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
+import { useDeleteStore } from "@/store/use-delete-store";
 
 const CandidatePage = () => {
 
@@ -25,8 +26,9 @@ const CandidatePage = () => {
     const [workflow, setWorkflow] = useState<WorkflowLine[]>([])
     const [isLoading, setLoading] = useState(true)
     const [total, setTotal] = useState(0);
-
+    const { flag } = useDeleteStore();
     const { set } = useWorkflow();
+
     async function fetchData() {
         await apiClient.get(`/candidate/get-by-org/${user?.orgId}`).then((res) => res.data)
             .then((data) => {
@@ -44,7 +46,7 @@ const CandidatePage = () => {
 
     useEffect(() => {
         fetchData();
-    }, [])
+    }, [flag])
 
     return (
         <>
@@ -77,6 +79,12 @@ const CandidatePage = () => {
                             )
                         },
                         {
+                            accessorKey: "position.title",
+                            header: ({ column }) => (
+                                <DataTableColumnHeader column={column} title="Position" />
+                            )
+                        },
+                        {
                             accessorKey: "email",
                             header: ({ column }) => (
                                 <DataTableColumnHeader column={column} title="Email" />
@@ -88,31 +96,31 @@ const CandidatePage = () => {
                                 <DataTableColumnHeader column={column} title="Mobile" />
                             )
                         },
-                        {
-                            accessorKey: "latestTransition.transitionName",
-                            header: ({ column }) => (
-                                <DataTableColumnHeader column={column} title="Level" />
-                            ),
-                            cell: ({ row }) => {
-                                const reportingManager = row.original.latestTransition.transitionName;
-                                const status = workflow.find(
-                                    (workflow) => workflow.transitionName === reportingManager
-                                )
+                        // {
+                        //     accessorKey: "latestTransition.transitionName",
+                        //     header: ({ column }) => (
+                        //         <DataTableColumnHeader column={column} title="Level" />
+                        //     ),
+                        //     cell: ({ row }) => {
+                        //         const reportingManager = row.original.latestTransition.transitionName;
+                        //         const status = workflow.find(
+                        //             (workflow) => workflow.transitionName === reportingManager
+                        //         )
 
-                                if (!status) {
-                                    return null
-                                }
+                        //         if (!status) {
+                        //             return null
+                        //         }
 
-                                return (
-                                    <div className={`flex w-[100px] items-center`}>
-                                        <span>{status.transitionName}</span>
-                                    </div>
-                                )
-                            },
-                            filterFn: (row, id, value) => {
-                                return value.includes(row.getValue(id))
-                            },
-                        }, 
+                        //         return (
+                        //             <div className={`flex w-[100px] items-center`}>
+                        //                 <span>{status.transitionName}</span>
+                        //             </div>
+                        //         )
+                        //     },
+                        //     filterFn: (row, id, value) => {
+                        //         return value.includes(row.getValue(id))
+                        //     },
+                        // }, 
                         {
                             accessorKey: "source",
                             header: ({ column }) => (
@@ -136,11 +144,11 @@ const CandidatePage = () => {
                             filterFn: (row, id, value) => {
                                 return value.includes(row.getValue(id))
                             },
-                        }
-                        // {
-                        //     id: "actions",
-                        //     cell: ({ row }) => <DataTableRowActions row={row} />,
-                        // },
+                        },
+                        {
+                            id: "actions",
+                            cell: ({ row }) => <DataTableRowActions row={row} />,
+                        },
                     ]} data={data} level={workflow} />
                 }
                 </div>

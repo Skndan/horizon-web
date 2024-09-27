@@ -8,24 +8,17 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu" 
+} from "@/components/ui/dropdown-menu"
 import { AlertModal } from "@/components/modals/alert-modal"
-import { Modal } from "@/components/ui/modal"
 import { useState } from "react"
 import apiClient from "@/lib/api/api-client"
 import toast from "react-hot-toast"
-import { usePathname, useRouter } from "next/navigation"
-import { revalidatePath } from "next/cache";
-import { useUpdateStore } from "@/store/use-update-store"
+import { useRouter } from "next/navigation"
 import { taskSchema } from "../_data/schema"
+import { Eye, Trash } from "lucide-react"
+import { useDeleteStore } from "@/store/use-delete-store"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -38,31 +31,38 @@ export function DataTableRowActions<TData>({
 
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const { set } = useUpdateStore();
+  const { set } = useDeleteStore();
 
-
-
-  const onStatusChange = async (status: string) => {
-    // try {
-    //   task.status = status;
-    //   await apiClient.put(`/tasks/${task.id}`, task);
-    //   set(`${Math.random()}`);
-    //   toast.success('Status updated');
-    // } catch (error: any) {
-    //   toast.error('Something went wrong.');
-    // } finally {
-    // }
-  }
+  const onConfirm = async () => {
+    try {
+      setLoading(true);
+      await apiClient.delete(`/candidate/${task.applicationNumber}`).then((res) => {
+        set(task.id ?? '');
+        toast.success('Candidate deleted.');
+        router.refresh();
+      }).catch((e) => {
+        toast.error(e.response.data.error);
+        return;
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error('Make sure you re-assign all employees using this department first.');
+    } finally {
+      setOpen(false);
+      setLoading(false);
+    }
+  };
 
   return (<>
 
-    {/* <Modal
-      title={task.title}
-      description={task.description}
+    <AlertModal
       isOpen={open}
       onClose={() => setOpen(false)}
-    /> */}
+      onConfirm={onConfirm}
+      loading={loading}
+    />
 
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -75,11 +75,16 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={() => setOpen(true)}>View</DropdownMenuItem>
-
-        {usePathname() === "/tasks" && <DropdownMenuItem onClick={() => router.push(`/tasks/${task.id}`)}>Edit</DropdownMenuItem>}
-
+        <DropdownMenuItem>
+          <Eye className="mr-2 h-4 w-4" /> View
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => setOpen(true)}
+          className="text-red-500"
+        >
+          <Trash className="mr-2 h-4 w-4" /> Delete
+        </DropdownMenuItem>
         {/* <DropdownMenuSub>
           <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>

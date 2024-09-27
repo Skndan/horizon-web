@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Workflow } from "@/types/hiring";
+import Link from "next/link";
 
 
 interface CellActionProps {
@@ -34,11 +35,11 @@ export const CellAction: React.FC<CellActionProps> = ({
             View Workflow
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => router.push(`/hiring/workflow/${data.id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" /> Edit
-          </DropdownMenuItem>
+          <Link href={`/hiring/workflow/${data.id}`}>
+            <DropdownMenuItem>
+              <Edit className="mr-2 h-4 w-4" /> Edit
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

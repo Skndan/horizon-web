@@ -33,17 +33,15 @@ import apiClient from "@/lib/api/api-client"
 import { Textarea } from "@/components/ui/textarea"
 import { useAuth } from "@/context/auth-provider"
 import { Candidate, Position } from "@/types/hiring"
-import EmployeeDetailPage from "@/app/(site)/organisation/employee/view/[employeeId]/page"
 
 const formSchema = z.object({
     organisation: z.any(),
+    position: z.any(),
     name: z.any(),
     email: z.any(),
     mobile: z.any(),
-    canRelocate: z.any(),
     source: z.any(),
     refer: z.any(),
-    position: z.any(),
     file: z.any()
 });
 
@@ -153,6 +151,7 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({
                 id: data.position.id
             },
             name: data.name,
+            email: data.email,
             mobile: data.mobile,
             source: data.source,
             refer: data.refer
@@ -162,10 +161,7 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({
         var formData = new FormData();
         formData.append('data', JSON.stringify(dd));
 
-        // for (const file of data.file) {
         formData.append("file", data.file);
-        // }
-
 
         if (initialData) {
             await apiClient

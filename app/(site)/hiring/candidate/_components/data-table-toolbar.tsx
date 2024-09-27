@@ -40,7 +40,7 @@ export function DataTableToolbar<TData>({
         }}>
           h
         </Button>  */}
-        {table.getColumn("latestTransition_transitionName") && (
+        {/* {table.getColumn("latestTransition_transitionName") && (
           <DataTableFacetedFilter
             column={table.getColumn("latestTransition_transitionName")}
             title="Level"
@@ -50,7 +50,7 @@ export function DataTableToolbar<TData>({
               })
             }
           />
-        )}
+        )} */}
         {table.getColumn("source") && (
           <DataTableFacetedFilter
             column={table.getColumn("source")}
