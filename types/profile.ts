@@ -138,8 +138,6 @@ export interface FileInfo {
   createdBy?: string
   updatedBy?: string
   active?: boolean
-  profile?: Profile
-  organisation?: Organisation
   fileName?: string
   hash?: string
   fileUrl?: string

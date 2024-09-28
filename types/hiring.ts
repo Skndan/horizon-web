@@ -1,4 +1,4 @@
-import { Department, Organisation, Profile } from "./profile"
+import { Department, FileInfo, Organisation, Profile } from "./profile"
 
 export interface Candidate {
   id: string
@@ -8,17 +8,16 @@ export interface Candidate {
   updatedBy: string
   active: boolean
   organisation: Organisation
+  applicationNumber: number
   name: string
   email: string
-  phone: string
+  mobile: string
   canRelocate: boolean
-  latestTransition: WorkflowLine
+  interview: string
   source: string
-  screeningRating: number
-  interviewRating: number
-  managerRating: number
   refer: string
   position: Position
+  fileInfo: FileInfo
 }
 
 export interface Workflow {
@@ -64,4 +63,16 @@ export interface Position {
   description: string
   code: string
   status: string
+}
+
+export interface Interview {
+  id: string
+  createdAt: string
+  updatedAt: string
+  createdBy: string
+  updatedBy: string
+  active: boolean
+  candidate: Candidate
+  workflow: Workflow
+  latestTransition: WorkflowLine
 }
