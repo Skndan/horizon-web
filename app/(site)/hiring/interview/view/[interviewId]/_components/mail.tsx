@@ -89,6 +89,17 @@ import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css';
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import toast from "react-hot-toast"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 
 interface MailProps {
   interviewId: string
@@ -104,16 +115,25 @@ const formSchema = z.object({
 
 type TimesheetFormValues = z.infer<typeof formSchema>
 
+const formSchema2 = z.object({
+  interview: z.any(),
+  workflowLine: z.any().optional(),
+  score: z.any().optional(),
+  remarks: z.any().optional(),
+  disQualified: z.any().optional(),
+});
+
+type TimesheetFormValues2 = z.infer<typeof formSchema2>
 
 export function Mail({
   interviewId,
 }: MailProps) {
-  const [mail] = useMail()
 
   const { user } = useAuth();
   const [data, setData] = useState<Interview | null>(null)
   const [line, setLine] = useState<InterviewLine[]>([])
   const [isLoading, setLoading] = useState(true)
+  const [open, setOpen] = useState(false);
 
   const form = useForm<TimesheetFormValues>({
     resolver: zodResolver(formSchema),
@@ -127,13 +147,17 @@ export function Mail({
     }
   });
 
-  const handleCommentChange = (content: string) => {
-    form.setValue('remarks', content); // Update the form field when ProseMirror content changes
-  };
-
-  // const onSubmit = (data: FormData) => {
-  //   console.log('Submitted data:', data);
-  // };
+  const form2 = useForm<TimesheetFormValues2>({
+    resolver: zodResolver(formSchema2),
+    defaultValues: {
+      interview: {
+        id: ''
+      },
+      workflowLine: {
+        id: ''
+      },
+    }
+  });
 
   const onSubmit = async (formValues: TimesheetFormValues) => {
     try {
@@ -141,21 +165,17 @@ export function Mail({
       formValues.interview.id = data?.id;
       formValues.workflowLine.id = data?.latestTransition.id;
 
-      console.log(formValues)
-
       await apiClient
         .post(`/interview/line`, formValues)
         .then((res) => res.data)
         .then(async (data) => {
-          await apiClient.get(`/interview/line/get-by-interview/${interviewId}`).then((res) => res.data)
-            .then((data) => {
-              setLine(data.content)
-            });
-
+          toast.success("Your remarks submitted!")
+          await fetchData();
         });
-        
-      form.reset();
 
+      form.reset();
+      form2.reset();
+      setOpen(false);
     } catch (error: any) {
 
     }
@@ -181,45 +201,85 @@ export function Mail({
   }, [])
 
   return (
-    <TooltipProvider delayDuration={0}>
-      <div className="m-4 border rounded-md">
-        <div className="items-stretch grid sm:grid-cols-2 grid-cols-1">
+    <>
+      <Dialog open={open} onOpenChange={(s) => setOpen(false)}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Disqualify Candidate</DialogTitle>
+            <DialogDescription>
+              {`Give a reason to disqualifying candidate.`}
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form2}>
+            <form onSubmit={form2.handleSubmit(onSubmit)} className="space-y-4 w-full">
+              <FormField
+                control={form2.control}
+                name="remarks"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Reason <span className="text-red-600">*</span></FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Reason for disqualification"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <Tabs defaultValue="overview">
-            <div className="flex items-center px-4 py-2">
-              <div className="flex flex-col gap-2">
-                <h1 className="text-xl font-bold">{data?.candidate.name}</h1>
-                <Label className="text-muted-foreground">{data?.candidate.position.title}</Label>
+              <div className="flex items-center">
+                <Button
+                  type="submit"
+                  className="ml-auto">
+                  Submit
+                </Button>
               </div>
-              <TabsList className="ml-auto">
-                <TabsTrigger
-                  value="overview"
-                  className="text-zinc-600 dark:text-zinc-200">
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger
-                  value="unread"
-                  className="text-zinc-600 dark:text-zinc-200">
-                  Files
-                </TabsTrigger>
-              </TabsList>
-            </div>
-            <Separator />
-            <TabsContent value="overview" className="m-0">
-              <MailList interview={data} />
-            </TabsContent>
-            <TabsContent value="unread" className="m-0">
-              <EmptyStateTable title={""} description={""} action={null} onClick={function (): void {
-                throw new Error("Function not implemented.")
-              }} />
-            </TabsContent>
-          </Tabs>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
 
-          <div className="flex h-full flex-col border-l">
-            <div className="flex items-center p-2">
-              <div className="flex items-center gap-2">
-                <Badge className="text-foreground">{data?.latestTransition.transitionName}</Badge>
-                {/* <Tooltip>
+      <TooltipProvider delayDuration={0}>
+        <div className="m-4 border rounded-md">
+          <div className="items-stretch grid sm:grid-cols-2 grid-cols-1">
+
+            <Tabs defaultValue="overview">
+              <div className="flex items-center px-4 py-2">
+                <div className="flex flex-col gap-2">
+                  <h1 className="text-xl font-bold">{data?.candidate.name}</h1>
+                  <Label className="text-muted-foreground">{data?.candidate.position.title}</Label>
+                </div>
+                <TabsList className="ml-auto">
+                  <TabsTrigger
+                    value="overview"
+                    className="text-zinc-600 dark:text-zinc-200">
+                    Overview
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="unread"
+                    className="text-zinc-600 dark:text-zinc-200">
+                    Files
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+              <Separator />
+              <TabsContent value="overview" className="m-0">
+                <MailList interview={data} />
+              </TabsContent>
+              <TabsContent value="unread" className="m-0">
+                <EmptyStateTable title={""} description={""} action={null} onClick={function (): void {
+                  throw new Error("Function not implemented.")
+                }} />
+              </TabsContent>
+            </Tabs>
+
+            <div className="flex h-full flex-col border-l">
+              <div className="flex items-center p-2">
+                <div className="flex items-center gap-2">
+                  <Badge className="text-foreground">{data?.latestTransition.transitionName}</Badge>
+                  {/* <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="ghost" size="icon" disabled={!mail}>
                       <Archive className="h-4 w-4" />
@@ -256,9 +316,9 @@ export function Mail({
                   </TooltipTrigger>
                   <TooltipContent>Move to trash</TooltipContent>
                 </Tooltip> */}
-              </div>
-              <div className="ml-auto flex items-center gap-2">
-                {/* <Tooltip>
+                </div>
+                <div className="ml-auto flex items-center gap-2">
+                  {/* <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="ghost" size="icon" disabled={!mail}>
                       <Reply className="h-4 w-4" />
@@ -266,48 +326,53 @@ export function Mail({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>Reply</TooltipContent>
-                </Tooltip> */}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" className="hover:text-red-500" size="icon">
-                      <Ban className="h-4 w-4" />
-                      <span className="sr-only">Disqualify</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Disqualify</TooltipContent>
-                </Tooltip>
-                <Separator orientation="vertical" className="mx-1 h-6" />
+                </Tooltip>  */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" className="hover:text-red-500" size="icon"
+                        disabled={data?.disQualified ?? false}
+                        onClick={(e) => {
+                          form.reset();
+                          form2.setValue("disQualified", true);
+                          setOpen(true)
+                        }}>
+                        <Ban className="h-4 w-4" />
+                        <span className="sr-only">Disqualify</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Disqualify</TooltipContent>
+                  </Tooltip>
+                  <Separator orientation="vertical" className="mx-1 h-6" />
 
-                <Button variant="outline" disabled={!mail}>
-                  <Label className="p-2">Proceed</Label>
-                  <Forward className="h-4 w-4" />
-                  <span className="sr-only">Forward</span>
-                </Button>
-
-              </div>
-              <Separator orientation="vertical" className="mx-2 h-6" />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" disabled={!mail}>
-                    <MoreVertical className="h-4 w-4" />
-                    <span className="sr-only">More</span>
+                  <Button variant="outline">
+                    <Label className="p-2">Proceed</Label>
+                    <Forward className="h-4 w-4" />
+                    <span className="sr-only">Forward</span>
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {/* <DropdownMenuItem>Mark as unread</DropdownMenuItem>
+
+                </div>
+                <Separator orientation="vertical" className="mx-2 h-6" />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <MoreVertical className="h-4 w-4" />
+                      <span className="sr-only">More</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {/* <DropdownMenuItem>Mark as unread</DropdownMenuItem>
                   <DropdownMenuItem>Star thread</DropdownMenuItem>
                   <DropdownMenuItem>Add label</DropdownMenuItem>
                   <DropdownMenuItem>Mute thread</DropdownMenuItem> */}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            <Separator />
-            {mail ? (
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <Separator />
               <div className="flex flex-1 flex-col">
                 <div className="flex items-start p-4">
                   <div className="flex items-start gap-4 text-sm">
                     <Avatar>
-                      <AvatarImage alt={"asdfasfd"} />
+                      <AvatarImage alt={data?.candidate.position.hiringLead.name} />
                       <AvatarFallback>
                         {data?.candidate.position.hiringLead.name
                           .split(" ")
@@ -324,29 +389,50 @@ export function Mail({
                 <Separator />
 
 
-                <ScrollArea className="h-96 p-4">
+                <ScrollArea className="h-96">
                   {
                     line.length == 0 ? <EmptyStateTable title={"No line"} description={"No line"} action={null} onClick={function (): void {
                       throw new Error("Function not implemented.");
                     }} /> :
 
-                      <div className="space-y-4">
+                      <div className="m-2 space-y-2">
                         {line.map((s) => {
-                          return <Alert key={s.id}>
-                            <AlertTitle>
-                              {toTitleCase(s.workflowLine.approver.name)}
-                            </AlertTitle>
-                            <AlertDescription className="text-foreground">
-                              <div className="flex flex-col">
-                                <div
-                                  dangerouslySetInnerHTML={{ __html: s.remarks }}
-                                />
-                                <div className="flex flex-row justify-end text-foreground">
-                                  <DateTimeCell dateStr={s.updatedAt} isTime={2} />
+                          return <div className="flex flex-col border rounded-md p-4" key={s.id}>
+                            <div className="flex flex-row justify-between">
+                              <div className="flex items-start gap-2 text-sm mb-4">
+                                <Avatar>
+                                  <AvatarImage alt={"asdfasfd"} />
+                                  <AvatarFallback>
+                                    {s.workflowLine.approver.name
+                                      .split(" ")
+                                      .map((chunk) => chunk[0])
+                                      .join("")}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div className="grid gap-1">
+                                  <h4 className="font-semibold">{s.workflowLine.approver.name}</h4>
+                                  <div className="line-clamp-1 text-xs">{s.workflowLine.approver.designation?.name ?? ""}</div>
                                 </div>
                               </div>
-                            </AlertDescription>
-                          </Alert>
+                              <div className="flex flex-row justify-end text-foreground">
+                                <DateTimeCell dateStr={s.updatedAt} isTime={2} />
+                              </div>
+                            </div>
+                            <div className="text-foreground">
+                              <div className="flex flex-col">
+                                {s.disQualified ?
+                                  <div className="flex flex-col gap-2">
+                                    <Label>{s.remarks}</Label>
+                                    <div className="flex">
+                                      <Badge variant={"destructive"}>Disqualified</Badge>
+                                    </div>
+                                  </div> :
+                                  <div
+                                    dangerouslySetInnerHTML={{ __html: s.remarks }}
+                                  />}
+                              </div>
+                            </div>
+                          </div>
                         })}
                       </div>
 
@@ -379,54 +465,18 @@ export function Mail({
                           <Switch id="mute" aria-label="Mute thread" /> Mute this
                           thread
                         </Label> */}
-                        <Button
-                          type="submit"
-                          className="ml-auto"
-                        >
+                        <Button disabled={data?.disQualified ?? false} type="submit" className="ml-auto">
                           Send
                         </Button>
                       </div>
                     </form>
                   </Form>
-
-
-                  {/* <form>
-                    <div className="grid gap-4">
-                      <Textarea
-                        className="p-4"
-                        placeholder={`Reply ${"asfdasdf"}...`}
-                      />
-                      <div className="flex items-center">
-                        <Label
-                          htmlFor="mute"
-                          className="flex items-center gap-2 text-xs font-normal"
-                        >
-                          <Switch id="mute" aria-label="Mute thread" /> Mute this
-                          thread
-                        </Label>
-                        <Button
-                          onClick={(e) => e.preventDefault()}
-                          size="sm"
-                          className="ml-auto"
-                        >
-                          Send
-                        </Button>
-                      </div>
-                    </div>
-                  </form> */}
-
-
                 </div>
               </div>
-            ) : (
-              <div className="p-8 text-center text-muted-foreground">
-                No message selected
-              </div>
-            )}
+            </div>
           </div>
-
         </div>
-      </div>
-    </TooltipProvider>
+      </TooltipProvider>
+    </>
   )
 }

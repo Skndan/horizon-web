@@ -69,10 +69,10 @@ export const CandidateInfo: React.FC<CandidateInfoProp> = ({
                         </Button>
                     </div>
                 </div>
-                <div className="flex flex-col p-4 hover:bg-muted">
+                {/* <div className="flex flex-col p-4 hover:bg-muted">
                     <Label className="text-muted-foreground">Gender</Label>
                     <Label className="text-md pt-1">{toTitleCase(interview?.candidate.email ?? '')}</Label>
-                </div>
+                </div> */}
                 {/* <div className="flex flex-col p-4 hover:bg-muted border">
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-col">

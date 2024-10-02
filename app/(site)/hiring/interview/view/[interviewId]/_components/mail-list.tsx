@@ -17,7 +17,7 @@ interface MailListProps {
 export function MailList({ interview }: MailListProps) {
   
   return (
-    <ScrollArea className="h-screen">
+    <ScrollArea className="h-auto">
       <div className="flex flex-col gap-2 p-4 pt-0">
       <CandidateInfo interview={interview} />
       </div>

@@ -1,3 +1,4 @@
+import { Label } from "../ui/label";
 
 interface DateTimeCellProps {
     dateStr: string;
@@ -48,7 +49,7 @@ const DateTimeCell = ({ dateStr, isTime }: DateTimeCellProps) => {
             }).format(date);
 
     }
-    return <div>{formattedDate}</div>;
+    return <Label>{formattedDate}</Label>;
 };
 
 export default DateTimeCell;

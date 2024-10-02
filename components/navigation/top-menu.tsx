@@ -99,7 +99,7 @@ export function MainNav({
         href: `/hiring/interview`,
         label: "Interview",
         description:
-          "-",
+          "Manage your interview schedules",
       },
       {
         href: `/hiring/position`,

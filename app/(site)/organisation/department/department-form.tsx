@@ -121,8 +121,7 @@ export const DepartmentForm: React.FC<DepartmentFormProps> = ({
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Name <span className="text-red-600">*</span></FormLabel>
-                                        <FormLabel> {formData?.name}</FormLabel>
+                                        <FormLabel>Name <span className="text-red-600">*</span></FormLabel> 
                                         <FormControl>
                                             <Input
                                                 disabled={loading}
