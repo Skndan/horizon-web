@@ -75,4 +75,23 @@ export interface Interview {
   candidate: Candidate
   workflow: Workflow
   latestTransition: WorkflowLine
+  interviewDate: string
+  startTime: string
+  endTime: string
+  disQualified: boolean
+  score: number
+}
+
+export interface InterviewLine {
+  id: string
+  createdAt: string
+  updatedAt: string
+  createdBy: string
+  updatedBy: string
+  active: boolean
+  interview: Interview
+  workflowLine: WorkflowLine
+  score: number
+  remarks: string
+  disQualified: boolean
 }

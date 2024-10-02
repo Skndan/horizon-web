@@ -66,7 +66,7 @@ const Register = () => {
     (async () => {
 
       await apiClient.get(`/company-category/all`).then((data) => {
-        setData(data.data.content)
+        setData(data.data)
         setLoading(false)
       }).catch(error => {
         // Handle errors

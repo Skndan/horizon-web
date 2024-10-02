@@ -40,6 +40,7 @@ import { Position } from "@/types/hiring"
 import { Address, Department, Profile } from "@/types/profile"
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css';
+import { Heading } from "@/components/ui/heading"
 const formSchema = z.object({
     organisation: z.any(),
     title: z.any(),
@@ -174,7 +175,7 @@ export const PositionForm: React.FC<PositionFormProps> = ({
     return (
         <>
             <div className="flex items-center justify-between">
-                <SubHeading title={title} description={description} />
+                <Heading title={title} description={description} />
                 <Breadcrumb className="sm:block hidden">
                     <BreadcrumbList>
                         <BreadcrumbItem>
@@ -194,6 +195,7 @@ export const PositionForm: React.FC<PositionFormProps> = ({
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                     <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
+                        {/* title */}
                         <FormField
                             control={form.control}
                             name="title"
@@ -208,6 +210,7 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                             )}
                         />
 
+                        {/* code */}
                         <FormField
                             control={form.control}
                             name="code"
@@ -222,6 +225,7 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                             )}
                         />
 
+                        {/* ctc */}
                         <FormField
                             control={form.control}
                             name="ctc"
@@ -239,6 +243,7 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                             )}
                         />
 
+                        {/* exp */}
                         <FormField
                             control={form.control}
                             name="minExperience"
@@ -253,6 +258,7 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                             )}
                         />
 
+                        {/* status */}
                         <FormField
                             control={form.control}
                             name="status"
@@ -276,6 +282,7 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                             )}
                         />
 
+                        {/* department */}
                         <FormField
                             control={form.control}
                             name="department.id"
@@ -299,6 +306,7 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                             )}
                         />
 
+                        {/* Loation */}
                         <FormField
                             control={form.control}
                             name="location.id"
@@ -322,6 +330,7 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                             )}
                         />
 
+                        {/* employmentType */}
                         <FormField
                             control={form.control}
                             name="employmentType"
@@ -345,6 +354,7 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                             )}
                         />
 
+                        {/* hiringLead */}
                         <FormField
                             control={form.control}
                             name="hiringLead.id"
@@ -368,6 +378,8 @@ export const PositionForm: React.FC<PositionFormProps> = ({
                             )}
                         />
                     </div>
+
+                    {/* description */}
                     <FormField
                         control={form.control}
                         name="description"

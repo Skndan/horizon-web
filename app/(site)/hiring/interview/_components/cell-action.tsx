@@ -1,11 +1,11 @@
 "use client";
 
-import { Edit, MoreHorizontal } from "lucide-react";
+import { Edit, Eye, MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Interview } from "@/types/hiring";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
 
@@ -28,9 +28,15 @@ export const CellAction: React.FC<CellActionProps> = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <Link href={`/hiring/position/${data.id}`}>
+          <Link href={`/hiring/interview/${data.id}`}>
             <DropdownMenuItem>
               <Edit className="mr-2 h-4 w-4" /> Edit
+            </DropdownMenuItem>
+          </Link>
+          <DropdownMenuSeparator/>
+          <Link href={`/hiring/interview/view/${data.id}`}>
+            <DropdownMenuItem>
+              <Eye className="mr-2 h-4 w-4" /> View
             </DropdownMenuItem>
           </Link>
           {/* <DropdownMenuSeparator/>

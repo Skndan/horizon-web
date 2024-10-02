@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { useRouter } from "next/navigation"
-
+import TimeRangePicker from "shadcn-time-range-picker";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
@@ -164,9 +164,8 @@ export const ShiftForm: React.FC<ShiftFormProps> = ({
         });
 
         // Convert formData to JSON format
-        ;
-    };
 
+    };
 
     return (
         <>

@@ -7,6 +7,8 @@ import DateTimeCell from "@/components/common/date-time-cell";
 import StatusCell from "@/components/common/status-cell";
 import { Interview } from "@/types/hiring";
 import AvatarCell from "@/components/common/avatar-cell";
+import { Label } from "@/components/ui/label";
+import { ArrowRightLeft } from "lucide-react";
 
 
 export const columns: ColumnDef<Interview>[] = [ 
@@ -20,49 +22,37 @@ export const columns: ColumnDef<Interview>[] = [
         avatarUrl={""}
         employeeId={profile.id}
         employeeName={profile.candidate.name}
-        employeeCode={profile.candidate.applicationNumber.toString()} // Assuming you have a strategy for the ID
+        employeeCode={`#${profile.candidate.applicationNumber.toString()}`} // Assuming you have a strategy for the ID
       />
     }
   },
   {
-    header: "CTC (in lakhs.)",
-    accessorKey: "ctc"
-  }, 
-  {
-    header: "Min. Experience",
-    accessorKey: "minExperience"
-  }, 
-  {
-    header: "Job Code",
-    accessorKey: "code"
-  },  
-  // {
-  //   header: "Reporting To",
-  //   accessorKey: "profile.reportingManger.name",
-  //   cell: ({ row }) => {
-  //     // Access nested data directly from the row's original data
-  //     const reportingManager = row.original.profile.reportingManager;
-  //     return reportingManager ? <AvatarCell
-  //       avatarUrl={""}
-  //       employeeId={reportingManager?.id ?? ''}
-  //       employeeName={reportingManager?.name ?? ''}
-  //       employeeCode={reportingManager?.employeeId ?? ''} // Assuming you have a strategy for the ID
-  //     /> : <></>
-  //   }
-  // },
-  {
-    header: "Status",
-    accessorKey: "status",
-    cell: ({ row }) => <StatusCell status={row.getValue("status")} />
+    header: "Position",
+    accessorKey: "candidate.position.title"
   },
-  // {
-  //   header: "Start Date",
-  //   accessorKey: "startDate",
-  // },
-  // {
-  //   header: "End Date",
-  //   accessorKey: "endDate",
-  // },
+  {
+    header: "Last Transition",
+    accessorKey: "latestTransition.transitionName"
+  },   
+    {
+      accessorKey: "interviewDate",
+      header: "Interview Date",
+      cell: ({ row }) => <DateTimeCell dateStr={row.getValue("interviewDate")} isTime={0} />
+    }, 
+  {
+    accessorKey: "startTime",
+    header: "Slot",
+    cell: ({ row }) => {
+      const tariff = row.original;
+      return <>
+        <div className="flex flex-row items-center gap-2">
+          <Label>{tariff.startTime}</Label>
+          <ArrowRightLeft className="h-4 w-4 text-muted-foreground" />
+          <Label>{tariff.endTime}</Label>
+        </div>
+      </>
+    }
+  },
   {
     accessorKey: "createdAt",
     header: "Created At",

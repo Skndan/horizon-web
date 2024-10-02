@@ -174,11 +174,11 @@ export const DesignationForm: React.FC<DesignationFormProps> = ({
                             name="level"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Source <span className="text-red-600">*</span></FormLabel>
+                                    <FormLabel>Seniority <span className="text-red-600">*</span></FormLabel>
                                     <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue defaultValue={field.value} placeholder="Select the source" />
+                                                <SelectValue defaultValue={field.value} placeholder="Select the seniority" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>

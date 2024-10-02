@@ -7,6 +7,7 @@ import { UserNav } from "@/components/dashboard/user-nav";
 import { MainNav } from "@/components/navigation/top-menu";
 import MobileNav from "@/components/navigation/top-menu-mobile";
 import { CommandMenu } from "@/components/common/command-center";
+import Link from "next/link";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -16,20 +17,22 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <header className="sticky top-0 z-40 border-b bg-background">
           <div className="flex h-16 items-center px-4">
             <MobileNav />
-            <Image
-              src="/horizon-light.svg"
-              className="hidden dark:block pl-3"
-              width="136"
-              height="56"
-              alt="Logo"
-            />
-            <Image
-              src="/horizon-dark.svg"
-              className="block dark:hidden pl-3"
-              width="136"
-              height="56"
-              alt="Logo"
-            />
+            <Link href={'/dashboard'}>
+              <Image
+                src="/horizon-light.svg"
+                className="hidden dark:block pl-3"
+                width="136"
+                height="56"
+                alt="Logo"
+              />
+              <Image
+                src="/horizon-dark.svg"
+                className="block dark:hidden pl-3"
+                width="136"
+                height="56"
+                alt="Logo"
+              />
+            </Link>
             <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
               <ThemeModeToggle />
@@ -37,8 +40,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               <CommandMenu />
             </div>
           </div>
-        </header> 
-          {children} 
+        </header>
+        {children}
       </main>
     </div>
   );

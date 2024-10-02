@@ -3,10 +3,10 @@ import { Label } from "../ui/label";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const AvatarCell = ({ avatarUrl, employeeName, employeeCode, employeeId }: { avatarUrl: string, employeeName: string, employeeCode: string, employeeId: string }) => {
+const AvatarCell = ({ type, avatarUrl, employeeName, employeeCode, employeeId }: { type?: string, avatarUrl: string, employeeName: string, employeeCode: string, employeeId: string }) => {
     const pathname = usePathname();
     return <>
-        <Link href={{ pathname: `/organisation/employee/view/${employeeId}`, query: { redirect: pathname } }}>
+        <Link href={type === "candidate" ? { pathname: `/hiring/candidate/view/${employeeId}`, query: { redirect: pathname } } : { pathname: `/organisation/employee/view/${employeeId}`, query: { redirect: pathname } }}>
             {/* <Link href={`/organisation/employee/view/${employeeId}`}> */}
             <div className="flex flex-row items-center hover:underline">
                 <Avatar>

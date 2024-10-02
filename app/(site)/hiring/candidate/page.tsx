@@ -16,6 +16,7 @@ import { DataTableColumnHeader } from "./_components/data-table-column-header";
 import { source } from "./_data/data";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { useDeleteStore } from "@/store/use-delete-store";
+import AvatarCell from "@/components/common/avatar-cell";
 
 const CandidatePage = () => {
 
@@ -61,96 +62,105 @@ const CandidatePage = () => {
                         </Link>
                     </div>
                     <Separator />
-                  {  
-                    data.length == 0 ?
-                                    <EmptyStateTable
-                                        title={"No candidate added"}
-                                        description={"You have not added candidate. Add one below."}
-                                        action={"Add candidate"}
-                                        onClick={() => {
-                                            router.push(`/hiring/candidate/new`);
-                                        }} /> :
+                    {
+                        data.length == 0 ?
+                            <EmptyStateTable
+                                title={"No candidate added"}
+                                description={"You have not added candidate. Add one below."}
+                                action={"Add candidate"}
+                                onClick={() => {
+                                    router.push(`/hiring/candidate/new`);
+                                }} /> :
 
-                    <DataTable columns={[
-                        {
-                            accessorKey: "name",
-                            header: ({ column }) => (
-                                <DataTableColumnHeader column={column} title="Name" />
-                            )
-                        },
-                        {
-                            accessorKey: "position.title",
-                            header: ({ column }) => (
-                                <DataTableColumnHeader column={column} title="Position" />
-                            )
-                        },
-                        {
-                            accessorKey: "email",
-                            header: ({ column }) => (
-                                <DataTableColumnHeader column={column} title="Email" />
-                            )
-                        },
-                        {
-                            accessorKey: "mobile",
-                            header: ({ column }) => (
-                                <DataTableColumnHeader column={column} title="Mobile" />
-                            )
-                        },
-                        // {
-                        //     accessorKey: "latestTransition.transitionName",
-                        //     header: ({ column }) => (
-                        //         <DataTableColumnHeader column={column} title="Level" />
-                        //     ),
-                        //     cell: ({ row }) => {
-                        //         const reportingManager = row.original.latestTransition.transitionName;
-                        //         const status = workflow.find(
-                        //             (workflow) => workflow.transitionName === reportingManager
-                        //         )
+                            <DataTable columns={[
+                                {
+                                    header: "Candidate",
+                                    accessorKey: "name",
+                                    cell: ({ row }) => {
+                                        // Access nested data directly from the row's original data
+                                        const profile = row.original;
+                                        return <AvatarCell
+                                            type={"candidate"}
+                                            avatarUrl={""}
+                                            employeeId={profile.id}
+                                            employeeName={profile.name}
+                                            employeeCode={`#${profile.applicationNumber.toString()}`} // Assuming you have a strategy for the ID
+                                        />
+                                    }
+                                },
+                                {
+                                    accessorKey: "position.title",
+                                    header: ({ column }) => (
+                                        <DataTableColumnHeader column={column} title="Position" />
+                                    )
+                                },
+                                {
+                                    accessorKey: "email",
+                                    header: ({ column }) => (
+                                        <DataTableColumnHeader column={column} title="Email" />
+                                    )
+                                },
+                                {
+                                    accessorKey: "mobile",
+                                    header: ({ column }) => (
+                                        <DataTableColumnHeader column={column} title="Mobile" />
+                                    )
+                                },
+                                // {
+                                //     accessorKey: "latestTransition.transitionName",
+                                //     header: ({ column }) => (
+                                //         <DataTableColumnHeader column={column} title="Level" />
+                                //     ),
+                                //     cell: ({ row }) => {
+                                //         const reportingManager = row.original.latestTransition.transitionName;
+                                //         const status = workflow.find(
+                                //             (workflow) => workflow.transitionName === reportingManager
+                                //         )
 
-                        //         if (!status) {
-                        //             return null
-                        //         }
+                                //         if (!status) {
+                                //             return null
+                                //         }
 
-                        //         return (
-                        //             <div className={`flex w-[100px] items-center`}>
-                        //                 <span>{status.transitionName}</span>
-                        //             </div>
-                        //         )
-                        //     },
-                        //     filterFn: (row, id, value) => {
-                        //         return value.includes(row.getValue(id))
-                        //     },
-                        // }, 
-                        {
-                            accessorKey: "source",
-                            header: ({ column }) => (
-                                <DataTableColumnHeader column={column} title="Source" />
-                            ),
-                            cell: ({ row }) => {
-                                const priority = source.find(
-                                    (priority) => priority.value === row.getValue("source")
-                                )
+                                //         return (
+                                //             <div className={`flex w-[100px] items-center`}>
+                                //                 <span>{status.transitionName}</span>
+                                //             </div>
+                                //         )
+                                //     },
+                                //     filterFn: (row, id, value) => {
+                                //         return value.includes(row.getValue(id))
+                                //     },
+                                // }, 
+                                {
+                                    accessorKey: "source",
+                                    header: ({ column }) => (
+                                        <DataTableColumnHeader column={column} title="Source" />
+                                    ),
+                                    cell: ({ row }) => {
+                                        const priority = source.find(
+                                            (priority) => priority.value === row.getValue("source")
+                                        )
 
-                                if (!priority) {
-                                    return null
-                                }
+                                        if (!priority) {
+                                            return null
+                                        }
 
-                                return (
-                                    <div className="flex items-center">
-                                        <span>{priority.label}</span>
-                                    </div>
-                                )
-                            },
-                            filterFn: (row, id, value) => {
-                                return value.includes(row.getValue(id))
-                            },
-                        },
-                        {
-                            id: "actions",
-                            cell: ({ row }) => <DataTableRowActions row={row} />,
-                        },
-                    ]} data={data} level={workflow} />
-                }
+                                        return (
+                                            <div className="flex items-center">
+                                                <span>{priority.label}</span>
+                                            </div>
+                                        )
+                                    },
+                                    filterFn: (row, id, value) => {
+                                        return value.includes(row.getValue(id))
+                                    },
+                                },
+                                {
+                                    id: "actions",
+                                    cell: ({ row }) => <DataTableRowActions row={row} />,
+                                },
+                            ]} data={data} level={workflow} />
+                    }
                 </div>
             </div>
         </>)
