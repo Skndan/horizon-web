@@ -112,7 +112,7 @@ const MySpaceAttendancePage = () => {
         <> 
             <div>
                 <div className="flex items-center justify-between">
-                    <SubHeading title="Attendance" description="Your attendance record" />
+                    <SubHeading title="⏰ Attendance" description="Your attendance record" />
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button variant="outline">

@@ -42,7 +42,7 @@ const OrgSettingsPage = () => {
     <>
       <div>
         <div className="flex items-center justify-between">
-          <SubHeading title="Timesheet" description="Your timesheet records" />
+          <SubHeading title="📅 Timesheet" description="Your timesheet records" />
           <Link href={`/my-space/timesheet/new`}>
             <Button>
               <Plus className="mr-2 h-4 w-4" /> Create

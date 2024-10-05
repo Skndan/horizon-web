@@ -28,7 +28,7 @@ export const ShiftTable: React.FC<ShiftTableProps> = ({
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title={`Shifts (${total})`} description="Manage your employee's shifts" />
+        <Heading title={`📊 Shifts (${total})`} description="Manage your employee's shifts" />
         <Link href={`/attendance/shifts/new`}>
           <Button>
             <Plus className="mr-2 h-4 w-4" /> Add

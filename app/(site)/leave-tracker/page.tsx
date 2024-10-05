@@ -46,7 +46,7 @@ const LeaveTrackerPage = () => {
         <>
             <div className="space-y-6 p-8">
                 <div className="flex items-center justify-between">
-                    <Heading title="Leave Tracker" description="Manage your organisation address here" />
+                    <Heading title="✈️ Leave Tracker" description="Manage your organisation address here" />
                     {/* <Link href={`/leave-tracker/new`}>
                         <Button>
                             <Plus className="mr-2 h-4 w-4" /> Add

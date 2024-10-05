@@ -135,7 +135,7 @@ const ReportPage = () => {
             <div className="flex-col">
                 <div className="flex-1 space-y-4 p-8 pt-6">
                     <div className="flex items-center justify-between space-y-2">
-                        <Heading title={`Reports`} description="Manage your reports" />
+                        <Heading title={`📊 Reports`} description="Manage your reports" />
                         <div className="flex flex-col items-end space-x-2 gap-2">
                             <CalendarDateRangePicker onChanged={(value: DateRange | undefined) => {
                                 if (value?.to) {

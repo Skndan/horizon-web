@@ -120,7 +120,7 @@ const WorkflowPage = ({ params }: { params: { workflowId: string } }) => {
                                     </BreadcrumbItem>
                                 </BreadcrumbList>
                             </Breadcrumb>
-                            <Heading title={`Workflow Steps (${total})`} description="Manage your workflow steps" />
+                            <Heading title={`📊 Workflow Steps (${total})`} description="Manage your workflow steps" />
                         </div>
 
                         <Link href={`/hiring/workflow/${params.workflowId}/line/new`}>

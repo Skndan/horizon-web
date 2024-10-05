@@ -43,7 +43,7 @@ const WorkflowPage = () => {
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">
                 <div className="flex items-center justify-between">
-                    <Heading title={`Workflows (${total})`} description="Manage your workflows" />
+                    <Heading title={`📊 Workflows (${total})`} description="Manage your workflows" />
                     <Link href={`/hiring/workflow/new`}>
                         <Button>
                             <Plus className="mr-2 h-4 w-4" /> Add

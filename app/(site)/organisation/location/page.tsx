@@ -42,7 +42,7 @@ const LocationPage = () => {
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-6">
                 <div className="flex items-center justify-between">
-                    <Heading title={`Locations (${total})`} description="Manage your office locations" /> 
+                    <Heading title={`🌎 Locations (${total})`} description="Manage your office locations" /> 
                     <Link href={`/organisation/location/new`}>
                         <Button>
                             <Plus className="mr-2 h-4 w-4" /> Add

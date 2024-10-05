@@ -45,7 +45,7 @@ const InterviewPage = () => {
             <div className="flex-col">
                 <div className="flex-1 space-y-4 p-8 pt-6">
                     <div className="flex items-center justify-between space-y-2">
-                        <Heading title={`Interviews (${total})`} description="Manage your interview schedules" />
+                        <Heading title={`🎤 Interviews (${total})`} description="Manage your interview schedules" />
                         <Link href={`/hiring/interview/new`}>
                             <Button>
                                 <Plus className="mr-2 h-4 w-4" /> Add

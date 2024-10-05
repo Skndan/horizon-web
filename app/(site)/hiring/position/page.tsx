@@ -39,7 +39,7 @@ const PositionPage = () => {
             <div className="flex-col">
                 <div className="flex-1 space-y-4 p-8 pt-6">
                     <div className="flex items-center justify-between space-y-2">
-                        <Heading title={`Positions (${total})`} description="Manage your job openings" />
+                        <Heading title={`📋 Positions (${total})`} description="Manage your job openings" />
                         <Link href={`/hiring/position/new`}>
                             <Button>
                                 <Plus className="mr-2 h-4 w-4" /> Add

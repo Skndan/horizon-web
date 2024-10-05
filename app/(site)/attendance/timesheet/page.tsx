@@ -11,7 +11,7 @@ const OrgSettingsPage = () => {
     <>
       <div className="space-y-4 p-8 pt-6">
         <div className="flex items-center justify-between">
-          <Heading title="Timesheet" description="Your timesheet records" />
+          <Heading title="📅 Timesheet" description="Your timesheet records" />
         </div>
         <Separator />
         {/* DRAFT, INITIATED, APPROVED, REJECTED */}
