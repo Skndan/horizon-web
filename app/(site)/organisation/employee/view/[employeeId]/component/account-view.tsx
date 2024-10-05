@@ -31,7 +31,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
                             <Label className="text-md pt-1">{account?.accountHolderName}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.accountHolderName}`, "Account Holder Name")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -42,7 +42,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
                             <Label className="text-md pt-1">{account?.bankName}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.bankName}`, "Bank Name")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -53,7 +53,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
                             <Label className="text-md pt-1">{account?.accountNumber}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.accountNumber}`, "Account Number")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -64,7 +64,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
                             <Label className="text-md pt-1">{account?.ifscCode}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.ifscCode}`, "IFSC Code")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -75,7 +75,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
                             <Label className="text-md pt-1">{account?.panNumber}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.panNumber}`, "PAN Number")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -86,7 +86,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
                             <Label className="text-md pt-1">{account?.uanNumber}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${account?.uanNumber}`, "UAN Number")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
 

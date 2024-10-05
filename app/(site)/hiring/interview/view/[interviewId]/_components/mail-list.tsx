@@ -1,12 +1,6 @@
 import { ComponentProps } from "react"
-import formatDistanceToNow from "date-fns/formatDistanceToNow"
-
-import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator" 
-import { useMail } from "@/store/use-mail-store"
-import { Mail } from "./data"
+import { ScrollArea } from "@/components/ui/scroll-area" 
 import { Interview } from "@/types/hiring"
 import { CandidateInfo } from "./_card/candidate-info"
 

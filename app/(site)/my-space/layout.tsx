@@ -60,9 +60,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
 
     return (
         <>
-            <div className="py-4 px-8 pb-16">
-                <Heading title={user?.username ?? ''} description={"Manage your account"} />
-                <Separator className="my-6" />
+            <div className="py-4 px-8 pb-16"> 
                 <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
                     <aside className="-mx-4 lg:w-1/6">
                         <SidebarNav items={sidebarNavItems} />

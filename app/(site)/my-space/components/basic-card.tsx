@@ -32,7 +32,7 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                             <Label className="text-md pt-1">{profile?.employeeId}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.employeeId}`, "Employee ID")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -43,7 +43,7 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                             <Label className="text-md pt-1">{profile?.name}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.name}`, "Name")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -54,7 +54,7 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                             <Label className="text-md pt-1">{profile?.mobile}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.mobile}`, "Mobile")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -65,7 +65,7 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                             <Label className="text-md pt-1">{profile?.email}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.email}`, "Office Email")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -80,7 +80,7 @@ export const BasicCard: React.FC<BasicCardProps> = ({
                             <Label className="text-md pt-1">{profile?.dateOfBirth && formatDate(profile?.dateOfBirth, 'dd MMM yyyy')}</Label>
                         </div>
                         <Button className="hover:bg-primary" size={"icon"} variant={"outline"} onClick={() => onCopy(`${profile?.dateOfBirth && formatDate(profile?.dateOfBirth, 'dd MMM yyyy')}`, "Date of Birth")}>
-                            <Copy className="top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Copy className="top-2.5 h-4 w-4 text-foreground" />
                         </Button>
                     </div>
                 </div>

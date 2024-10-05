@@ -42,8 +42,11 @@ const formSchema = z.object({
     transitionName: z.any(),
     transitionLevel: z.any(),
     sendEmail: z.any(),
-    approver: z.any()
+    approver: z.any(),
+    stage: z.any()
 });
+
+import { Circle, PhoneCall, HelpCircle, CheckCircle, UserCheck } from 'lucide-react';
 
 type PositionFormValues = z.infer<typeof formSchema>
 
@@ -67,7 +70,7 @@ export const WorkflowLineForm: React.FC<PositionFormProps> = ({
     const toastMessage = initialData ? 'Workflow step updated' : 'Workflow step created';
     const action = initialData ? 'Save changes' : 'Create';
 
-    const { user } = useAuth(); 
+    const { user } = useAuth();
 
     const form = useForm<PositionFormValues>({
         resolver: zodResolver(formSchema),
@@ -115,7 +118,7 @@ export const WorkflowLineForm: React.FC<PositionFormProps> = ({
     }
 
     useEffect(() => {
-        fetchData(); 
+        fetchData();
     }, [])
 
 
@@ -142,6 +145,32 @@ export const WorkflowLineForm: React.FC<PositionFormProps> = ({
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                     <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
+
+                        <FormField
+                            control={form.control}
+                            name="stage"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Stage</FormLabel>
+                                    <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue defaultValue={field.value} placeholder="Select the stage" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {workflowStages.map((size) => (
+                                                <SelectItem key={size.value} value={size.value}>
+                                                    <div className="flex flex-row gap-2">{<size.icon className='h-4 w-4' style={{ color: size.color }} />}{size.label}</div>
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <FormField
                             control={form.control}
                             name="transitionName"
@@ -154,7 +183,7 @@ export const WorkflowLineForm: React.FC<PositionFormProps> = ({
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        /> 
+                        />
 
                         <FormField
                             control={form.control}
@@ -179,7 +208,6 @@ export const WorkflowLineForm: React.FC<PositionFormProps> = ({
                             )}
                         />
 
-
                     </div>
 
                     <Button disabled={loading} className="ml-auto" type="submit">
@@ -191,4 +219,37 @@ export const WorkflowLineForm: React.FC<PositionFormProps> = ({
             </Form>
         </>
     );
-}; 
+};
+
+export const workflowStages = [
+    {
+        value: "SOURCED",
+        label: "Sourced",
+        color: "#3498db", // Light Blue
+        icon: Circle,
+    },
+    {
+        value: "PHONE_SCREENING",
+        label: "Phone Screening",
+        color: "#f39c12", // Orange
+        icon: PhoneCall,
+    },
+    {
+        value: "INTERVIEW",
+        label: "Interview",
+        color: "#9b59b6", // Purple
+        icon: HelpCircle,
+    },
+    {
+        value: "EVALUATION",
+        label: "Evaluation",
+        color: "#2ecc71", // Green
+        icon: CheckCircle,
+    },
+    {
+        value: "HIRED",
+        label: "Hired",
+        color: "#1abc9c", // Teal
+        icon: UserCheck,
+    }
+];

@@ -144,7 +144,7 @@ const ReportPage = () => {
                             }} className={''} />
                             <div className="flex flex-row items-center gap-2">
                                 <CircleAlert className="text-muted-foreground h-4 w-4" />
-                                <Label className="text-muted-foreground">Reports will generated based on the date range</Label>
+                                <Label className="text-muted-foreground">Reports will generate based on the date range</Label>
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,7 @@ const ReportPage = () => {
                             </TableBody>
                             <TableFooter>
                                 <TableRow>
-                                    <TableCell colSpan={2} className="text-center">This is experimental</TableCell>
+                                    <TableCell colSpan={2} className="text-center">*This is a Beta feature</TableCell>
                                 </TableRow>
                             </TableFooter>
                         </Table>

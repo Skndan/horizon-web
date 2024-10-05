@@ -2,29 +2,12 @@
 
 import * as React from "react"
 import {
-  AlertCircle,
-  Archive,
-  ArchiveX,
   Ban,
-  File,
-  Inbox,
-  MessagesSquare,
-  Search,
-  Send,
-  ShoppingCart,
-  Trash2,
-  Users2,
+  Loader,
 } from "lucide-react"
-import addDays from "date-fns/addDays"
-import addHours from "date-fns/addHours"
-import format from "date-fns/format"
-import nextSaturday from "date-fns/nextSaturday"
 import {
-  Clock,
   Forward,
   MoreVertical,
-  Reply,
-  ReplyAll,
 } from "lucide-react"
 
 import {
@@ -37,24 +20,15 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Switch } from "@/components/ui/switch"
-import { Textarea } from "@/components/ui/textarea"
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 import {
   Tabs,
@@ -63,24 +37,15 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { useMail } from "@/store/use-mail-store"
 import { MailList } from "./mail-list"
 import { type Mail } from "./data"
-import { Card, CardContent } from "@/components/ui/card"
 import { useAuth } from "@/context/auth-provider"
 import { useEffect, useState } from "react"
-import { Interview, InterviewLine } from "@/types/hiring"
+import { Interview, InterviewLine, WorkflowLine } from "@/types/hiring"
 import apiClient from "@/lib/api/api-client"
 import { Label } from "@/components/ui/label"
 import { EmptyStateTable } from "@/components/common/empty-state-table"
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert"
 import DateTimeCell from "@/components/common/date-time-cell"
-import { toTitleCase } from "@/lib/utils/string-utils"
-import dynamic from "next/dynamic"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
@@ -94,12 +59,11 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
 
 interface MailProps {
   interviewId: string
@@ -134,6 +98,7 @@ export function Mail({
   const [line, setLine] = useState<InterviewLine[]>([])
   const [isLoading, setLoading] = useState(true)
   const [open, setOpen] = useState(false);
+  const [statusLoading, setStatusLoading] = useState(false);
 
   const form = useForm<TimesheetFormValues>({
     resolver: zodResolver(formSchema),
@@ -184,16 +149,31 @@ export function Mail({
 
   async function fetchData() {
     await apiClient.get<Interview>(`/interview/${interviewId}`).then((res) => res.data)
-      .then((data) => {
-        setData(data)
+      .then(async (data) => {
+        setData(data);
+        await apiClient.get(`/interview/line/get-by-interview/${interviewId}/${user?.profileId}`).then((res) => res.data)
+          .then((data) => {
+            setLine(data)
+          });
+
       });
 
-    await apiClient.get(`/interview/line/get-by-interview/${interviewId}`).then((res) => res.data)
-      .then((data) => {
-        setLine(data.content)
-      });
 
     setLoading(false)
+  }
+
+  async function updateStatus(newLine: WorkflowLine) {
+
+    setStatusLoading(true);
+    // check if we have a remark and the proceed
+    await apiClient.post<Interview>(`/interview/update-pipeline/${interviewId}/${data?.latestTransition.id}`, newLine).then((res) => res.data)
+      .then((data) => {
+        setData(data)
+        setStatusLoading(false);
+      }).catch((e) => {
+        toast.error(e.response.data.message);
+        setStatusLoading(false);
+      });
   }
 
   useEffect(() => {
@@ -275,7 +255,7 @@ export function Mail({
               </TabsContent>
             </Tabs>
 
-            <div className="flex h-full flex-col border-l">
+            <div className="flex h-full flex-col border-t border-l">
               <div className="flex items-center p-2">
                 <div className="flex items-center gap-2">
                   <Badge className="text-foreground">{data?.latestTransition.transitionName}</Badge>
@@ -344,17 +324,33 @@ export function Mail({
                   </Tooltip>
                   <Separator orientation="vertical" className="mx-1 h-6" />
 
-                  <Button variant="outline">
-                    <Label className="p-2">Proceed</Label>
-                    <Forward className="h-4 w-4" />
-                    <span className="sr-only">Forward</span>
-                  </Button>
-
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline">
+                        {statusLoading &&
+                          <Loader className="animate-spin h-5 w-5 mr-3" />}
+                        <Label className="p-2">Proceed</Label>
+                        <Forward className="h-4 w-4" />
+                        <span className="sr-only">Forward</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {
+                        data?.workflow.workflowLines
+                        .sort((a, b) => a.transitionLevel - b.transitionLevel)
+                        .map((size) => (
+                          <DropdownMenuItem key={size.id} onClick={(e) => {
+                            updateStatus(size);
+                          }}>{size.transitionName}</DropdownMenuItem>
+                        ))
+                      }
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
                 <Separator orientation="vertical" className="mx-2 h-6" />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" disabled={true}>
                       <MoreVertical className="h-4 w-4" />
                       <span className="sr-only">More</span>
                     </Button>
@@ -441,7 +437,6 @@ export function Mail({
 
                 <Separator />
                 <div className="p-4 flex-1">
-
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
                       <FormField
@@ -462,10 +457,10 @@ export function Mail({
                           htmlFor="mute"
                           className="flex items-center gap-2 text-xs font-normal"
                         >
-                          <Switch id="mute" aria-label="Mute thread" /> Mute this
-                          thread
+                          <Switch id="mute" aria-label="Mute thread" />
+                          {(data?.latestTransition.approver.id !== user?.profileId) ? "hy" : "hx"}
                         </Label> */}
-                        <Button disabled={data?.disQualified ?? false} type="submit" className="ml-auto">
+                        <Button disabled={(data?.disQualified ?? false) || (data?.latestTransition.approver.id !== user?.profileId)} type="submit" className="ml-auto">
                           Send
                         </Button>
                       </div>

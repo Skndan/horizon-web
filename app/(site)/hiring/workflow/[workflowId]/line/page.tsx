@@ -21,6 +21,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { EmptyStateTable } from "@/components/common/empty-state-table";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { InterviewStageCell } from "@/components/common/status-cell";
 
 const WorkflowPage = ({ params }: { params: { workflowId: string } }) => {
 
@@ -46,7 +47,7 @@ const WorkflowPage = ({ params }: { params: { workflowId: string } }) => {
                     // that falls out of the range of 2xx
                     if (error.response.status === 404) {
 
-                        
+
                         // Inform the user about the bad request
                         // alert('Bad request. Please check your input.');
                         toast.error("Workflow ID is not present");
@@ -164,8 +165,13 @@ const WorkflowPage = ({ params }: { params: { workflowId: string } }) => {
                                                                     {...provided.dragHandleProps}>
                                                                     <GripVertical className="h-4 w-4" />
                                                                     <AlertTitle>
-                                                                        <div className="flex flex-row justify-between">
-                                                                            <p>{item.transitionName}</p>
+                                                                        <div className="flex flex-row justify-between items-center">
+                                                                            <div className="flex flex-row">
+                                                                                <InterviewStageCell stage={item.stage} />
+                                                                                <Separator orientation="vertical" className="mx-2 h-4" />
+                                                                                <p>{item.transitionName}</p>
+                                                                                <p>{item.approver.name}</p>
+                                                                            </div>
                                                                             <Link href={`/hiring/workflow/${params.workflowId}/line/${item.id}`}>
                                                                                 <Button variant="outline" size="icon">
                                                                                     <Edit className="h-4 w-4" />

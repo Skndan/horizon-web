@@ -20,7 +20,8 @@ export const columns: ColumnDef<Interview>[] = [
       const profile = row.original;
       return <AvatarCell
         avatarUrl={""}
-        employeeId={profile.id}
+        type={"candidate"}
+        employeeId={profile.candidate.applicationNumber.toString()}
         employeeName={profile.candidate.name}
         employeeCode={`#${profile.candidate.applicationNumber.toString()}`} // Assuming you have a strategy for the ID
       />

@@ -29,6 +29,7 @@ export interface Workflow {
   active: boolean
   organisation: Organisation
   name: string
+  workflowLines: WorkflowLine[]
 }
 
 export interface WorkflowLine {
@@ -43,6 +44,7 @@ export interface WorkflowLine {
   transitionLevel: number
   sendEmail: boolean
   approver: Profile
+  stage: string
 }
 
 export interface Position {
