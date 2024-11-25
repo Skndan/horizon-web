@@ -50,8 +50,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import ReactQuill from "react-quill"
-import 'react-quill/dist/quill.snow.css';
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import toast from "react-hot-toast"
@@ -63,7 +61,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
+import { MinimalTiptapEditor } from "@/components/minimal-tiptap"
 
 interface MailProps {
   interviewId: string
@@ -337,12 +335,12 @@ export function Mail({
                     <DropdownMenuContent align="end">
                       {
                         data?.workflow.workflowLines
-                        .sort((a, b) => a.transitionLevel - b.transitionLevel)
-                        .map((size) => (
-                          <DropdownMenuItem key={size.id} onClick={(e) => {
-                            updateStatus(size);
-                          }}>{size.transitionName}</DropdownMenuItem>
-                        ))
+                          .sort((a, b) => a.transitionLevel - b.transitionLevel)
+                          .map((size) => (
+                            <DropdownMenuItem key={size.id} onClick={(e) => {
+                              updateStatus(size);
+                            }}>{size.transitionName}</DropdownMenuItem>
+                          ))
                       }
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -387,7 +385,7 @@ export function Mail({
 
                 <ScrollArea className="h-96">
                   {
-                    line.length == 0 ? <EmptyStateTable title={"No line"} description={"No line"} action={null} onClick={function (): void {
+                    line.length == 0 ? <EmptyStateTable title={"No reviews yet"} description={"Be the one to review first"} action={null} onClick={function (): void {
                       throw new Error("Function not implemented.");
                     }} /> :
 
@@ -445,8 +443,17 @@ export function Mail({
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <ReactQuill
-                                value={field.value} onChange={field.onChange} />
+                              <MinimalTiptapEditor
+                                value={field.value}
+                                onChange={field.onChange}
+                                className="w-full"
+                                editorContentClassName="p-5"
+                                output="html"
+                                placeholder="Type your description here..."
+                                autofocus={true}
+                                editable={true}
+                                editorClassName="focus:outline-none"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>

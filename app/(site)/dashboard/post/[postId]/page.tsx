@@ -37,15 +37,13 @@ import { cn } from "@/lib/utils"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import MultipleSelector, { Option } from '@/components/ui/multiple-selector';
-import { Textarea } from "@/components/ui/textarea";
 import apiClient from "@/lib/api/api-client";
 import { Profile } from "@/types/profile";
 
-
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import { useAuth } from "@/context/auth-provider";
 import { Loader } from "lucide-react";
+import { MinimalTiptapEditor } from "@/components/minimal-tiptap";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const formSchema = z.object({
     name: z.string().min(1),
@@ -148,22 +146,23 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
     return (
         <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
-                <Heading title={title} description={description} />
-                <Breadcrumb className="sm:block hidden">
-                    <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator>
-                            <SlashIcon />
-                        </BreadcrumbSeparator>
-                        <BreadcrumbItem>
-                            <BreadcrumbPage>Form</BreadcrumbPage>
-                        </BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
-                {/* {initialData && (
+            <TooltipProvider>
+                <div className="flex items-center justify-between">
+                    <Heading title={title} description={description} />
+                    <Breadcrumb className="sm:block hidden">
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator>
+                                <SlashIcon />
+                            </BreadcrumbSeparator>
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>Form</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                    {/* {initialData && (
                     <Button
                         disabled={loading}
                         variant="destructive"
@@ -173,229 +172,235 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                         <Trash className="h-4 w-4" />
                     </Button>
                     )} */}
-            </div>
-            <Separator />
-
-            {loading ? (
-                <div className="grid h-screen place-items-center">
-                    <Loader className="animate-spin h-5 w-5 mr-3" />
                 </div>
-            ) : (
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                <Separator />
 
-
-
-                        <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
-
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Event/Activity Name <span className="text-red-600">*</span></FormLabel>
-                                        <FormControl>
-                                            <Input disabled={loading} placeholder="Name" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="location"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Location <span className="text-red-600">*</span></FormLabel>
-                                        <FormControl>
-                                            <Input disabled={loading} placeholder="Location address or Online" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="visibility"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Visibility</FormLabel>
-                                        <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                {loading ? (
+                    <div className="grid h-screen place-items-center">
+                        <Loader className="animate-spin h-5 w-5 mr-3" />
+                    </div>
+                ) : (
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                            <div className="grid md:grid-cols-3 gap-x-8 gap-y-4">
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Event/Activity Name <span className="text-red-600">*</span></FormLabel>
                                             <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue defaultValue={field.value} placeholder="Select visibility" />
-                                                </SelectTrigger>
+                                                <Input disabled={loading} placeholder="Name" {...field} />
                                             </FormControl>
-                                            <SelectContent>
-                                                {visibility.map((category) => (
-                                                    <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="type"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Type</FormLabel>
-                                        <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="location"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Location <span className="text-red-600">*</span></FormLabel>
                                             <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue defaultValue={field.value} placeholder="Select type" />
-                                                </SelectTrigger>
+                                                <Input disabled={loading} placeholder="Location address or Online" {...field} />
                                             </FormControl>
-                                            <SelectContent>
-                                                {type.map((category) => (
-                                                    <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="visibility"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Visibility</FormLabel>
+                                            <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue defaultValue={field.value} placeholder="Select visibility" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {visibility.map((category) => (
+                                                        <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="type"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Type</FormLabel>
+                                            <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue defaultValue={field.value} placeholder="Select type" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {type.map((category) => (
+                                                        <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="attendies"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Attendies</FormLabel>
+                                            <MultipleSelector disabled={loading}
+                                                onChange={field.onChange}
+                                                value={field.value}
+                                                defaultOptions={profile}
+                                                placeholder="Select the attendies..."
+                                                emptyIndicator={
+                                                    <p className="text-center text-lg leading-10">
+                                                        no results found.
+                                                    </p>
+                                                }
+                                            />
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="startDate"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col pt-2">
+                                            <FormLabel>Start Date</FormLabel>
+                                            <FormControl>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <FormControl>
+                                                            <Button disabled={loading}
+                                                                variant={"outline"}
+                                                                className={cn(
+                                                                    "pl-3 text-left font-normal",
+                                                                    !field.value && "text-muted-foreground"
+                                                                )}
+                                                            >
+                                                                {field.value ? (
+                                                                    format(field.value, "PPP")
+                                                                ) : (
+                                                                    <span>Pick a date</span>
+                                                                )}
+                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                            </Button>
+                                                        </FormControl>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent align="start" className="w-auto p-0">
+                                                        <Calendar
+                                                            mode="single"
+                                                            captionLayout="dropdown-buttons"
+                                                            selected={field.value}
+                                                            onSelect={field.onChange}
+                                                            fromYear={1970}
+                                                            toYear={new Date().getFullYear()}
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+
+                                <FormField
+                                    control={form.control}
+                                    name="dueDate"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col pt-2">
+                                            <FormLabel>Due Date</FormLabel>
+                                            <FormControl>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <FormControl>
+                                                            <Button disabled={loading}
+                                                                variant={"outline"}
+                                                                className={cn(
+                                                                    "pl-3 text-left font-normal",
+                                                                    !field.value && "text-muted-foreground"
+                                                                )}
+                                                            >
+                                                                {field.value ? (
+                                                                    format(field.value, "PPP")
+                                                                ) : (
+                                                                    <span>Pick a date</span>
+                                                                )}
+                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                            </Button>
+                                                        </FormControl>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent align="start" className="w-auto p-0">
+                                                        <Calendar
+                                                            mode="single"
+                                                            captionLayout="dropdown-buttons"
+                                                            selected={field.value}
+                                                            onSelect={field.onChange}
+                                                            fromYear={1970}
+                                                            toYear={new Date().getFullYear()}
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                            </div>
+
 
                             <FormField
                                 control={form.control}
-                                name="attendies"
+                                name="description"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Attendies</FormLabel>
-                                        <MultipleSelector disabled={loading}
-                                            onChange={field.onChange}
-                                            value={field.value}
-                                            defaultOptions={profile}
-                                            placeholder="Select the attendies..."
-                                            emptyIndicator={
-                                                <p className="text-center text-lg leading-10">
-                                                    no results found.
-                                                </p>
-                                            }
-                                        />
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="startDate"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-col pt-2">
-                                        <FormLabel>Start Date</FormLabel>
+                                        <FormLabel>Description <span className="text-red-600">*</span></FormLabel>
                                         <FormControl>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button disabled={loading}
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "pl-3 text-left font-normal",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value ? (
-                                                                format(field.value, "PPP")
-                                                            ) : (
-                                                                <span>Pick a date</span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent align="start" className="w-auto p-0">
-                                                    <Calendar
-                                                        mode="single"
-                                                        captionLayout="dropdown-buttons"
-                                                        selected={field.value}
-                                                        onSelect={field.onChange}
-                                                        fromYear={1970}
-                                                        toYear={new Date().getFullYear()}
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
+                                            <MinimalTiptapEditor
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                className="w-full"
+                                                editorContentClassName="p-5"
+                                                output="html"
+                                                placeholder="Type your description here..."
+                                                autofocus={true}
+                                                editable={true}
+                                                editorClassName="focus:outline-none"
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
 
-
-                            <FormField
-                                control={form.control}
-                                name="dueDate"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-col pt-2">
-                                        <FormLabel>Due Date</FormLabel>
-                                        <FormControl>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button disabled={loading}
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "pl-3 text-left font-normal",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value ? (
-                                                                format(field.value, "PPP")
-                                                            ) : (
-                                                                <span>Pick a date</span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent align="start" className="w-auto p-0">
-                                                    <Calendar
-                                                        mode="single"
-                                                        captionLayout="dropdown-buttons"
-                                                        selected={field.value}
-                                                        onSelect={field.onChange}
-                                                        fromYear={1970}
-                                                        toYear={new Date().getFullYear()}
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                        </div>
-
-
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Description <span className="text-red-600">*</span></FormLabel>
-                                    <FormControl>
-                                        <ReactQuill 
-                                            value={field.value} onChange={field.onChange} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <Button disabled={loading} className="ml-auto" type="submit">
-                            {loading &&
-                                <Loader className="animate-spin h-5 w-5 mr-3" />}
-                            {action}
-                        </Button>
-                    </form>
-                </Form>
-            )}
+                            <Button disabled={loading} className="ml-auto" type="submit">
+                                {loading &&
+                                    <Loader className="animate-spin h-5 w-5 mr-3" />}
+                                {action}
+                            </Button>
+                        </form>
+                    </Form>
+                )}
+            </TooltipProvider>
         </div>)
 }
 
